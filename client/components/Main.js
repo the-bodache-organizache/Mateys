@@ -2,7 +2,7 @@ import React from 'react'
 import {Routes, Navbar} from './nav'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import Load from './Load'
+import {Load} from './load'
 import {me} from '../store/user'
 
 const Main = () => {

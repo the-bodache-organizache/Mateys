@@ -1,6 +1,14 @@
 import React from 'react'
+import {connect} from 'react-redux'
 
-// Home: there's no place like it (as long as you've logged in).
-const Home = () => <h1>Welcome Home</h1>
+const Home = ({email}) => {
+  return <h1>Welcome Home, {email}!</h1>
+}
 
-export default Home
+const mapState = state => {
+  return {
+    email: state.user.email
+  }
+}
+
+export default connect(mapState)(Home)
