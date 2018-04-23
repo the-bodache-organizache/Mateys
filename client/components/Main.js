@@ -1,6 +1,9 @@
 import React from 'react'
-import Routes from './Routes'
-import Navbar from './Navbar'
+import {Routes, Navbar} from './nav'
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+import Load from './Load'
+import {me} from '../store/user'
 
 const Main = () => {
   return (
@@ -11,4 +14,8 @@ const Main = () => {
   )
 }
 
-export default Main
+const mapDispatch = dispatch => ({
+  load: () => dispatch(me())
+})
+
+export default withRouter(connect(null, mapDispatch)(Load(Main)))

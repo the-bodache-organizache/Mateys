@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {AuthLink, Logout} from './auth'
+import {AuthLink, Logout} from '../auth'
 
 const Navbar = () => (
   <nav className='row center-y'>

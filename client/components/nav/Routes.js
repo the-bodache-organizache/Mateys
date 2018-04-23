@@ -1,8 +1,8 @@
 import React from 'react'
 import {Switch, Route} from 'react-router-dom'
-import {AuthRoute, Login, Signup} from './auth'
-import Welcome from './Welcome'
-import Home from './Home'
+import {AuthRoute, Login, Signup} from '../auth'
+import Welcome from '../Welcome'
+import {Home} from '../user'
 import NoMatch from './NoMatch'
 
 const Routes = () => (
