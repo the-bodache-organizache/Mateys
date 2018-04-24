@@ -11,34 +11,26 @@ const removeUser = () => ({type: REMOVE_USER})
 
 // THUNK CREATORS
 export const me = () => {
-  return (dispatch, _, {axios}) => {
-    return axios.get('/auth')
-      .then(res => {
-        dispatch(gotUser(res.data || defaultUser))
-      })
+  return async (dispatch, _, {axios}) => {
+    const {data} = await axios.get('/auth')
+    dispatch(gotUser(data || defaultUser))
   }
 }
 
 export const auth = (credentials, method) => {
-  return (dispatch, _, {axios, history}) => {
-    return axios[method](`/auth/local`, credentials)
-      .then(res => {
-        dispatch(gotUser(res.data))
-        history.push('/home')
-      }, authError => { // rare example: a good use case for parallel (non-catch) error handler
-        dispatch(gotUser({error: authError.response.data}))
-      })
-      .catch(dispatchOrHistoryErr => console.error(dispatchOrHistoryErr))
+  return async (dispatch, _, {axios, history}) => {
+    const {data} = await axios[method](`/auth/local`, credentials)
+    dispatch(gotUser(data))
+    history.push('/home')
   }
 }
 
-export const logout = () =>
-  (dispatch, _, {axios, history}) =>
-    axios.delete('/auth')
-      .then(() => {
-        dispatch(removeUser())
-      })
-      .catch(err => console.log(err))
+export const logout = () => {
+  return async (dispatch, _, {axios, history}) => {
+    await axios.delete('/auth')
+    dispatch(removeUser())
+  }
+}
 
 // REDUCER
 export default (state = defaultUser, action) => {
