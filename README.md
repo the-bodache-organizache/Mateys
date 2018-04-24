@@ -1,6 +1,6 @@
 # Appy McAppFace
 
-*Embark and a grand voyage!*
+*Embark on a grand voyage!*
 
 ## Setup
 
