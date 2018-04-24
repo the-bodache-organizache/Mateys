@@ -1,7 +1,12 @@
 #app {
   height: 100%;
-  width: 100%;
   margin: 0;
+  width: 100%;
+}
+
+form {
+  max-width: 50%;
+  min-width: 50%;
 }
 
 nav {
@@ -12,26 +17,30 @@ nav a {
   margin: 0 1em;
 }
 
-form {
-  min-width: 50%;
-  max-width: 50%;
-}
-
-a {
+nav a {
   text-decoration: none;
-  color: #753ebd;
+  color: rgb(82, 103, 225);
 }
 
-a:hover {
-  border-bottom: 1px solid;
+nav a::after {
+  background-color: rgb(82, 103, 225);
+  content: '';
+  display: block;
+  height: 2px;
+  transition: width .3s;
+  width: 0;
 }
 
-nav a:first-child:hover {
-  border: none;
+nav a:hover::after {
+  width: 100%;
+}
+
+nav a:first-child:hover::after {
+  width: 0;
 }
 
 #logo {
+  border-radius: 50%;
   height: 40px;
   width: 40px;
-  border-radius: 50%;
 }
