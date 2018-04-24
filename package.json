@@ -1,5 +1,5 @@
 {
-  "name": "grace-shopper-starter",
+  "name": "appy-mcappface",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,8 +11,8 @@
     "seed": "node scripts/seed.js",
     "start": "node server",
     "start:dev": "webpack -w & nodemon server --ignore public",
-    "test:server": "DATABASE_URL=postgres://localhost/grace-shopper-test mocha './server/**/*.test.js' --require babel-polyfill --exit",
-    "test:client": "DATABASE_URL=postgres://localhost/grace-shopper-test mocha './client/**/*.test.js' --require babel-polyfill --require babel-register --exit",
+    "test:server": "NODE_ENV=test mocha './server/**/*.test.js' --require babel-polyfill --exit",
+    "test:client": "NODE_ENV=test mocha './client/**/*.test.js' --require babel-polyfill --require babel-register --exit",
     "test": "npm run test:server && npm run test:client"
   },
   "author": "",
@@ -27,7 +27,6 @@
     "helmet": "^3.12.0",
     "history": "^4.7.2",
     "morgan": "^1.9.0",
-    "normalizr": "^3.2.4",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "pg": "^7.4.1",
@@ -39,7 +38,6 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.1",
     "sequelize": "^4.37.5"
   },
   "devDependencies": {
