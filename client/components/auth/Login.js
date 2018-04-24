@@ -1,7 +1,8 @@
 import AuthForm from './AuthForm'
 import {connect} from 'react-redux'
+import {compose} from 'redux'
 import {auth} from '../../store/user'
-import authError from './authError'
+import AuthError from './AuthError'
 
 const mapStateLogin = (state) => {
   return {
@@ -37,5 +38,12 @@ const mapDispatchSignup = (dispatch) => {
   }
 }
 
-export const Login = connect(mapStateLogin, mapDispatchLogin)(authError(AuthForm))
-export const Signup = connect(mapStateSignup, mapDispatchSignup)(authError(AuthForm))
+export const Login = compose(
+  connect(mapStateLogin, mapDispatchLogin),
+  AuthError
+)(AuthForm)
+
+export const Signup = compose(
+  connect(mapStateSignup, mapDispatchSignup),
+  AuthError
+)(AuthForm)

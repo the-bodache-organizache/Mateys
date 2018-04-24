@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, Route, withRouter} from 'react-router-dom'
+import {compose} from 'redux'
 import {connect} from 'react-redux'
 import AuthPrompt from './AuthPrompt'
 
@@ -28,5 +29,11 @@ export const AuthRoute = ({allowed, ...rest}) => {
     : <Route {...rest} component={AuthPrompt} />
 }
 
-export const ConnectedAuthLink = withRouter(connect(mapState)(AuthLink))
-export const ConnectedAuthRoute = withRouter(connect(mapState)(AuthRoute))
+export const ConnectedAuthLink = compose(
+  withRouter,
+  connect(mapState)
+)(AuthLink)
+export const ConnectedAuthRoute = compose(
+  withRouter,
+  connect(mapState)
+)(AuthRoute)

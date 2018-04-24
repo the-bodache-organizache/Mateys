@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-const authError = OtherComponent => class ErrorHandler extends Component {
+const AuthError = OtherComponent => class ErrorHandler extends Component {
   state = {
     error: false
   }
@@ -17,4 +17,4 @@ const authError = OtherComponent => class ErrorHandler extends Component {
   }
 }
 
-export default authError
+export default AuthError
