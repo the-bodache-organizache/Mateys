@@ -2,16 +2,7 @@
 
 import {expect} from 'chai'
 import {me, logout} from './user'
-import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
-import configureMockStore from 'redux-mock-store'
-import thunks from 'redux-thunk'
-import {createMemoryHistory} from 'history'
-
-const history = createMemoryHistory()
-const mockAxios = new MockAdapter(axios)
-const middlewares = [thunks.withExtraArgument({axios, history})]
-const mockStore = configureMockStore(middlewares)
+import {mockStore, mockAxios, history} from './__test-config'
 
 describe('thunk creators', () => {
   let store
