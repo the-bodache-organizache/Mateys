@@ -1,34 +1,32 @@
-# Grace Shopper
+# Appy McAppFace
 
-*A shop that's closed is safe; but that's not what shops are for.*
+*Embark and a grand voyage!*
 
 ## Setup
 
-To use this boilerplate, you'll need to take the following steps:
-
-* Don't fork or clone this repo! Instead, create a new, empty directory on your machine and `git init` (or create an empty repo on Github and clone it to your local machine)
-* Run the following commands:
-
 ```
-git remote add boilerplate https://github.com/FullstackAcademy/grace-shopper-starter.git
-git fetch boilerplate
-git merge boilerplate/master
+mkdir your-app
+cd your-app
+git init
+git remote add starter https://github.com/FullstackAcademy/Starter.Appy-McAppFace
+git fetch starter
+git merge starter/master
 ```
 
-Why did we do that? Because every once in a while, `grace-shopper-starter` may be updated with additional features or bug fixes, and you can easily get those changes from now on by entering:
+Why did we do that? Because every once in a while, `appy-mcappface` may be updated with additional features or bug fixes, and you can easily get those changes from now on by entering:
 
 ```
-git fetch boilerplate
-git merge boilerplate/master
+git fetch starter
+git merge starter/master
 ```
 
 ## Customize
 
 Now that you've got the code, follow these steps to get acclimated:
 
-* Update project name and description in `package.json` and `.travis.yml` files
+* Update project name and description in `package.json`
 * `npm install`, or `yarn install` - whatever you're into
-* Create a postgres database called `grace-shopper`
+* Create a postgres database with the same name as the project
 * Create a file called `secrets.js` in the project root
   * This file is `.gitignore`'d, and will *only* be required in your *development* environment
   * Its purpose is to attach the secret env variables that you'll use while developing
@@ -74,17 +72,6 @@ Ready to go world wide? Here's a guide to deployment!
 
 ### When you're ready to deploy
 
-1. Make sure that all your work is fully committed and pushed to your master branch on Github.
-2. If you currently have an existing branch called "deploy", delete it now (`git branch -d deploy`). We're going to use a dummy branch with the name "deploy" (see below), so if you have one lying around, the script below will error
-3. `npm run deploy` - this will cause the following commands to happen in order:
-  - `git checkout -b deploy`: checks out a new branch called "deploy". Note that the name "deploy" here isn't magical, but it needs to match the name of the branch we specify when we push to our heroku remote.
-  - `webpack -p`: webpack will run in "production mode"
-  - `git add -f public/bundle.js public/bundle.js.map`: "force" add the otherwise gitignored build files
-  - `git commit --allow-empty -m 'Deploying'`: create a commit, even if nothing changed
-  - `git push --force heroku deploy:master`: push your local "deploy" branch to the "master" branch on heroku
-  - `git checkout master`: return to your master branch
-  - `git branch -D deploy`: remove the deploy branch
-
-Now, you should be deployed!
-
-Why do all of these steps? The big reason is because we don't want our production server to be cluttered up with dev dependencies like webpack, but at the same time we don't want our development git-tracking to be cluttered with production build files like bundle.js! By doing these steps, we make sure our development and production environments both stay nice and clean!
+```
+npm run deploy
+```
