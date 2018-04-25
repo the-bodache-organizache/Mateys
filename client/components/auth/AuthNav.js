@@ -20,7 +20,7 @@ const mapState = (state, {
 }
 
 export const AuthLink = ({allowed, to, children}) => {
-  return allowed && <Link to={to}>{children}</Link>
+  return allowed ? <Link to={to}>{children}</Link> : null
 }
 
 export const AuthRoute = ({allowed, ...rest}) => {
