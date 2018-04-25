@@ -20,7 +20,7 @@ set -e
 # We trap any program EXIT and run this function.
 # Whether the deploy succeeds or fails, we'll clean up the deploy branch.
 
-function cleanup_at_exit {
+cleanup_at_exit() {
   # return to your master branch
   git checkout master
 
