@@ -1,3 +1,5 @@
+import {keyBy} from 'lodash'
+
 // ACTION TYPES
 const GOT_MEMBERS = 'GOT_MEMBERS'
 
@@ -15,18 +17,13 @@ export const fetchMembers = () => {
   }
 }
 
-const byId = array => array.reduce((obj, next) => {
-  obj[next.id] = next
-  return obj
-}, {})
-
 // REDUCER
 export default (state = defaultMembers, action) => {
   switch (action.type) {
     case GOT_MEMBERS:
       return {
         ...state,
-        ...byId(action.members)
+        ...keyBy(action.members, (mem) => mem.id)
       }
     default:
       return state
