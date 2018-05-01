@@ -1,0 +1,7 @@
+{
+  "extends": "fullstack",
+  "root": true,
+  "rules": {
+      "semi": [1, "always"]
+  }
+}
