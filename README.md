@@ -8,16 +8,10 @@ A swashbuckling adventure for you and your mateys
 
 # Tech Stack/Libraries
 Node.js
-
 Express.js
-
 EasyRTC (client and server)
-
 Sequelize
-
 React
-
 Redux
-
 Socket.io
 
