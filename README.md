@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Mateys
 A swashbuckling adventure for you and your mateys
 
@@ -100,4 +99,3 @@ Ready to go world wide? Here's a guide to deployment!
 ```
 npm run deploy
 ```
->>>>>>> appy/master
