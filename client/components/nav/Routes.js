@@ -1,14 +1,14 @@
-import React from 'react'
-import {Switch, Route} from 'react-router-dom'
-import {AuthRoute, Login, Signup} from '../auth'
-import Welcome from '../Welcome'
-import {Home} from '../user'
-import {MembersList} from '../members'
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { AuthRoute, Login, Signup } from '../auth';
+import Welcome from '../Welcome';
+import { Home } from '../user';
+import { MembersList } from '../members';
 import { MotionDetection, VideoFeed } from '../test';
-import NoMatch from './NoMatch'
+import NoMatch from './NoMatch';
 
 const Routes = () => (
-  <div className='fill-xy center-xy column'>
+  <div className="fill-xy center-xy column">
     <Switch>
       <Route exact path='/' component={Welcome} />
       <Route path='/login' component={Login} />
@@ -20,6 +20,6 @@ const Routes = () => (
       <Route component={NoMatch} />
     </Switch>
   </div>
-)
+);
 
-export default Routes
+export default Routes;
