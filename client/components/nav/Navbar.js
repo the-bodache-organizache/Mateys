@@ -1,11 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AuthLink, Logout } from '../auth';
+import { VideoFeed, MotionDetection } from '../test';
 
 const Navbar = () => (
   <nav className="row center-y">
     <Link to="/">
       <img id="logo" src="/favicon.ico" />
+    </Link>
+    <Link to='/videofeed'>
+      Video Feed
+    </Link>
+    <Link to='/motiondetection'>
+      Motion Detection
     </Link>
     <AuthLink to="/login" guestsOnly>
       Login
