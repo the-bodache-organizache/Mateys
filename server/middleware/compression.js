@@ -1,5 +1,5 @@
-const router = require('express').Router()
-const compression = require('compression')
-module.exports = router
+const router = require('express').Router();
+const compression = require('compression');
+module.exports = router;
 
-router.use(compression())
+router.use(compression());
