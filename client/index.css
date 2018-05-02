@@ -1,0 +1,46 @@
+#app {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+form {
+  max-width: 50%;
+  min-width: 50%;
+}
+
+nav {
+  height: 80px;
+}
+
+nav a {
+  margin: 0 1em;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(82, 103, 225);
+}
+
+nav a::after {
+  background-color: rgb(82, 103, 225);
+  content: '';
+  display: block;
+  height: 2px;
+  transition: width .3s;
+  width: 0;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+nav a:first-child:hover::after {
+  width: 0;
+}
+
+#logo {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}

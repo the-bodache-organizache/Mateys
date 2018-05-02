@@ -55,4 +55,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
+public/bundle.js
+public/bundle.js.map
+secrets.js
