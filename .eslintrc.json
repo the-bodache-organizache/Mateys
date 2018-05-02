@@ -2,6 +2,6 @@
   "extends": "fullstack",
   "root": true,
   "rules": {
-      "semi": [1, "always"]
+    "semi": [1, "always"]
   }
 }
