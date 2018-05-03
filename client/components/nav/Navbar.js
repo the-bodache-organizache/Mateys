@@ -11,6 +11,9 @@ const Navbar = () => (
     <Link to='/videofeed'>
       Video Feed
     </Link>
+    <Link to='/tyler'>
+      Tyler
+    </Link>
     <Link to='/motiondetection'>
       Motion Detection
     </Link>
