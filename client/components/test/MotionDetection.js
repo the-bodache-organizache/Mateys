@@ -14,12 +14,11 @@ window.requestAnimFrame = (function(){
 class MotionDetection extends React.Component {
   constructor() {
     super();
-    this.canvasNode = React.createRef();
     this.canvasSource = (
-      <canvas ref={this.canvasNode} id="canvas-source" width="640" height="480" />
+      <canvas id="canvas-source" width="640" height="480" />
     );
     this.canvasBlended = (
-      <canvas ref={this.canvasNode} id="canvas-blended" width="640" height="480" />
+      <canvas id="canvas-blended" width="640" height="480" />
     );
     this.video = (
       <video
@@ -32,6 +31,13 @@ class MotionDetection extends React.Component {
         width="640"
       />
     );
+
+    this.state = {
+      contextSource: null,
+      contextBlended: null,
+      timeOut: 0,
+      lastImageData: null
+    }
   }
 
   connectToEasyRTC = () => {
@@ -95,40 +101,53 @@ class MotionDetection extends React.Component {
     connect();
   };
 
-  update = () => {
+  update = async () => {
+    await this.setState({
+      contextSource: document.getElementById('canvas-source').getContext('2d'),
+      contextBlended: document.getElementById('canvas-blended').getContext('2d')
+    });
     this.drawVideo();
-    // this.blend();
+    this.blend();
     // this.checkAreas();
     // window.requestAnimFrame(update);
   };
 
   drawVideo = () => {
-    console.log(this.refs);
-    let video = document.getElementById('selfVideo');
-    let contextSource = document.getElementById('canvas-source').getContext('2d');
+    const video = document.getElementById('selfVideo');
+    const { contextSource } = this.state;
     contextSource.drawImage(video, 0, 0, video.width, video.height);
-    console.log(contextSource.getImageData(0, 0, video.width, video.height));
   };
 
-  /*
   blend = () => {
-    let width = this.canvasSource.width;
-    let height = this.canvasSource.height;
-    let contextSource = this.canvasSource.getContext('2d');
-    let contextBlended = this.canvasBlended.getContext('2d');
+    const { width, height } = this.canvasSource.props;
+    const { contextSource, contextBlended, lastImageData } = this.state;
+    const { differenceAccuracy } = this;
     let sourceData = contextSource.getImageData(0, 0, width, height);
+
 		// create an image if the previous image doesn’t exist
-		if (!lastImageData) lastImageData = this.contextSource.getImageData(0, 0, width, height);
+		if (!lastImageData) this.setState({
+      lastImageData: contextSource.getImageData(0, 0, width, height)
+    });
+
+    console.log('last image data: ', lastImageData);
+
 		// create a ImageData instance to receive the blended result
-		let blendedData = contextSource.createImageData(width, height);
-		// blend the 2 images
+    let blendedData = contextSource.createImageData(width, height);
+
+    console.log('blended data: ', blendedData);
+
+		//blend the 2 images
 		differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
 		// draw the result in a canvas
 		contextBlended.putImageData(blendedData, 0, 0);
 		// store the current webcam image
-		lastImageData = sourceData;
+		this.setState({
+      lastImageData: sourceData
+    });
+    console.log('last image data: ', lastImageData);
   };
 
+  /*
   fastAbs = (value) => {
 		// funky bitwise, equal Math.abs
 		return (value ^ (value >> 31)) - (value >> 31);
