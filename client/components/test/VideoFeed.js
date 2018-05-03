@@ -8,7 +8,7 @@ class VideoFeed extends React.Component {
 
     function connect() {
         console.log('connect');
-        easyrtc.setVideoDims(640, 480);
+        easyrtc.setVideoDims(320, 240);
         easyrtc.setRoomOccupantListener(convertListToButtons);
         easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["callerVideo"], loginSuccess, loginFailure);
     }
@@ -92,9 +92,9 @@ class VideoFeed extends React.Component {
                         <div id="otherClients"></div>
                     </div>
                     <div id="videos">
-                        <video autoPlay="autoplay" className="easyrtcMirror" id="selfVideo" muted="muted" volume="0" ></video>
+                        <video autoPlay="autoplay" className="easyrtcMirror" id="selfVideo" muted="muted" volume="0" height="240" width="320"></video>
                         <div style={{position:'relative', float:'left'}}>
-                        <video autoPlay="autoplay" id="callerVideo"></video>
+                        <video autoPlay="autoplay" id="callerVideo" height="240" width="320"></video>
                         </div>
                         
                     </div>

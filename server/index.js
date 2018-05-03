@@ -110,9 +110,7 @@ if (env === "production") {
     return next();
   };
 
-  app.configure(function () {
-    app.use(forceSsl);
-  });
+  app.use(forceSsl);
 }
 
 db.sync().then(() => {
