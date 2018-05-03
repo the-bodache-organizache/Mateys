@@ -6,13 +6,15 @@ const http = require('http');
 const socketIo = require('socket.io');
 const easyrtc = require('easyrtc');
 
+const env = process.env.NODE_ENV || 'development';
+
 process.title = 'node-easyrtc';
 
 // Start Express http server on port 8080
 const webServer = http.createServer(app);
 
 // Start Socket.io so it attaches itself to Express server
-var socketServer = socketIo.listen(webServer, { 'log level': 1 });
+const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
 easyrtc.setOption('logLevel', 'debug');
 
@@ -91,12 +93,26 @@ easyrtc.events.on('roomJoin', function(
   );
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (env !== 'production') {
   try {
     require('./secrets');
   } catch (err) {
     console.log('No secrets file found - make sure to add one!');
   }
+}
+
+if (env === "production") {
+
+  const forceSsl = function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+    return next();
+  };
+
+  app.configure(function () {
+    app.use(forceSsl);
+  });
 }
 
 db.sync().then(() => {
