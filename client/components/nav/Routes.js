@@ -4,7 +4,7 @@ import { AuthRoute, Login, Signup } from '../auth';
 import Welcome from '../Welcome';
 import { Home } from '../user';
 import { MembersList } from '../members';
-import { MotionDetection, VideoFeed } from '../test';
+import { MotionDetection, VideoFeed, MultiParty } from '../test';
 import NoMatch from './NoMatch';
 
 const Routes = () => (
@@ -15,6 +15,7 @@ const Routes = () => (
       <Route path='/signup' component={Signup} />
       <Route path='/motiondetection' component={ MotionDetection } />
       <Route path='/videofeed' component={ VideoFeed } />
+      <Route path='/multiparty' component={ MultiParty } />
       <AuthRoute path='/home' component={Home} />
       <AuthRoute path='/members' component={MembersList} adminsOnly />
       <Route component={NoMatch} />
