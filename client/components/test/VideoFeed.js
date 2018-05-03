@@ -8,7 +8,7 @@ class VideoFeed extends React.Component {
 
     function connect() {
         console.log('connect');
-        easyrtc.setVideoDims(640, 480);
+        easyrtc.setVideoDims(320, 240);
         easyrtc.setRoomOccupantListener(convertListToButtons);
         easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["callerVideo"], loginSuccess, loginFailure);
     }
