@@ -1,7 +1,26 @@
 import React from 'react';
 
 class MotionDetection extends React.Component {
-
+  constructor() {
+    super();
+    this.canvasSource = (<canvas id="canvas-source" width="640" height="480" />);
+    this.canvasBlended = (
+      <canvas id="canvas-blended" width="640" height="480" />
+    );
+    //this.contextSource = this.canvasSource.getContext('2d');
+    //this.contextBlended = this.canvasBlended.getContext('2d');
+    this.video = (
+      <video
+        autoPlay="autoplay"
+        className="easyrtcMirror"
+        id="selfVideo"
+        muted="muted"
+        volume="0"
+        height="480"
+        width="640"
+      />
+    );
+  }
   connectToEasyRTC = () => {
     var selfEasyrtcid = '';
 
@@ -63,11 +82,23 @@ class MotionDetection extends React.Component {
     connect();
   };
 
-  componentDidMount () {
+  update = () => {
+    this.drawVideo();
+    this.blend();
+    this.checkAreas();
+    window.requestAnimFrame(update);
+  };
+
+  drawVideo = () => {
+    this.contextSource.drawImage(this.video);
+  };
+
+  componentDidMount() {
     this.connectToEasyRTC();
   }
 
   render() {
+    const { canvasSource, canvasBlended, video } = this;
     return (
       <div id="container">
         <div id="header">
@@ -89,19 +120,10 @@ class MotionDetection extends React.Component {
               <div id="otherClients" />
             </div>
             <div id="videos">
-              <div id="self-video-div">
-                <video
-                  autoPlay="autoplay"
-                  className="easyrtcMirror"
-                  id="selfVideo"
-                  muted="muted"
-                  volume="0"
-                  height="480"
-                  width="640"
-                />
-                <canvas id="canvas-source" width="640" height="480" />
-              </div>
-              <canvas id="canvas-blended" width="640" height="480" />
+              <div id="self-video-div">{ video } { canvasSource }</div>
+              {
+                canvasBlended
+              }
               <div style={{ position: 'relative', float: 'left' }}>
                 <video
                   autoPlay="autoplay"
