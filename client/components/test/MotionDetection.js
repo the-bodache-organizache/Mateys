@@ -14,11 +14,13 @@ window.requestAnimFrame = (function(){
 class MotionDetection extends React.Component {
   constructor() {
     super();
-    this.canvasSource = (<canvas id="canvas-source" width="640" height="480" />);
-    this.canvasBlended = (
-      <canvas id="canvas-blended" width="640" height="480" />
+    this.canvasNode = React.createRef();
+    this.canvasSource = (
+      <canvas ref={this.canvasNode} id="canvas-source" width="640" height="480" />
     );
-    
+    this.canvasBlended = (
+      <canvas ref={this.canvasNode} id="canvas-blended" width="640" height="480" />
+    );
     this.video = (
       <video
         autoPlay="autoplay"
@@ -31,6 +33,7 @@ class MotionDetection extends React.Component {
       />
     );
   }
+
   connectToEasyRTC = () => {
     var selfEasyrtcid = '';
 
@@ -94,17 +97,20 @@ class MotionDetection extends React.Component {
 
   update = () => {
     this.drawVideo();
-    this.blend();
-    this.checkAreas();
-    window.requestAnimFrame(update);
+    // this.blend();
+    // this.checkAreas();
+    // window.requestAnimFrame(update);
   };
 
   drawVideo = () => {
-    console.log(this.canvasSource, 'sourcelog')
-    let contextSource = this.canvasSource.getContext('2d');
-    contextSource.drawImage(this.video);
+    console.log(this.refs);
+    let video = document.getElementById('selfVideo');
+    let contextSource = document.getElementById('canvas-source').getContext('2d');
+    contextSource.drawImage(video, 0, 0, video.width, video.height);
+    console.log(contextSource.getImageData(0, 0, video.width, video.height));
   };
 
+  /*
   blend = () => {
     let width = this.canvasSource.width;
     let height = this.canvasSource.height;
@@ -127,11 +133,11 @@ class MotionDetection extends React.Component {
 		// funky bitwise, equal Math.abs
 		return (value ^ (value >> 31)) - (value >> 31);
   };
-  
+
   threshold = (value) => { // return white or black
 		return (value > 0x15) ? 0xFF : 0;
   };
-  
+
   difference = (target, data1, data2) => {
 		// blend mode difference
 		if (data1.length != data2.length) return null;
@@ -144,7 +150,7 @@ class MotionDetection extends React.Component {
 			++i;
 		}
   };
-  
+
   differenceAccuracy = (target, data1, data2) => {
 		if (data1.length != data2.length) return null;
 		let i = 0;
@@ -159,7 +165,7 @@ class MotionDetection extends React.Component {
 			++i;
 		}
   };
-  
+
   checkAreas = () => {
 		// loop over the note areas
 		for (let r=0; r<8; ++r) {
@@ -178,7 +184,8 @@ class MotionDetection extends React.Component {
 				console.log("BING")
 			}
 		}
-	}
+  }
+  */
 
   componentDidMount() {
     this.connectToEasyRTC();
