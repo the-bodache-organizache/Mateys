@@ -44,3 +44,22 @@ nav a:first-child:hover::after {
   height: 40px;
   width: 40px;
 }
+
+#self-video-div {
+  position: relative;
+}
+
+canvas {
+  border: solid 2px red;
+}
+
+#canvas-source {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#self-video-div {
+  height: 480px;
+  width: 640px;
+}
