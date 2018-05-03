@@ -111,7 +111,7 @@ class MotionDetection extends React.Component {
     this.drawVideo();
     this.blend();
     this.checkAreas();
-    window.requestAnimFrame(update());
+    window.requestAnimFrame(this.update);
   };
 
   drawVideo = () => {
@@ -191,9 +191,10 @@ class MotionDetection extends React.Component {
   };
 
   checkAreas = () => {
-		// loop over the note areas
+    // loop over the note areas
+    const video = document.getElementById('selfVideo');
 		for (let r=0; r<8; ++r) {
-			let blendedData = this.contextBlended.getImageData(1/8*r*video.width, 0, video.width/8, 100);
+			let blendedData = this.state.contextBlended.getImageData(1/8*r*video.width, 0, video.width/8, 100);
 			let i = 0;
 			let average = 0;
 			// loop over the pixels
