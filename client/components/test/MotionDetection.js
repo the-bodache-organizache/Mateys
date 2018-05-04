@@ -31,6 +31,9 @@ class MotionDetection extends React.Component {
         width="640"
       />
     );
+    this.testButton = (
+      <button id="test-button"></button>
+    )
 
     this.state = {
       contextSource: null,
@@ -131,12 +134,9 @@ class MotionDetection extends React.Component {
       lastImageData: contextSource.getImageData(0, 0, width, height)
     });
 
-    console.log('last image data: ', lastImageData);
 
 		// create a ImageData instance to receive the blended result
     let blendedData = contextSource.createImageData(width, height);
-
-    console.log('blended data: ', blendedData);
 
 		//blend the 2 images
 		differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
@@ -146,10 +146,9 @@ class MotionDetection extends React.Component {
 		this.setState({
       lastImageData: sourceData
     });
-    console.log('last image data: ', lastImageData);
   };
 
-  
+
   fastAbs = (value) => {
 		// funky bitwise, equal Math.abs
 		return (value ^ (value >> 31)) - (value >> 31);
@@ -173,9 +172,6 @@ class MotionDetection extends React.Component {
   };
 
   differenceAccuracy = (target, data1, data2) => {
-    console.log('target :', target);
-    console.log('data1 :', data1);
-    console.log('data2 :', data2)
 		if (data1.length != data2.length) return null;
 		let i = 0;
 		while (i < (data1.length * 0.25)) {
@@ -210,7 +206,6 @@ class MotionDetection extends React.Component {
 			}
 		}
   }
-  
 
   componentDidMount() {
     this.connectToEasyRTC();
@@ -218,7 +213,7 @@ class MotionDetection extends React.Component {
   }
 
   render() {
-    const { canvasSource, canvasBlended, video } = this;
+    const { canvasSource, canvasBlended, testButton, video } = this;
     return (
       <div id="container">
         <div id="header">
@@ -240,10 +235,12 @@ class MotionDetection extends React.Component {
               <div id="otherClients" />
             </div>
             <div id="videos">
-              <div id="self-video-div">{ video } { canvasSource }</div>
-              {
-                canvasBlended
-              }
+              <div id="self-video-div">
+                { video }
+                { canvasSource }
+                { canvasBlended }
+              </div>
+                { testButton }
               <div style={{ position: 'relative', float: 'left' }}>
                 <video
                   autoPlay="autoplay"

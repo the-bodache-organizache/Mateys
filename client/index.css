@@ -46,6 +46,14 @@ nav a:first-child:hover::after {
 }
 
 #self-video-div {
+  display: flex;
+  height: 480px;
+  width: 640px;
+  -webkit-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  transform: scaleX(-1);
   position: relative;
 }
 
@@ -59,7 +67,15 @@ canvas {
   left: 0;
 }
 
-#self-video-div {
-  height: 480px;
-  width: 640px;
+/* #canvas-blended {
+  visibility: hidden;
+} */
+
+#test-button {
+  width: 100px;
+  height: 100px;
+  border: solid 2px red;
+  position: relative;
+  top: -480px;
+  left: -640px;
 }
