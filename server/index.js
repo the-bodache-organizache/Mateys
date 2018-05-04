@@ -16,6 +16,17 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
+socketServer.on('connection', (socket) => {
+  console.log('A new client has connected!: ', socket.id);
+  socket.on('disconnect', () => {
+    console.log('A client has disconnected!: ', socket.id);
+  })
+  socket.on('press box', (payload) => {
+    console.log(socket.id, payload);
+    socket.broadcast.emit('the box was pressed!', payload);
+  });
+});
+
 easyrtc.setOption('logLevel', 'debug');
 
 // Overriding the default easyrtcAuth listener, only so we can directly access its callback
