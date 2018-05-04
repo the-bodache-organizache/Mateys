@@ -66,16 +66,17 @@ canvas {
   top: 0;
   left: 0;
 }
-
-/* #canvas-blended {
+/*
+ #canvas-blended {
   visibility: hidden;
-} */
-
+} 
+*/
 #test-button {
   width: 100px;
   height: 100px;
   border: solid 2px red;
   position: relative;
   top: -480px;
-  left: -640px;
+  left: -100px;
+  background-color: transparent;
 }

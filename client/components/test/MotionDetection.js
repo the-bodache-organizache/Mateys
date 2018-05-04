@@ -189,7 +189,7 @@ class MotionDetection extends React.Component {
   checkAreas = () => {
     // loop over the note areas
     const video = document.getElementById('selfVideo');
-		for (let r=0; r<8; ++r) {
+		for (let r=0; r<1; ++r) {
 			let blendedData = this.state.contextBlended.getImageData(1/8*r*video.width, 0, video.width/8, 100);
 			let i = 0;
 			let average = 0;
@@ -202,7 +202,7 @@ class MotionDetection extends React.Component {
 			// calculate an average between of the color values of the note area
 			average = Math.round(average / (blendedData.data.length * 0.25));
 			if (average > 10) {
-				console.log("BING")
+				console.log("BING", r)
 			}
 		}
   }
