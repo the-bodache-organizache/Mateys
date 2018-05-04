@@ -12,7 +12,6 @@ class Tyler extends React.Component {
     this.populateList = this.populateList.bind(this);
   }
   componentDidMount () {
-    console.log(easyrtc);
     this.initRTC(this.connectSuccess, this.connectFailure);
   }
 
@@ -27,15 +26,13 @@ class Tyler extends React.Component {
    );
 }
   
-  populateList (roomName, peers) {
-    this.setState({peers});
-    const ids = Object.keys(peers);
-    ids.forEach(id => {this.performCall(id)})
+  async populateList (roomName, peers) {
+    await this.setState({peers});
+    // const ids = Object.keys(peers);
+    // ids.forEach(id => {this.performCall(id)})
   }
 
   connectSuccess (myId) {
-    // console.log("My easyrtcid is " + myId);
-    console.log("in success", this);
     this.setState({myId});
   }
 
@@ -65,12 +62,15 @@ class Tyler extends React.Component {
 
   render () {
     const peersArr = Object.keys(this.state.peers);
-    console.log('peers array', peersArr);
-    console.log("state", this.state)
+    console.log("state", this.state);
     return (
       <div>
         <div id="connected-list" >
-          {peersArr.map((peer, index) => (<div key={index}>{peer}</div>))}
+          {peersArr.map((peer, index) => {
+            return (
+              <button key={index} onClick={() => {this.performCall(peer)}}>{peer}</button>
+            )
+          })}
         </div>
         <h3>My Id is {this.state.myId}</h3>
         <video id="self" width="300" height="200" />
