@@ -16,8 +16,21 @@ class Tyler extends React.Component {
     this.initRTC(this.connectSuccess, this.connectFailure);
   }
 
+  performCall(easyrtcid) {
+    easyrtc.call(
+       easyrtcid,
+       function(easyrtcid) { console.log("completed call to " + easyrtcid);},
+       function(errorCode, errorText) { console.log("err:" + errorText);},
+       function(accepted, bywho) {
+          console.log((accepted?"accepted":"rejected")+ " by " + bywho);
+       }
+   );
+}
+  
   populateList (roomName, peers) {
     this.setState({peers});
+    const ids = Object.keys(peers);
+    ids.forEach(id => {this.performCall(id)})
   }
 
   connectSuccess (myId) {
