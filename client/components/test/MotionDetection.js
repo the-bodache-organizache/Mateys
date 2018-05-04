@@ -14,6 +14,10 @@ window.requestAnimFrame = (function(){
 class MotionDetection extends React.Component {
   constructor() {
     super();
+    this.socket = io(window.location.origin);
+    this.socket.on('the box was pressed!', (payload) => {
+      console.log('the box was pressed!!!!');
+    });
     this.canvasSource = (
       <canvas id="canvas-source" width="640" height="480" />
     );
@@ -202,7 +206,8 @@ class MotionDetection extends React.Component {
 			// calculate an average between of the color values of the note area
 			average = Math.round(average / (blendedData.data.length * 0.25));
 			if (average > 10) {
-				console.log("BING", r)
+        // console.log("BING", r)
+        this.socket.emit('press box', {});
 			}
 		}
   }
@@ -210,8 +215,9 @@ class MotionDetection extends React.Component {
   componentDidMount() {
     this.connectToEasyRTC();
     this.update();
+    
   }
-
+  
   render() {
     const { canvasSource, canvasBlended, testButton, video } = this;
     return (
