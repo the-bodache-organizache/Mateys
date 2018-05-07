@@ -19,8 +19,12 @@ class MotionDetection extends React.Component {
     super();
 
     this.socket = io(window.location.origin);
+    this.socket.emit('request game start');
     this.socket.on('the box was pressed!', payload => {
       console.log('the box was pressed!!!!');
+    });
+    this.socket.on('start game', payload => {
+      console.log('set sail!!!!!');
     });
     this.width = `${Math.floor(window.innerWidth * 0.65)}`;
     this.height = `${Math.floor(window.innerHeight * 0.65)}`;
