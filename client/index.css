@@ -62,15 +62,19 @@ nav a:first-child:hover::after {
 
 canvas {
   border: solid 2px red;
-}
-
-#canvas-source {
   position: absolute;
   top: 0;
   left: 0;
+  visibility: hidden;
 }
 
- /* #canvas-blended {
+/* #canvas-source {
+  position: absolute;
+  top: 0;
+  left: 0;
+} */
+/*
+#canvas-blended {
   visibility: hidden;
 } */
 
@@ -79,7 +83,7 @@ canvas {
   height: 100px;
   border: solid 2px red;
   position: relative;
-  top: -480px;
-  /* left: -100px; */
+  top: 0px;
+  right: 540px;
   background-color: transparent;
 }

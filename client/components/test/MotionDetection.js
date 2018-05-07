@@ -23,8 +23,8 @@ class MotionDetection extends React.Component {
       console.log('the box was pressed!!!!');
     });
 
-    this.width = '640';
-    this.height = '480';
+    this.width = '1280';
+    this.height = '960';
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -47,8 +47,8 @@ class MotionDetection extends React.Component {
       <video
         autoPlay="autoplay"
         id="callerVideo"
-        width={this.width}
-        height={this.height}
+        width={this.width / 4}
+        height={this.height / 4}
       />
     );
 
@@ -153,7 +153,9 @@ class MotionDetection extends React.Component {
 
   checkAreas = () => {
     // loop over the note areas
-    const { width, height } = this;
+    let { width, height } = this;
+    width = +width;
+    height = +height;
     const { contextBlended } = this.state;
     for (let r = 0; r < 1; ++r) {
       let blendedData = contextBlended.getImageData(
@@ -177,7 +179,7 @@ class MotionDetection extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        // console.log("BING", r)
+        console.log("BING")
         this.socket.emit('press box', {});
       }
     }
@@ -185,7 +187,7 @@ class MotionDetection extends React.Component {
 
   componentDidMount() {
     const { width, height } = this;
-    connectToEasyRTC(width, height);
+    connectToEasyRTC(+width, +height);
     this.update();
   }
 
@@ -198,8 +200,8 @@ class MotionDetection extends React.Component {
             {selfVideo}
             {canvasSource}
             {canvasBlended}
+            {testButton}
           </div>
-          {testButton}
           <div style={{ position: 'relative', float: 'left' }}>
             {callerVideo}
           </div>
