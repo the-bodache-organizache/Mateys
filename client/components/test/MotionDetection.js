@@ -1,19 +1,6 @@
 import React from 'react';
 import { connectToEasyRTC } from '../../../scripts/';
 
-window.requestAnimFrame = (function() {
-  return (
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function(callback) {
-      window.setTimeout(callback, 1000 / 60);
-    }
-  );
-})();
-
 class MotionDetection extends React.Component {
   constructor() {
     super();
@@ -80,7 +67,7 @@ class MotionDetection extends React.Component {
     this.drawVideo();
     this.blend();
     this.checkAreas();
-    window.requestAnimFrame(this.update);
+    this.interval = requestAnimationFrame(this.update);
   };
 
   drawVideo = () => {
@@ -209,6 +196,11 @@ class MotionDetection extends React.Component {
     const { width, height } = this;
     connectToEasyRTC(+width, +height);
     this.update();
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.interval);
+    easyrtc.disconnect();
   }
 
   render() {
