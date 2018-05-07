@@ -10,7 +10,7 @@ const Widget = db.define('widget', {
       notEmpty: true
     }
   },
-  commandText: {
+  command: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
