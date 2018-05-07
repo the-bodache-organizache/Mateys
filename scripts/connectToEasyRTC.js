@@ -1,9 +1,9 @@
-export default () => {
+export default (videoWidth, videoHeight) => {
   var selfEasyrtcid = '';
 
   function connect() {
     console.log('connect');
-    easyrtc.setVideoDims(640, 480);
+    easyrtc.setVideoDims(videoWidth, videoHeight);
     easyrtc.setRoomOccupantListener(convertListToButtons);
     easyrtc.easyApp(
       'easyrtc.audioVideoSimple',
