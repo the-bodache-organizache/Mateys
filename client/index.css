@@ -45,8 +45,11 @@ nav a:first-child:hover::after {
   width: 40px;
 }
 
+/* GAME ROOM */
+
 #container {
-  padding-top: 150px;
+  margin: 1em 5em 0 5em;
+  border: solid 2px red;
 }
 
 #self-video-div {
@@ -68,16 +71,6 @@ canvas {
   visibility: hidden;
 }
 
-/* #canvas-source {
-  position: absolute;
-  top: 0;
-  left: 0;
-} */
-/*
-#canvas-blended {
-  visibility: hidden;
-} */
-
 #test-button {
   width: 100px;
   height: 100px;
@@ -86,4 +79,10 @@ canvas {
   top: 0px;
   right: 540px;
   background-color: transparent;
+}
+
+#bottom-panel {
+  display: flex;
+  margin: 1em;
+  justify-content: space-between;
 }

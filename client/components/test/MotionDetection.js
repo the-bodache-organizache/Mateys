@@ -23,8 +23,8 @@ class MotionDetection extends React.Component {
       console.log('the box was pressed!!!!');
     });
 
-    this.width = '1280';
-    this.height = '960';
+    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -202,14 +202,21 @@ class MotionDetection extends React.Component {
             {canvasBlended}
             {testButton}
           </div>
-          <div style={{ position: 'relative', float: 'left' }}>
-            {callerVideo}
-          </div>
-          <div id="connectControls">
-            <div id="iam">Not yet connected...</div>
-            <br />
-            <strong>Connected users:</strong>
-            <div id="otherClients" />
+          <div id="bottom-panel">
+            <div id="score-panel">
+              <h1>Dummy score panel</h1>
+              <h2>Score bar</h2>
+              <h3>Timer?</h3>
+            </div>
+            <div id="connectControls">
+              <div id="iam">Not yet connected...</div>
+              <br />
+              <strong>Connected users:</strong>
+              <div id="otherClients" />
+            </div>
+            <div id="caller-video-div">
+              {callerVideo}
+            </div>
           </div>
         </div>
       </div>
