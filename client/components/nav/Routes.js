@@ -8,19 +8,16 @@ import { MotionDetection, VideoFeed, MultiParty } from '../test';
 import NoMatch from './NoMatch';
 
 const Routes = () => (
-  <div className="fill-xy center-xy column">
-    <Switch>
-      <Route exact path='/' component={Welcome} />
-      <Route path='/login' component={Login} />
-      <Route path='/signup' component={Signup} />
-      <Route path='/motiondetection' component={ MotionDetection } />
-      <Route path='/videofeed' component={ VideoFeed } />
-      <Route path='/multiparty' component={ MultiParty } />
-      <AuthRoute path='/home' component={Home} />
-      <AuthRoute path='/members' component={MembersList} adminsOnly />
-      <Route component={NoMatch} />
-    </Switch>
-  </div>
+  <Switch>
+    <Route exact path='/' component={Welcome} />
+    <Route path='/login' component={Login} />
+    <Route path='/signup' component={Signup} />
+    <Route path='/motiondetection' component={ MotionDetection } />
+    <Route path='/videofeed' component={ VideoFeed } />
+    <AuthRoute path='/home' component={Home} />
+    <AuthRoute path='/members' component={MembersList} adminsOnly />
+    <Route component={NoMatch} />
+  </Switch>
 );
 
 export default Routes;

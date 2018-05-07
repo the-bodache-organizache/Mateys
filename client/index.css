@@ -44,3 +44,45 @@ nav a:first-child:hover::after {
   height: 40px;
   width: 40px;
 }
+
+/* GAME ROOM */
+
+#container {
+  margin: 1em 5em 0 5em;
+  border: solid 2px red;
+}
+
+#self-video-div {
+  display: flex;
+  -webkit-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  transform: scaleX(-1);
+  position: relative;
+  justify-content: center;
+}
+
+canvas {
+  border: solid 2px red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}
+
+#test-button {
+  width: 100px;
+  height: 100px;
+  border: solid 2px red;
+  position: relative;
+  top: 0px;
+  right: 540px;
+  background-color: transparent;
+}
+
+#bottom-panel {
+  display: flex;
+  margin: 1em;
+  justify-content: space-between;
+}
