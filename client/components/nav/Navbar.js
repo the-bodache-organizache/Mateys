@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AuthLink, Logout } from '../auth';
-import { VideoFeed, MotionDetection } from '../test';
+import { VideoFeed, MotionDetection, MultiParty } from '../test';
 
 const Navbar = () => (
   <nav className="row center-y">
@@ -10,6 +10,9 @@ const Navbar = () => (
     </Link>
     <Link to='/videofeed'>
       Video Feed
+    </Link>
+    <Link to='/multiparty'>
+      MultiParty
     </Link>
     <Link to='/motiondetection'>
       Motion Detection

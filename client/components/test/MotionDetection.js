@@ -1,4 +1,5 @@
 import React from 'react';
+import { connectToEasyRTC } from '../../../scripts/';
 
 window.requestAnimFrame = (function() {
   return (
@@ -16,28 +17,40 @@ window.requestAnimFrame = (function() {
 class MotionDetection extends React.Component {
   constructor() {
     super();
+
     this.socket = io(window.location.origin);
     this.socket.on('the box was pressed!', payload => {
       console.log('the box was pressed!!!!');
     });
-    this.socket.on('start game', payload => {
-      console.log('set sail!');
-    });
-    this.canvasSource = <canvas id="canvas-source" width="640" height="480" />;
-    this.canvasBlended = (
-      <canvas id="canvas-blended" width="640" height="480" />
+    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
+    this.canvasSource = (
+      <canvas id="canvas-source" width={this.width} height={this.height} />
     );
-    this.video = (
+    this.canvasBlended = (
+      <canvas id="canvas-blended" width={this.width} height={this.height} />
+    );
+
+    this.selfVideo = (
       <video
         autoPlay="autoplay"
         className="easyrtcMirror"
         id="selfVideo"
         muted="muted"
         volume="0"
-        height="480"
-        width="640"
+        width={this.width}
+        height={this.height}
       />
     );
+    this.callerVideo = (
+      <video
+        autoPlay="autoplay"
+        id="callerVideo"
+        width={this.width / 4}
+        height={this.height / 4}
+      />
+    );
+
     this.testButton = <button id="test-button" />;
 
     this.state = {
@@ -49,67 +62,6 @@ class MotionDetection extends React.Component {
       }
     };
   }
-
-  connectToEasyRTC = () => {
-    var selfEasyrtcid = '';
-
-    function connect() {
-      console.log('connect');
-      easyrtc.setVideoDims(640, 480);
-      easyrtc.setRoomOccupantListener(convertListToButtons);
-      easyrtc.easyApp(
-        'easyrtc.audioVideoSimple',
-        'selfVideo',
-        ['callerVideo'],
-        loginSuccess,
-        loginFailure
-      );
-    }
-
-    function clearConnectList() {
-      var otherClientDiv = document.getElementById('otherClients');
-      while (otherClientDiv.hasChildNodes()) {
-        otherClientDiv.removeChild(otherClientDiv.lastChild);
-      }
-    }
-
-    function convertListToButtons(roomName, data, isPrimary) {
-      clearConnectList();
-      var otherClientDiv = document.getElementById('otherClients');
-      for (var easyrtcid in data) {
-        var button = document.createElement('button');
-        button.onclick = (function(easyrtcid) {
-          return function() {
-            performCall(easyrtcid);
-          };
-        })(easyrtcid);
-
-        var label = document.createTextNode(easyrtc.idToName(easyrtcid));
-        button.appendChild(label);
-        otherClientDiv.appendChild(button);
-      }
-    }
-
-    function performCall(otherEasyrtcid) {
-      easyrtc.hangupAll();
-
-      var successCB = function() {};
-      var failureCB = function() {};
-      easyrtc.call(otherEasyrtcid, successCB, failureCB);
-    }
-
-    function loginSuccess(easyrtcid) {
-      selfEasyrtcid = easyrtcid;
-      document.getElementById('iam').innerHTML =
-        'I am ' + easyrtc.cleanId(easyrtcid);
-    }
-
-    function loginFailure(errorCode, message) {
-      easyrtc.showError(errorCode, message);
-    }
-
-    connect();
-  };
 
   update = async () => {
     await this.setState({
@@ -129,15 +81,14 @@ class MotionDetection extends React.Component {
   };
 
   blend = () => {
-    const { width, height } = this.canvasSource.props;
+    const { width, height, differenceAccuracy } = this;
     const { contextSource, contextBlended, lastImageData } = this.state;
-    const { differenceAccuracy } = this;
     let sourceData = contextSource.getImageData(0, 0, width, height);
 
     // create an image if the previous image doesn’t exist
     if (!lastImageData)
       this.setState({
-        lastImageData: contextSource.getImageData(0, 0, width, height)
+        lastImageData: sourceData
       });
 
     // create a ImageData instance to receive the blended result
@@ -200,12 +151,15 @@ class MotionDetection extends React.Component {
 
   checkAreas = () => {
     // loop over the note areas
-    const video = document.getElementById('selfVideo');
+    let { width, height } = this;
+    width = +width;
+    height = +height;
+    const { contextBlended } = this.state;
     for (let r = 0; r < 1; ++r) {
-      let blendedData = this.state.contextBlended.getImageData(
-        1 / 8 * r * video.width,
+      let blendedData = contextBlended.getImageData(
+        1 / 8 * r * width,
         0,
-        video.width / 8,
+        width / 8,
         100
       );
       let i = 0;
@@ -223,54 +177,43 @@ class MotionDetection extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        // console.log("BING", r)
+        console.log("BING")
         this.socket.emit('press box', {});
       }
     }
   };
 
   componentDidMount() {
-    this.connectToEasyRTC();
+    const { width, height } = this;
+    connectToEasyRTC(+width, +height);
     this.update();
   }
 
   render() {
-    const { canvasSource, canvasBlended, testButton, video } = this;
+    const { canvasSource, canvasBlended, testButton, selfVideo, callerVideo } = this;
     return (
       <div id="container">
-        <div id="header">
-          <a href="index.html">
-            <img
-              id="logo_easyrtc"
-              src="images/easyrtc_logo.png"
-              alt="EasyRTC"
-            />
-          </a>
-        </div>
-        <div id="main">
-          <h2>The Demo</h2>
-          <div id="demoContainer">
+        <div id="videos">
+          <div id="self-video-div">
+            {selfVideo}
+            {canvasSource}
+            {canvasBlended}
+            {testButton}
+          </div>
+          <div id="bottom-panel">
+            <div id="score-panel">
+              <h1>Dummy score panel</h1>
+              <h2>Score bar</h2>
+              <h3>Timer?</h3>
+            </div>
             <div id="connectControls">
               <div id="iam">Not yet connected...</div>
               <br />
               <strong>Connected users:</strong>
               <div id="otherClients" />
             </div>
-            <div id="videos">
-              <div id="self-video-div">
-                {video}
-                {canvasSource}
-                {canvasBlended}
-              </div>
-              {testButton}
-              <div style={{ position: 'relative', float: 'left' }}>
-                <video
-                  autoPlay="autoplay"
-                  id="callerVideo"
-                  height="480"
-                  width="640"
-                />
-              </div>
+            <div id="caller-video-div">
+              {callerVideo}
             </div>
           </div>
         </div>
