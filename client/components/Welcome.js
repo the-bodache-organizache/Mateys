@@ -1,7 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Welcome = () => {
-  return <h1>Welcome to Appy McAppFace!</h1>;
+  return (
+    <div id="welcome">
+      <Link to='/motiondetection'>
+        <h1>Game Room</h1>
+      </Link>
+    </div>
+  );
 };
 
 export default Welcome;
