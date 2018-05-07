@@ -23,8 +23,8 @@ class MotionDetection extends React.Component {
       console.log('the box was pressed!!!!');
     });
 
-    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
+    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -200,7 +200,6 @@ class MotionDetection extends React.Component {
             {selfVideo}
             {canvasSource}
             {canvasBlended}
-            {testButton}
           </div>
           <div id="bottom-panel">
             <div id="score-panel">

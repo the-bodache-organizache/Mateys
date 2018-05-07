@@ -8,7 +8,7 @@ import { me } from '../store/user';
 
 const Main = () => {
   return (
-    <div id="main" className="fill-xy column">
+    <div id="main">
       <Navbar />
       <Routes />
     </div>
