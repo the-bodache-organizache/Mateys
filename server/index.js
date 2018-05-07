@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 8080;
 const http = require('http');
 const socketIo = require('socket.io');
 const easyrtc = require('easyrtc');
+const Game = require('./game');
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -16,14 +17,35 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
-socketServer.on('connection', (socket) => {
-  console.log('A new client has connected!: ', socket.id);
+let players = [];
+
+socketServer.on('connection', socket => {
+  
+  // console.log(players.length);
   socket.on('disconnect', () => {
     console.log('A client has disconnected!: ', socket.id);
-  })
-  socket.on('press box', (payload) => {
+  });
+  socket.on('press box', payload => {
     console.log(socket.id, payload);
     socket.broadcast.emit('the box was pressed!', payload);
+  });
+
+  socket.on('request game start', () => {
+    console.log('Another client has connected!: ', socket.id);
+    players.push(socket);
+    if (players.length >= 2) {
+      players[0].emit('notify player one', {
+        numPlayers: players.length
+      });
+      socket.emit('set sail');
+      socket.broadcast.emit('set sail');
+      const game = new Game(players);
+      game.play();
+    }
+    socket.on('disconnect', () => {
+      players = players.filter(player => player.id !== socket.id);
+      console.log(players.length);
+    });
   });
 });
 
@@ -112,11 +134,10 @@ if (env !== 'production') {
   }
 }
 
-if (env === "production") {
-
-  const forceSsl = function (req, res, next) {
+if (env === 'production') {
+  const forceSsl = function(req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
     }
     return next();
   };

@@ -6,12 +6,19 @@ class MotionDetection extends React.Component {
     super();
 
     this.socket = io(window.location.origin);
+    this.socket.emit('request game start');
     this.socket.on('the box was pressed!', payload => {
       console.log('the box was pressed!!!!');
     });
-
-    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
+    this.socket.on('set sail', payload => {
+      console.log('set sail!!!!!');
+    });
+    this.socket.on('notify player one', payload => {
+      console.log('notify player one', payload);
+      this.setState({ isPlayerOne: true });
+    })
+    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -45,6 +52,7 @@ class MotionDetection extends React.Component {
       contextSource: null,
       contextBlended: null,
       timeOut: 0,
+      isPlayerOne: false,
       lastImageData: {
         data: []
       },
@@ -94,7 +102,6 @@ class MotionDetection extends React.Component {
     differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
     // draw the result in a canvas
     contextBlended.putImageData(blendedData, 0, 0);
-
     // store the current webcam image
     this.setState({
       lastImageData: sourceData
