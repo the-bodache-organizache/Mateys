@@ -23,9 +23,13 @@ class MotionDetection extends React.Component {
     this.socket.on('the box was pressed!', payload => {
       console.log('the box was pressed!!!!');
     });
-    this.socket.on('start game', payload => {
+    this.socket.on('set sail', payload => {
       console.log('set sail!!!!!');
     });
+    this.socket.on('notify player one', payload => {
+      console.log('notify player one', payload);
+      this.setState({ isPlayerOne: true });
+    })
     this.width = `${Math.floor(window.innerWidth * 0.65)}`;
     this.height = `${Math.floor(window.innerHeight * 0.65)}`;
     this.canvasSource = (
@@ -61,6 +65,7 @@ class MotionDetection extends React.Component {
       contextSource: null,
       contextBlended: null,
       timeOut: 0,
+      isPlayerOne: false,
       lastImageData: {
         data: []
       }
