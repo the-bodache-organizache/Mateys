@@ -16,11 +16,18 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
+let players = [];
+
 socketServer.on('connection', (socket) => {
   console.log('A new client has connected!: ', socket.id);
+  players.push(socket);
+  if (players.length === 2) {
+    socket.emit('start game', {});
+  }
   socket.on('disconnect', () => {
     console.log('A client has disconnected!: ', socket.id);
-  })
+    players = players.filter(player => player.id !== socket.id);
+  });
   socket.on('press box', (payload) => {
     console.log(socket.id, payload);
     socket.broadcast.emit('the box was pressed!', payload);
