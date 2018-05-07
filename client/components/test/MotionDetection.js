@@ -23,8 +23,8 @@ class MotionDetection extends React.Component {
       console.log('the box was pressed!!!!');
     });
 
-    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
+    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -157,13 +157,15 @@ class MotionDetection extends React.Component {
     width = +width;
     height = +height;
     const { contextBlended } = this.state;
-    for (let r = 0; r < 1; ++r) {
-      let blendedData = contextBlended.getImageData(
-        1 / 8 * r * width,
-        0,
-        width / 8,
-        100
-      );
+    for (let r = 0; r < 3; ++r) {
+      let sx = 0,
+          sy = 1 / 3 * r * height,
+          sw = 50,
+          sh = height * .3
+      if (r >= 1) {
+        sy = (1 / 3 * r * height) + (height * .05);
+      }
+      let blendedData = contextBlended.getImageData(sx, sy, sw, sh);
       let i = 0;
       let average = 0;
       // loop over the pixels
@@ -179,7 +181,35 @@ class MotionDetection extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        console.log("BING")
+        console.log("BING", r)
+        this.socket.emit('press box', {});
+      }
+    }
+    for (let r = 3; r < 6; ++r) {
+      let sx = width - 50,
+          sy = 1 / 3 * (r - 3) * height,
+          sw = 50,
+          sh = height * .3
+      if (r >= 4) {
+        sy = (1 / 3 * (r - 3) * height) + (height * .05);
+      }
+      let blendedData = contextBlended.getImageData(sx, sy, sw, sh);
+      let i = 0;
+      let average = 0;
+      // loop over the pixels
+      while (i < blendedData.data.length * 0.25) {
+        // make an average between the color channel
+        average +=
+          (blendedData.data[i * 4] +
+            blendedData.data[i * 4 + 1] +
+            blendedData.data[i * 4 + 2]) /
+          3;
+        ++i;
+      }
+      // calculate an average between of the color values of the note area
+      average = Math.round(average / (blendedData.data.length * 0.25));
+      if (average > 10) {
+        console.log("BING", r)
         this.socket.emit('press box', {});
       }
     }
@@ -200,7 +230,6 @@ class MotionDetection extends React.Component {
             {selfVideo}
             {canvasSource}
             {canvasBlended}
-            {testButton}
           </div>
           <div id="bottom-panel">
             <div id="score-panel">
