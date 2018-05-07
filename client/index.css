@@ -1,7 +1,11 @@
 #app {
-  height: 100%;
-  margin: 0;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 form {
@@ -9,47 +13,34 @@ form {
   min-width: 50%;
 }
 
-nav {
-  height: 80px;
-}
-
-nav a {
-  margin: 0 1em;
-}
-
-nav a {
-  text-decoration: none;
-  color: rgb(82, 103, 225);
-}
-
-nav a::after {
-  background-color: rgb(82, 103, 225);
-  content: '';
-  display: block;
-  height: 2px;
-  transition: width 0.3s;
-  width: 0;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-nav a:first-child:hover::after {
-  width: 0;
+#main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #logo {
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
+  padding: 1em;
+}
+
+#welcome {
+  background-image: url("/parchment.png");
+  background-repeat: no-repeat;
+  background-size: 45em 100%;
+  width: 45em;
+  height: 40em;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* GAME ROOM */
 
 #container {
-  margin: 1em 5em 0 5em;
-  border: solid 2px red;
+  width: 75vw;
+  margin: 0 5em;
 }
 
 #self-video-div {
@@ -61,6 +52,11 @@ nav a:first-child:hover::after {
   transform: scaleX(-1);
   position: relative;
   justify-content: center;
+}
+
+video {
+  border: solid 5px black;
+  background-color: black;
 }
 
 canvas {
@@ -85,4 +81,5 @@ canvas {
   display: flex;
   margin: 1em;
   justify-content: space-between;
+  background-color: sandybrown;
 }

@@ -4,33 +4,11 @@ import { AuthLink, Logout } from '../auth';
 import { VideoFeed, MotionDetection, MultiParty } from '../test';
 
 const Navbar = () => (
-  <nav className="row center-y">
+  <div className="navbar">
     <Link to="/">
-      <img id="logo" src="/favicon.ico" />
+      <img id="logo" src="/mateys.png" />
     </Link>
-    <Link to='/videofeed'>
-      Video Feed
-    </Link>
-    <Link to='/multiparty'>
-      MultiParty
-    </Link>
-    <Link to='/motiondetection'>
-      Motion Detection
-    </Link>
-    <AuthLink to="/login" guestsOnly>
-      Login
-    </AuthLink>
-    <AuthLink to="/signup" guestsOnly>
-      Signup
-    </AuthLink>
-    <AuthLink to="/home">Home</AuthLink>
-    <AuthLink to="/members" adminsOnly>
-      Members
-    </AuthLink>
-    <AuthLink to="/">
-      <Logout />
-    </AuthLink>
-  </nav>
+  </div>
 );
 
 export default Navbar;
