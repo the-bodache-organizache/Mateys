@@ -23,8 +23,8 @@ class MotionDetection extends React.Component {
       console.log('the box was pressed!!!!');
     });
 
-    this.width = '640';
-    this.height = '480';
+    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
@@ -47,8 +47,8 @@ class MotionDetection extends React.Component {
       <video
         autoPlay="autoplay"
         id="callerVideo"
-        width={this.width}
-        height={this.height}
+        width={this.width / 4}
+        height={this.height / 4}
       />
     );
 
@@ -153,7 +153,9 @@ class MotionDetection extends React.Component {
 
   checkAreas = () => {
     // loop over the note areas
-    const { width, height } = this;
+    let { width, height } = this;
+    width = +width;
+    height = +height;
     const { contextBlended } = this.state;
     for (let r = 0; r < 1; ++r) {
       let blendedData = contextBlended.getImageData(
@@ -177,7 +179,7 @@ class MotionDetection extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        // console.log("BING", r)
+        console.log("BING")
         this.socket.emit('press box', {});
       }
     }
@@ -185,7 +187,7 @@ class MotionDetection extends React.Component {
 
   componentDidMount() {
     const { width, height } = this;
-    connectToEasyRTC(width, height);
+    connectToEasyRTC(+width, +height);
     this.update();
   }
 
@@ -198,16 +200,23 @@ class MotionDetection extends React.Component {
             {selfVideo}
             {canvasSource}
             {canvasBlended}
+            {testButton}
           </div>
-          {testButton}
-          <div style={{ position: 'relative', float: 'left' }}>
-            {callerVideo}
-          </div>
-          <div id="connectControls">
-            <div id="iam">Not yet connected...</div>
-            <br />
-            <strong>Connected users:</strong>
-            <div id="otherClients" />
+          <div id="bottom-panel">
+            <div id="score-panel">
+              <h1>Dummy score panel</h1>
+              <h2>Score bar</h2>
+              <h3>Timer?</h3>
+            </div>
+            <div id="connectControls">
+              <div id="iam">Not yet connected...</div>
+              <br />
+              <strong>Connected users:</strong>
+              <div id="otherClients" />
+            </div>
+            <div id="caller-video-div">
+              {callerVideo}
+            </div>
           </div>
         </div>
       </div>
