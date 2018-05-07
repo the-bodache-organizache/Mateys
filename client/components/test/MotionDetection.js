@@ -17,8 +17,8 @@ class MotionDetection extends React.Component {
       console.log('notify player one', payload);
       this.setState({ isPlayerOne: true });
     })
-    this.width = `${Math.floor(window.innerWidth * 0.65)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.65)}`;
+    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
+    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
     this.canvasSource = (
       <canvas id="canvas-source" width={this.width} height={this.height} />
     );
