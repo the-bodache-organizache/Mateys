@@ -1,19 +1,6 @@
 import React from 'react';
 import { connectToEasyRTC } from '../../../scripts/';
 
-window.requestAnimFrame = (function() {
-  return (
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function(callback) {
-      window.setTimeout(callback, 1000 / 60);
-    }
-  );
-})();
-
 class MotionDetection extends React.Component {
   constructor() {
     super();
@@ -60,7 +47,15 @@ class MotionDetection extends React.Component {
       timeOut: 0,
       lastImageData: {
         data: []
-      }
+      },
+      widgets: [
+        null,
+        null,
+        { name: 'cannon', command: 'The cannon needs to be loaded!' },
+        null,
+        { name: 'poopDeck', command: 'Quickly, Swab the poop deck!' },
+        null
+      ]
     };
   }
 
@@ -72,7 +67,7 @@ class MotionDetection extends React.Component {
     this.drawVideo();
     this.blend();
     this.checkAreas();
-    window.requestAnimFrame(this.update);
+    this.interval = requestAnimationFrame(this.update);
   };
 
   drawVideo = () => {
@@ -157,41 +152,20 @@ class MotionDetection extends React.Component {
     width = +width;
     height = +height;
     const { contextBlended } = this.state;
-    for (let r = 0; r < 3; ++r) {
+    for (let r = 0; r < 6; ++r) {
       let sx = 0,
-          sy = 1 / 3 * r * height,
-          sw = 50,
-          sh = height * .3
+        sy = 1 / 3 * r * height,
+        sw = 50,
+        sh = height * 0.3;
       if (r >= 1) {
-        sy = (1 / 3 * r * height) + (height * .05);
+        sy = 1 / 3 * r * height + height * 0.05;
       }
-      let blendedData = contextBlended.getImageData(sx, sy, sw, sh);
-      let i = 0;
-      let average = 0;
-      // loop over the pixels
-      while (i < blendedData.data.length * 0.25) {
-        // make an average between the color channel
-        average +=
-          (blendedData.data[i * 4] +
-            blendedData.data[i * 4 + 1] +
-            blendedData.data[i * 4 + 2]) /
-          3;
-        ++i;
+      if (r >= 3) {
+        sx = width - 50;
+        sy = 1 / 3 * (r - 3) * height;
       }
-      // calculate an average between of the color values of the note area
-      average = Math.round(average / (blendedData.data.length * 0.25));
-      if (average > 10) {
-        console.log("BING", r)
-        this.socket.emit('press box', {});
-      }
-    }
-    for (let r = 3; r < 6; ++r) {
-      let sx = width - 50,
-          sy = 1 / 3 * (r - 3) * height,
-          sw = 50,
-          sh = height * .3
       if (r >= 4) {
-        sy = (1 / 3 * (r - 3) * height) + (height * .05);
+        sy = 1 / 3 * (r - 3) * height + height * 0.05;
       }
       let blendedData = contextBlended.getImageData(sx, sy, sw, sh);
       let i = 0;
@@ -209,8 +183,11 @@ class MotionDetection extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        console.log("BING", r)
-        this.socket.emit('press box', {});
+        let widget = this.state.widgets[r];
+        if (widget) {
+          console.log(widget.name);
+          this.socket.emit('press box', widget);
+        }
       }
     }
   };
@@ -221,15 +198,62 @@ class MotionDetection extends React.Component {
     this.update();
   }
 
+  componentWillUnmount() {
+    cancelAnimationFrame(this.interval);
+    easyrtc.disconnect();
+  }
+
   render() {
-    const { canvasSource, canvasBlended, testButton, selfVideo, callerVideo } = this;
+    const {
+      canvasSource,
+      canvasBlended,
+      testButton,
+      selfVideo,
+      callerVideo,
+      width,
+      height
+    } = this;
+
+    const container = {
+      width
+    }
+
+    const widgetStyle = {
+      height: +height * 0.3,
+      margin: +height * 0.025
+    }
+
+    const rightWidgets = {
+      right: +width - 75
+    }
+
+    const leftWidgets = {
+      right: 0
+    }
+
     return (
       <div id="container">
         <div id="videos">
-          <div id="self-video-div">
+          <div id="self-video-div" style={container}>
             {selfVideo}
             {canvasSource}
             {canvasBlended}
+            <div id="right-widgets" style={rightWidgets}>
+              <div id="widget" style={widgetStyle}>
+              </div>
+              <div id="widget" style={widgetStyle}>
+              </div>
+              <div id="widget" style={widgetStyle}>
+              </div>
+            </div>
+            <div id="left-widgets" style={leftWidgets}>
+              <div id="widget" style={widgetStyle}>
+              </div>
+              <div id="widget" style={widgetStyle}>
+              </div>
+              <div id="widget" style={widgetStyle}>
+              </div>
+            </div>
           </div>
           <div id="bottom-panel">
             <div id="score-panel">
@@ -243,9 +267,7 @@ class MotionDetection extends React.Component {
               <strong>Connected users:</strong>
               <div id="otherClients" />
             </div>
-            <div id="caller-video-div">
-              {callerVideo}
-            </div>
+            <div id="caller-video-div">{callerVideo}</div>
           </div>
         </div>
       </div>

@@ -39,7 +39,6 @@ form {
 /* GAME ROOM */
 
 #container {
-  width: 75vw;
   margin: 0 5em;
 }
 
@@ -67,19 +66,25 @@ canvas {
   visibility: hidden;
 }
 
-#test-button {
-  width: 100px;
-  height: 100px;
-  border: solid 2px red;
-  position: relative;
-  top: 0px;
-  right: 540px;
-  background-color: transparent;
-}
-
 #bottom-panel {
   display: flex;
   margin: 1em;
   justify-content: space-between;
   background-color: sandybrown;
+}
+
+/* WIDGETS */
+#widget {
+  width: 50px;
+  background-color: white;
+  opacity: 0.6;
+  border: solid 2px red;
+}
+
+#right-widgets {
+  position: absolute;
+}
+
+#left-widgets {
+  position: absolute;
 }
