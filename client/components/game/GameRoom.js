@@ -101,26 +101,6 @@ class GameRoom extends React.Component {
     return value > 0x15 ? 0xff : 0;
   };
 
-  difference = (target, data1, data2) => {
-    // blend mode difference
-    if (data1.length != data2.length) return null;
-    let i = 0;
-    while (i < data1.length * 0.25) {
-      target[4 * i] =
-        data1[4 * i] == 0 ? 0 : fastAbs(data1[4 * i] - data2[4 * i]);
-      target[4 * i + 1] =
-        data1[4 * i + 1] == 0
-          ? 0
-          : fastAbs(data1[4 * i + 1] - data2[4 * i + 1]);
-      target[4 * i + 2] =
-        data1[4 * i + 2] == 0
-          ? 0
-          : fastAbs(data1[4 * i + 2] - data2[4 * i + 2]);
-      target[4 * i + 3] = 0xff;
-      ++i;
-    }
-  };
-
   differenceAccuracy = (target, data1, data2) => {
     if (data1.length != data2.length) return null;
     let i = 0;
