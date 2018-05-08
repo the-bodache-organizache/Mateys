@@ -20,11 +20,17 @@ class GameRoom extends React.Component {
     this.socket.on('notify player one', payload => {
       console.log('notify player one', payload);
       this.setState({ isPlayerOne: true });
+      
     });
     this.socket.on('send player widgets', widgets => {
       console.log('sent the widgets!', widgets)
       this.setState({ widgets })
     })
+
+    this.socket.on('game over', () => {
+      console.log('gaaaaaame over!!!');
+    });
+
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;

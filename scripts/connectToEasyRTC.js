@@ -4,7 +4,7 @@ export default (videoWidth, videoHeight) => {
   function connect() {
     console.log('connect');
     easyrtc.setVideoDims(videoWidth, videoHeight);
-    easyrtc.setRoomOccupantListener(convertListToButtons);
+    easyrtc.setRoomOccupantListener(forceCall);
     easyrtc.easyApp(
       'easyrtc.audioVideoSimple',
       'selfVideo',
@@ -21,20 +21,10 @@ export default (videoWidth, videoHeight) => {
     }
   }
 
-  function convertListToButtons(roomName, data, isPrimary) {
+  function forceCall(roomName, data, isPrimary) {
     clearConnectList();
-    var otherClientDiv = document.getElementById('otherClients');
     for (var easyrtcid in data) {
-      var button = document.createElement('button');
-      button.onclick = (function(easyrtcid) {
-        return function() {
-          performCall(easyrtcid);
-        };
-      })(easyrtcid);
-
-      var label = document.createTextNode(easyrtc.idToName(easyrtcid));
-      button.appendChild(label);
-      otherClientDiv.appendChild(button);
+      performCall(easyrtcid);
     }
   }
 
