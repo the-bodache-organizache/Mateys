@@ -16,7 +16,8 @@ class MotionDetection extends React.Component {
     this.socket.on('notify player one', payload => {
       console.log('notify player one', payload);
       this.setState({ isPlayerOne: true });
-    })
+    });
+
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
     this.canvasSource = (
@@ -25,28 +26,6 @@ class MotionDetection extends React.Component {
     this.canvasBlended = (
       <canvas id="canvas-blended" width={this.width} height={this.height} />
     );
-
-    this.selfVideo = (
-      <video
-        autoPlay="autoplay"
-        className="easyrtcMirror"
-        id="selfVideo"
-        muted="muted"
-        volume="0"
-        width={this.width}
-        height={this.height}
-      />
-    );
-    this.callerVideo = (
-      <video
-        autoPlay="autoplay"
-        id="callerVideo"
-        width={this.width / 4}
-        height={this.height / 4}
-      />
-    );
-
-    this.testButton = <button id="test-button" />;
 
     this.state = {
       contextSource: null,
@@ -215,51 +194,51 @@ class MotionDetection extends React.Component {
       canvasSource,
       canvasBlended,
       testButton,
-      selfVideo,
-      callerVideo,
       width,
       height
     } = this;
 
     const container = {
       width
-    }
+    };
 
     const widgetStyle = {
       height: +height * 0.3,
       margin: +height * 0.025
-    }
+    };
 
     const rightWidgets = {
       right: +width - 75
-    }
+    };
 
     const leftWidgets = {
       right: 0
-    }
+    };
 
     return (
       <div id="container">
         <div id="videos">
           <div id="self-video-div" style={container}>
-            {selfVideo}
+            <video
+              autoPlay="autoplay"
+              className="easyrtcMirror"
+              id="selfVideo"
+              muted="muted"
+              volume="0"
+              width={width}
+              height={height}
+            />
             {canvasSource}
             {canvasBlended}
             <div id="right-widgets" style={rightWidgets}>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
+              <div id="widget" style={widgetStyle} />
+              <div id="widget" style={widgetStyle} />
+              <div id="widget" style={widgetStyle} />
             </div>
             <div id="left-widgets" style={leftWidgets}>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
+              <div id="widget" style={widgetStyle} />
+              <div id="widget" style={widgetStyle} />
+              <div id="widget" style={widgetStyle} />
             </div>
           </div>
           <div id="bottom-panel">
@@ -274,7 +253,14 @@ class MotionDetection extends React.Component {
               <strong>Connected users:</strong>
               <div id="otherClients" />
             </div>
-            <div id="caller-video-div">{callerVideo}</div>
+            <div id="caller-video-div">
+              <video
+                autoPlay="autoplay"
+                id="callerVideo"
+                width={width / 4}
+                height={height / 4}
+              />
+            </div>
           </div>
         </div>
       </div>
