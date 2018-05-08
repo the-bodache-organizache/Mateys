@@ -20,7 +20,7 @@ class Game {
       }
     }
     this.widgets = chosenWidgetIdxs.map(i => widgets[i].dataValues);
-    console.log(this.widgets);
+    //console.log(this.widgets);
   }
   
   sendWidgets() {
