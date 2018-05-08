@@ -39,8 +39,6 @@ class GameRoom extends React.Component {
       this.props.getWidgets(newWidgets);
     });
 
-    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
     this.canvasSourceRef = React.createRef();
     this.canvasBlendedRef = React.createRef();
     this.videoRef = React.createRef();
@@ -61,15 +59,14 @@ class GameRoom extends React.Component {
   };
 
   drawVideo = () => {
-    const { width, height } = this;
-    const { contextSource, video } = this.props;
+    const { width, height, contextSource, video } = this.props;
     contextSource.drawImage(video, 0, 0, width, height);
   };
 
   blend = () => {
-    const { width, height, differenceAccuracy } = this;
+    const { differenceAccuracy } = this;
     const { lastImageData } = this.state;
-    const { contextSource, contextBlended } = this.props;
+    const { width, height, contextSource, contextBlended } = this.props;
     let sourceData = contextSource.getImageData(0, 0, width, height);
 
     // create an image if the previous image doesn’t exist
@@ -118,10 +115,10 @@ class GameRoom extends React.Component {
 
   checkAreas = () => {
     // loop over the note areas
-    let { width, height } = this;
+    const { contextBlended } = this.props;
+    let { width, height } = this.props;
     width = +width;
     height = +height;
-    const { contextBlended } = this.props;
     for (let r = 0; r < 6; ++r) {
       let sx = 0,
         sy = 1 / 3 * r * height,
@@ -163,8 +160,8 @@ class GameRoom extends React.Component {
   };
 
   async componentDidMount() {
-    const { width, height, canvasSourceRef, canvasBlendedRef, videoRef } = this;
-    const { getContextSource, getContextBlended, getVideo } = this.props;
+    const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
+    const { width, height, getContextSource, getContextBlended, getVideo } = this.props;
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
@@ -181,14 +178,14 @@ class GameRoom extends React.Component {
   }
 
   render() {
-    const { width, height, canvasSourceRef, canvasBlendedRef, videoRef } = this;
+    const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     return (
       <div id="game">
-        <SelfVideo width={width} height={height} canvasSourceRef={canvasSourceRef} canvasBlendedRef={canvasBlendedRef} videoRef={videoRef} />
+        <SelfVideo canvasSourceRef={canvasSourceRef} canvasBlendedRef={canvasBlendedRef} videoRef={videoRef} />
         <div id="bottom-panel">
           <ScorePanel />
           <ConnectControls />
-          <CallerVideo width={width} height={height} />
+          <CallerVideo />
         </div>
       </div>
     );
@@ -207,6 +204,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
   widgets: state.widgets,
+  width: state.motionDetection.dimensions.width,
+  height: state.motionDetection.dimensions.height,
   contextSource: state.motionDetection.contextSource,
   contextBlended: state.motionDetection.contextBlended,
   video: state.motionDetection.video

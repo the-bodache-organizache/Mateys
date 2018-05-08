@@ -18,7 +18,9 @@ const Widget = props => {
 };
 
 const mapStateToProps = state => ({
-  widgets: state.widgets
+  widgets: state.widgets,
+  width: state.motionDetection.dimensions.width,
+  height: state.motionDetection.dimensions.height
 });
 
 export default connect(mapStateToProps)(Widget);

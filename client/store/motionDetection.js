@@ -1,12 +1,25 @@
+const GET_DIMENSIONS = 'GET_DIMENSIONS';
 const GET_CONTEXT_SOURCE = 'GET_CONTEXT_SOURCE';
 const GET_CONTEXT_BLENDED = 'GET_CONTEXT_BLENDED';
 const GET_VIDEO = 'GET_VIDEO';
 
 const initialState = {
+  dimensions: {
+    width: 0,
+    height: 0
+  },
   contextSource: null,
   contextBlended: null,
   video: null
 }
+
+export const getDimensions = (width, height) => ({
+  type: GET_DIMENSIONS,
+  dimensions: {
+    width,
+    height
+  }
+});
 
 export const getContextSource = (contextSource) => ({
   type: GET_CONTEXT_SOURCE,
@@ -25,6 +38,11 @@ export const getVideo = (video) => ({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_DIMENSIONS:
+      return {
+        ...state,
+        dimensions: action.dimensions
+      }
     case GET_CONTEXT_SOURCE:
       return {
         ...state,
