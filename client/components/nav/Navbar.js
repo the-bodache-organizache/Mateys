@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AuthLink, Logout } from '../auth';
-import { VideoFeed, MotionDetection, MultiParty } from '../test';
 
 const Navbar = () => (
   <div className="navbar">

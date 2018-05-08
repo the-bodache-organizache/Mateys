@@ -1,7 +1,11 @@
 import React from 'react';
-import { connectToEasyRTC } from '../../../scripts/';
+import SelfVideo from './SelfVideo';
+import ScorePanel from './ScorePanel';
+import ConnectControls from './ConnectControls';
+import CallerVideo from './CallerVideo';
+import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
-class MotionDetection extends React.Component {
+class GameRoom extends React.Component {
   constructor() {
     super();
 
@@ -16,42 +20,14 @@ class MotionDetection extends React.Component {
     this.socket.on('notify player one', payload => {
       console.log('notify player one', payload);
       this.setState({ isPlayerOne: true });
-    })
+    });
+
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
-    this.canvasSource = (
-      <canvas id="canvas-source" width={this.width} height={this.height} />
-    );
-    this.canvasBlended = (
-      <canvas id="canvas-blended" width={this.width} height={this.height} />
-    );
-
-    this.selfVideo = (
-      <video
-        autoPlay="autoplay"
-        className="easyrtcMirror"
-        id="selfVideo"
-        muted="muted"
-        volume="0"
-        width={this.width}
-        height={this.height}
-      />
-    );
-    this.callerVideo = (
-      <video
-        autoPlay="autoplay"
-        id="callerVideo"
-        width={this.width / 4}
-        height={this.height / 4}
-      />
-    );
-
-    this.testButton = <button id="test-button" />;
 
     this.state = {
       contextSource: null,
       contextBlended: null,
-      timeOut: 0,
       isPlayerOne: false,
       lastImageData: {
         data: []
@@ -211,75 +187,19 @@ class MotionDetection extends React.Component {
   }
 
   render() {
-    const {
-      canvasSource,
-      canvasBlended,
-      testButton,
-      selfVideo,
-      callerVideo,
-      width,
-      height
-    } = this;
-
-    const container = {
-      width
-    }
-
-    const widgetStyle = {
-      height: +height * 0.3,
-      margin: +height * 0.025
-    }
-
-    const rightWidgets = {
-      right: +width - 75
-    }
-
-    const leftWidgets = {
-      right: 0
-    }
+    const { width, height } = this;
 
     return (
-      <div id="container">
-        <div id="videos">
-          <div id="self-video-div" style={container}>
-            {selfVideo}
-            {canvasSource}
-            {canvasBlended}
-            <div id="right-widgets" style={rightWidgets}>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-            </div>
-            <div id="left-widgets" style={leftWidgets}>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-              <div id="widget" style={widgetStyle}>
-              </div>
-            </div>
-          </div>
-          <div id="bottom-panel">
-            <div id="score-panel">
-              <h1>Dummy score panel</h1>
-              <h2>Score bar</h2>
-              <h3>Timer?</h3>
-            </div>
-            <div id="connectControls">
-              <div id="iam">Not yet connected...</div>
-              <br />
-              <strong>Connected users:</strong>
-              <div id="otherClients" />
-            </div>
-            <div id="caller-video-div">{callerVideo}</div>
-          </div>
+      <div id="game">
+        <SelfVideo width={width} height={height} />
+        <div id="bottom-panel">
+          <ScorePanel />
+          <ConnectControls />
+          <CallerVideo width={width} height={height} />
         </div>
       </div>
     );
   }
 }
 
-export default MotionDetection;
+export default GameRoom;
