@@ -49,8 +49,7 @@ class GameRoom extends React.Component {
       isPlayerOne: false,
       lastImageData: {
         data: []
-      },
-      widgets: []
+      }
     };
   }
 
