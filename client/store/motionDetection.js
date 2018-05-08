@@ -1,9 +1,11 @@
 const GET_CONTEXT_SOURCE = 'GET_CONTEXT_SOURCE';
 const GET_CONTEXT_BLENDED = 'GET_CONTEXT_BLENDED';
+const GET_VIDEO = 'GET_VIDEO';
 
 const initialState = {
   contextSource: null,
-  contextBlended: null
+  contextBlended: null,
+  video: null
 }
 
 export const getContextSource = (contextSource) => ({
@@ -16,6 +18,11 @@ export const getContextBlended = (contextBlended) => ({
   contextBlended
 });
 
+export const getVideo = (video) => ({
+  type: GET_VIDEO,
+  video
+})
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_CONTEXT_SOURCE:
@@ -27,6 +34,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         contextBlended: action.contextBlended
+      }
+    case GET_VIDEO:
+      return {
+        ...state,
+        video: action.video
       }
     default:
       return state;
