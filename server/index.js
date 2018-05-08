@@ -30,7 +30,7 @@ socketServer.on('connection', socket => {
     socket.broadcast.emit('the box was pressed!', payload);
   });
 
-  socket.on('request game start', () => {
+  socket.on('request game start', async () => {
     console.log('Another client has connected!: ', socket.id);
     players.push(socket);
     if (players.length >= 2) {
@@ -40,7 +40,8 @@ socketServer.on('connection', socket => {
       socket.emit('set sail');
       socket.broadcast.emit('set sail');
       const game = new Game(players);
-      game.play();
+      await game.selectWidgets();
+      game.sendWidgets();
     }
     socket.on('disconnect', () => {
       players = players.filter(player => player.id !== socket.id);
