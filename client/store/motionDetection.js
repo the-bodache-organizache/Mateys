@@ -2,6 +2,7 @@ const GET_DIMENSIONS = 'GET_DIMENSIONS';
 const GET_CONTEXT_SOURCE = 'GET_CONTEXT_SOURCE';
 const GET_CONTEXT_BLENDED = 'GET_CONTEXT_BLENDED';
 const GET_VIDEO = 'GET_VIDEO';
+const GET_LAST_IMAGE_DATA = 'GET_LAST_IMAGE_DATA';
 
 const initialState = {
   dimensions: {
@@ -10,7 +11,8 @@ const initialState = {
   },
   contextSource: null,
   contextBlended: null,
-  video: null
+  video: null,
+  lastImageData: null
 }
 
 export const getDimensions = (width, height) => ({
@@ -34,7 +36,12 @@ export const getContextBlended = (contextBlended) => ({
 export const getVideo = (video) => ({
   type: GET_VIDEO,
   video
-})
+});
+
+export const getLastImageData = (lastImageData) => ({
+  type: GET_LAST_IMAGE_DATA,
+  lastImageData
+});
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -57,6 +64,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         video: action.video
+      }
+    case GET_LAST_IMAGE_DATA:
+      return {
+        ...state,
+        lastImageData: action.lastImageData
       }
     default:
       return state;

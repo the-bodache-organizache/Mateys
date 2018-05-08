@@ -51,7 +51,7 @@ class GameRoom extends React.Component {
     };
   }
 
-  update = async () => {
+  update = () => {
     this.drawVideo();
     this.blend();
     this.checkAreas();
@@ -194,12 +194,9 @@ class GameRoom extends React.Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getWidgets: (widgets) => dispatch(getWidgets(widgets)),
-  getContextSource: async (contextSource) =>
-    await dispatch(getContextSource(contextSource)),
-  getContextBlended: async (contextBlended) =>
-    await dispatch(getContextBlended(contextBlended)),
-  getVideo: async (video) =>
-    await dispatch(getVideo(video))
+  getContextSource: (contextSource) => dispatch(getContextSource(contextSource)),
+  getContextBlended: (contextBlended) => dispatch(getContextBlended(contextBlended)),
+  getVideo: (video) => dispatch(getVideo(video))
 });
 
 const mapStateToProps = (state) => ({
