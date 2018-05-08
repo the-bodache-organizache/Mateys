@@ -40,7 +40,7 @@ socketServer.on('connection', socket => {
       socket.emit('set sail');
       socket.broadcast.emit('set sail');
       const game = new Game(players);
-      game.play();
+      game.selectWidgets();
     }
     socket.on('disconnect', () => {
       players = players.filter(player => player.id !== socket.id);
