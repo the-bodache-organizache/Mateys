@@ -19,12 +19,8 @@ const SelfVideo = props => {
       <canvas id="canvas-source" width={width} height={height} />
       <canvas id="canvas-blended" width={width} height={height} />
       <div id="widgets-div" style={container}>
-        <div id="right-widgets">
-          <Widget width={width} height={height} add={0} />
-        </div>
-        <div id="left-widgets">
-          <Widget width={width} height={height} add={3} />
-        </div>
+        <Widget id="right-widgets" width={width} height={height} add={0} />
+        <Widget id="left-widgets" width={width} height={height} add={3} />
       </div>
     </div>
   );

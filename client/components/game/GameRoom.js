@@ -1,13 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
+import { getWidgets } from '../../store/widgets';
 import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
 class GameRoom extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.socket = io(window.location.origin);
     this.socket.emit('request game start');
@@ -33,8 +35,10 @@ class GameRoom extends React.Component {
           index++;
         }
       }
-      this.setState({ widgets: newWidgets });
-    })
+      console.log(props);
+      console.log(this.props);
+      this.props.getWidgets(newWidgets);
+    });
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
@@ -153,7 +157,7 @@ class GameRoom extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        let widget = this.state.widgets[r];
+        let widget = this.props.widgets[r];
         if (widget) {
           console.log(widget.name);
           this.socket.emit('press box', widget);
@@ -164,6 +168,7 @@ class GameRoom extends React.Component {
 
   componentDidMount() {
     const { width, height } = this;
+    console.log(this.props);
     connectToEasyRTC(+width, +height);
     this.update();
   }
@@ -190,4 +195,12 @@ class GameRoom extends React.Component {
   }
 }
 
-export default GameRoom;
+const mapDispatchToProps = (dispatch) => ({
+  getWidgets: (widgets) => dispatch(getWidgets(widgets))
+});
+
+const mapStateToProps = (state) => ({
+  widgets: state.widgets
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
