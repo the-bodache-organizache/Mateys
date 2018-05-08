@@ -1,5 +1,8 @@
 import React from 'react';
 import SelfVideo from './SelfVideo';
+import ScorePanel from './ScorePanel';
+import ConnectControls from './ConnectControls';
+import CallerVideo from './CallerVideo';
 import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
 class GameRoom extends React.Component {
@@ -190,25 +193,9 @@ class GameRoom extends React.Component {
       <div id="game">
         <SelfVideo width={width} height={height} />
         <div id="bottom-panel">
-          <div id="score-panel">
-            <h1>Dummy score panel</h1>
-            <h2>Score bar</h2>
-            <h3>Timer?</h3>
-          </div>
-          <div id="connectControls">
-            <div id="iam">Not yet connected...</div>
-            <br />
-            <strong>Connected users:</strong>
-            <div id="otherClients" />
-          </div>
-          <div id="caller-video-div">
-            <video
-              autoPlay="autoplay"
-              id="callerVideo"
-              width={width / 4}
-              height={height / 4}
-            />
-          </div>
+          <ScorePanel />
+          <ConnectControls />
+          <CallerVideo width={width} height={height} />
         </div>
       </div>
     );
