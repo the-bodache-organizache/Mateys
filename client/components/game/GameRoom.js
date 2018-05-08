@@ -23,7 +23,17 @@ class GameRoom extends React.Component {
     });
     this.socket.on('send player widgets', widgets => {
       console.log('sent the widgets!', widgets)
-      this.setState({ widgets })
+      const newWidgets = new Array(6);
+      newWidgets.fill(null);
+      let index = 0;
+      while (index < widgets.length) {
+        const newIndex = (Math.round(Math.random() * 6));
+        if (!newWidgets[newIndex]) {
+          newWidgets[newIndex] = widgets[index];
+          index++;
+        }
+      }
+      this.setState({ widgets: newWidgets });
     })
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
