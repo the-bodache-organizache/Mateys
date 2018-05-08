@@ -4,7 +4,7 @@ class Game {
   constructor(players) {
     this.players = players;
     this.widgets = [];
-    this.heatlh = 5;
+    this.health = 5;
     this.score = 0;
     this.level = 1
   }
