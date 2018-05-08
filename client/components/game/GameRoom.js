@@ -21,6 +21,10 @@ class GameRoom extends React.Component {
       console.log('notify player one', payload);
       this.setState({ isPlayerOne: true });
     });
+    this.socket.on('send player widgets', widgets => {
+      console.log('sent the widgets!', widgets)
+      this.setState({ widgets })
+    })
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
@@ -32,14 +36,7 @@ class GameRoom extends React.Component {
       lastImageData: {
         data: []
       },
-      widgets: [
-        null,
-        null,
-        { name: 'cannon', command: 'The cannon needs to be loaded!' },
-        null,
-        { name: 'poopDeck', command: 'Quickly, Swab the poop deck!' },
-        null
-      ]
+      widgets: []
     };
   }
 

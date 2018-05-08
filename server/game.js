@@ -23,11 +23,22 @@ class Game {
     console.log(this.widgets);
   }
   
-  // sendWidgets(players) {
-  //   for (let i = 0; i < widgets.length; i++) {
-  //     if ((i % 2) === 0) 
-  //   }
-  // }
+  sendWidgets() {
+    const player1Widgets = [];
+    const player2Widgets = [];
+
+    for (let i = 0; i < this.widgets.length; i++) {
+      if ((i % 2) === 0) {
+        player1Widgets.push(this.widgets[i]);
+      } else {
+        player2Widgets.push(this.widgets[i]);
+      }
+    }
+    this.players[0].emit('send player widgets', player1Widgets);
+    this.players[1].emit('send player widgets', player2Widgets);
+    console.log(player1Widgets);
+    console.log(player2Widgets)
+  }
 }
 
 module.exports = Game;
