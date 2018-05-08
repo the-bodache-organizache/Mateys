@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import Widget from './Widget';
 
 const SelfVideo = (props) => {
   const { width, height } = props;
@@ -30,14 +31,10 @@ const SelfVideo = (props) => {
       <canvas id="canvas-source" width={width} height={height} />
       <canvas id="canvas-blended" width={width} height={height} />
       <div id="right-widgets" style={rightWidgets}>
-        <div id="widget" style={widgetStyle} />
-        <div id="widget" style={widgetStyle} />
-        <div id="widget" style={widgetStyle} />
+        <Widget width={width} height={height} />
       </div>
       <div id="left-widgets" style={leftWidgets}>
-        <div id="widget" style={widgetStyle} />
-        <div id="widget" style={widgetStyle} />
-        <div id="widget" style={widgetStyle} />
+        <Widget width={width} height={height} />
       </div>
     </div>
   )

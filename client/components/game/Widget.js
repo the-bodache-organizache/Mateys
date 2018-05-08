@@ -8,7 +8,11 @@ const Widget = (props) => {
   };
 
   return (
-    <div id="widget" style={widgetStyle} />
+    <div id="widgets">
+      <div id="widget" style={widgetStyle} />
+      <div id="widget" style={widgetStyle} />
+      <div id="widget" style={widgetStyle} />
+    </div>
   );
 }
 
