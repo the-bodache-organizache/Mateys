@@ -38,7 +38,7 @@ form {
 
 /* GAME ROOM */
 
-#container {
+#game {
   margin: 0 5em;
 }
 
@@ -59,7 +59,6 @@ video {
 }
 
 canvas {
-  border: solid 2px red;
   position: absolute;
   top: 0;
   left: 0;

@@ -185,45 +185,29 @@ class GameRoom extends React.Component {
 
   render() {
     const { width, height } = this;
-    const container = { width };
-
-    const widgetStyle = {
-      height: +height * 0.3,
-      margin: +height * 0.025
-    };
-
-    const rightWidgets = {
-      right: +width - 75
-    };
-
-    const leftWidgets = {
-      right: 0
-    };
 
     return (
-      <div id="container">
-        <div id="videos">
-          <SelfVideo width={width} height={height} />
-          <div id="bottom-panel">
-            <div id="score-panel">
-              <h1>Dummy score panel</h1>
-              <h2>Score bar</h2>
-              <h3>Timer?</h3>
-            </div>
-            <div id="connectControls">
-              <div id="iam">Not yet connected...</div>
-              <br />
-              <strong>Connected users:</strong>
-              <div id="otherClients" />
-            </div>
-            <div id="caller-video-div">
-              <video
-                autoPlay="autoplay"
-                id="callerVideo"
-                width={width / 4}
-                height={height / 4}
-              />
-            </div>
+      <div id="game">
+        <SelfVideo width={width} height={height} />
+        <div id="bottom-panel">
+          <div id="score-panel">
+            <h1>Dummy score panel</h1>
+            <h2>Score bar</h2>
+            <h3>Timer?</h3>
+          </div>
+          <div id="connectControls">
+            <div id="iam">Not yet connected...</div>
+            <br />
+            <strong>Connected users:</strong>
+            <div id="otherClients" />
+          </div>
+          <div id="caller-video-div">
+            <video
+              autoPlay="autoplay"
+              id="callerVideo"
+              width={width / 4}
+              height={height / 4}
+            />
           </div>
         </div>
       </div>
