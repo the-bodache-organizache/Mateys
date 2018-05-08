@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Widget from './Widget';
 
-const SelfVideo = props => {
-  const { width, height } = props;
+const SelfVideo = (props) => {
+  const { width, height, canvasSourceRef, canvasBlendedRef } = props;
   const container = { width: +width };
-
   return (
     <div id="self-video-div" style={container}>
       <video
@@ -16,8 +15,18 @@ const SelfVideo = props => {
         width={width}
         height={height}
       />
-      <canvas id="canvas-source" width={width} height={height} />
-      <canvas id="canvas-blended" width={width} height={height} />
+      <canvas
+        ref={canvasSourceRef}
+        id="canvas-source"
+        width={width}
+        height={height}
+      />
+      <canvas
+        ref={canvasBlendedRef}
+        id="canvas-blended"
+        width={width}
+        height={height}
+      />
       <div id="widgets-div" style={container}>
         <Widget id="right-widgets" width={width} height={height} add={0} />
         <Widget id="left-widgets" width={width} height={height} add={3} />

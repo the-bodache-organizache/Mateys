@@ -5,6 +5,7 @@ import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
 import { getWidgets } from '../../store/widgets';
+import { getContextSource, getContextBlended } from '../../store/motionDetection';
 import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
 class GameRoom extends React.Component {
@@ -35,17 +36,17 @@ class GameRoom extends React.Component {
           index++;
         }
       }
-      console.log(props);
-      console.log(this.props);
       this.props.getWidgets(newWidgets);
     });
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
+    this.canvasSourceRef = React.createRef();
+    this.canvasBlendedRef = React.createRef();
 
     this.state = {
-      contextSource: null,
-      contextBlended: null,
+      // contextSource: null,
+      // contextBlended: null,
       isPlayerOne: false,
       lastImageData: {
         data: []
@@ -54,10 +55,10 @@ class GameRoom extends React.Component {
   }
 
   update = async () => {
-    await this.setState({
-      contextSource: document.getElementById('canvas-source').getContext('2d'),
-      contextBlended: document.getElementById('canvas-blended').getContext('2d')
-    });
+    // await this.setState({
+    //   contextSource: document.getElementById('canvas-source').getContext('2d'),
+    //   contextBlended: document.getElementById('canvas-blended').getContext('2d')
+    // });
     this.drawVideo();
     this.blend();
     this.checkAreas();
@@ -66,13 +67,14 @@ class GameRoom extends React.Component {
 
   drawVideo = () => {
     const video = document.getElementById('selfVideo');
-    const { contextSource } = this.state;
+    const { contextSource } = this.props;
     contextSource.drawImage(video, 0, 0, video.width, video.height);
   };
 
   blend = () => {
     const { width, height, differenceAccuracy } = this;
-    const { contextSource, contextBlended, lastImageData } = this.state;
+    const { lastImageData } = this.state;
+    const { contextSource, contextBlended } = this.props;
     let sourceData = contextSource.getImageData(0, 0, width, height);
 
     // create an image if the previous image doesn’t exist
@@ -124,7 +126,7 @@ class GameRoom extends React.Component {
     let { width, height } = this;
     width = +width;
     height = +height;
-    const { contextBlended } = this.state;
+    const { contextBlended } = this.props;
     for (let r = 0; r < 6; ++r) {
       let sx = 0,
         sy = 1 / 3 * r * height,
@@ -165,9 +167,11 @@ class GameRoom extends React.Component {
     }
   };
 
-  componentDidMount() {
-    const { width, height } = this;
-    console.log(this.props);
+  async componentDidMount() {
+    const { width, height, canvasSourceRef, canvasBlendedRef } = this;
+    const { getContextSource, getContextBlended } = this.props;
+    await getContextSource(canvasSourceRef.current.getContext('2d'));
+    await getContextBlended(canvasBlendedRef.current.getContext('2d'));
     connectToEasyRTC(+width, +height);
     this.update();
   }
@@ -179,11 +183,11 @@ class GameRoom extends React.Component {
   }
 
   render() {
-    const { width, height } = this;
+    const { width, height, canvasSourceRef, canvasBlendedRef } = this;
 
     return (
       <div id="game">
-        <SelfVideo width={width} height={height} />
+        <SelfVideo width={width} height={height} canvasSourceRef={canvasSourceRef} canvasBlendedRef={canvasBlendedRef} />
         <div id="bottom-panel">
           <ScorePanel />
           <ConnectControls />
@@ -195,11 +199,17 @@ class GameRoom extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getWidgets: (widgets) => dispatch(getWidgets(widgets))
+  getWidgets: (widgets) => dispatch(getWidgets(widgets)),
+  getContextSource: async (contextSource) =>
+    await dispatch(getContextSource(contextSource)),
+  getContextBlended: async (contextBlended) =>
+    await dispatch(getContextBlended(contextBlended))
 });
 
 const mapStateToProps = (state) => ({
-  widgets: state.widgets
+  widgets: state.widgets,
+  contextSource: state.motionDetection.contextSource,
+  contextBlended: state.motionDetection.contextBlended
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
