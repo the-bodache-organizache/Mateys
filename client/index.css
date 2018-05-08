@@ -80,10 +80,8 @@ canvas {
   border: solid 2px red;
 }
 
-#right-widgets {
+#widgets-div {
   position: absolute;
-}
-
-#left-widgets {
-  position: absolute;
+  display: flex;
+  justify-content: space-between;
 }
