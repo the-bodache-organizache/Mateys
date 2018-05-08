@@ -6,13 +6,11 @@ class Ref extends Component {
     this.myRef = React.createRef();
   }
 
-  async getContext () {
-    const context = await this.myRef.current.getContext('2d');
-    return context;
+  componentDidMount () {
+    console.log(this.myRef);
   }
 
   render () {
-    console.log(this.getContext());
     return (
       <canvas ref={this.myRef} id="canvas-source" width="100" height="100" />
     )

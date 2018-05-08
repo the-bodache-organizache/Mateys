@@ -3,9 +3,7 @@ import Widget from './Widget';
 
 const SelfVideo = props => {
   const { width, height } = props;
-  const container = { width };
-  const rightWidgets = { right: +width - 75 };
-  const leftWidgets = { right: 0 };
+  const container = { width: +width };
 
   return (
     <div id="self-video-div" style={container}>
@@ -20,11 +18,13 @@ const SelfVideo = props => {
       />
       <canvas id="canvas-source" width={width} height={height} />
       <canvas id="canvas-blended" width={width} height={height} />
-      <div id="right-widgets" style={rightWidgets}>
-        <Widget width={width} height={height} />
-      </div>
-      <div id="left-widgets" style={leftWidgets}>
-        <Widget width={width} height={height} />
+      <div id="widgets-div" style={container}>
+        <div id="right-widgets">
+          <Widget width={width} height={height} />
+        </div>
+        <div id="left-widgets">
+          <Widget width={width} height={height} />
+        </div>
       </div>
     </div>
   );
