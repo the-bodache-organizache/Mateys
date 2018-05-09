@@ -5,7 +5,7 @@ module.exports = router;
 
 // GET /api/users
 // Hm...should everyone really be able to get these...?
-router.get('/', isAdmin, async (req, res, next) => {
+router.get('/', /* isAdmin, */ async (req, res, next) => {
   try {
     const members = await User.findAll();
     res.json(members);

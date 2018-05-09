@@ -10,7 +10,7 @@ describe('User routes', () => {
     await db.sync({ force: true });
   });
 
-  describe('/api/users/', () => {
+  describe('/api/members/', () => {
     const codysEmail = 'cody@puppybook.com';
     const codysPwd = '123';
 
@@ -21,9 +21,9 @@ describe('User routes', () => {
       });
     });
 
-    it('GET /api/users', async () => {
+    it('GET /api/members', async () => {
       await request(app)
-        .get('/api/users')
+        .get('/api/members')
         .expect(200)
         .then(res => {
           expect(res.body).to.be.an('array');
