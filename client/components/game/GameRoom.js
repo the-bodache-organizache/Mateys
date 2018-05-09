@@ -174,7 +174,7 @@ class GameRoom extends React.Component {
     this.socket.emit('press box', widget);
     setTimeout(async () => {
       await toggleReady(widget);
-    }, 5000);
+    }, 2000);
   }
 
   componentDidMount() {
