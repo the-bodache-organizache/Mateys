@@ -1,3 +1,6 @@
+import store from '../client/store';
+import { toggleReady } from '../client/store/widgets';
+
 const checkAreas = (width, height, contextBlended, widgets, socket) => {
   for (let r = 0; r < 6; ++r) {
     let sx = 0,
@@ -32,7 +35,14 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
     if (average > 10) {
       let widget = widgets[r];
       if (widget) {
-        socket.emit('press box', widget);
+        if (widget.ready) {
+          store.dispatch(toggleReady(widget));
+          console.log(widget);
+          socket.emit('press box', widget);
+          setTimeout(() => {
+            store.dispatch(toggleReady(widget));
+          }, 2000);
+        }
       }
     }
   }
