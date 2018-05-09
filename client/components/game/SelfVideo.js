@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Widget from './Widget';
+import WidgetColumn from './WidgetColumn';
 
 const SelfVideo = (props) => {
   const { width, height, canvasSourceRef, canvasBlendedRef, videoRef } = props;
@@ -30,8 +30,8 @@ const SelfVideo = (props) => {
         height={height}
       />
       <div id="widgets-div" style={container}>
-        <Widget id="right-widgets" add={0} />
-        <Widget id="left-widgets" add={3} />
+        <WidgetColumn id="right-widgets" add={0} />
+        <WidgetColumn id="left-widgets" add={3} />
       </div>
     </div>
   );
