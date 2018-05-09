@@ -73,7 +73,7 @@ canvas {
 }
 
 /* WIDGETS */
-#widget {
+.widget {
   width: 50px;
   background-color: white;
   opacity: 0.6;

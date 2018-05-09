@@ -5,8 +5,9 @@ import axios from 'axios';
 import history from '../history';
 import user from './user';
 import members from './members';
+import widgets from './widgets';
 
-const reducer = combineReducers({ user, members });
+const reducer = combineReducers({ user, members, widgets });
 
 const store = createStore(
   reducer,

@@ -1,13 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
+import { getWidgets, toggleReady } from '../../store/widgets';
 import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
 class GameRoom extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.socket = io(window.location.origin);
     this.socket.emit('request game start');
@@ -23,8 +25,20 @@ class GameRoom extends React.Component {
     });
     this.socket.on('send player widgets', widgets => {
       console.log('sent the widgets!', widgets)
-      this.setState({ widgets })
-    })
+      const newWidgets = new Array(6);
+      newWidgets.fill(null);
+      let index = 0;
+      while (index < widgets.length) {
+        const newIndex = (Math.round(Math.random() * 5));
+        if (!newWidgets[newIndex]) {
+          newWidgets[newIndex] = widgets[index];
+          index++;
+        }
+      }
+      console.log(props);
+      console.log(this.props);
+      this.props.getWidgets(newWidgets);
+    });
 
     this.width = `${Math.floor(window.innerWidth * 0.5)}`;
     this.height = `${Math.floor(window.innerHeight * 0.5)}`;
@@ -35,8 +49,7 @@ class GameRoom extends React.Component {
       isPlayerOne: false,
       lastImageData: {
         data: []
-      },
-      widgets: []
+      }
     };
   }
 
@@ -91,26 +104,6 @@ class GameRoom extends React.Component {
     return value > 0x15 ? 0xff : 0;
   };
 
-  difference = (target, data1, data2) => {
-    // blend mode difference
-    if (data1.length != data2.length) return null;
-    let i = 0;
-    while (i < data1.length * 0.25) {
-      target[4 * i] =
-        data1[4 * i] == 0 ? 0 : fastAbs(data1[4 * i] - data2[4 * i]);
-      target[4 * i + 1] =
-        data1[4 * i + 1] == 0
-          ? 0
-          : fastAbs(data1[4 * i + 1] - data2[4 * i + 1]);
-      target[4 * i + 2] =
-        data1[4 * i + 2] == 0
-          ? 0
-          : fastAbs(data1[4 * i + 2] - data2[4 * i + 2]);
-      target[4 * i + 3] = 0xff;
-      ++i;
-    }
-  };
-
   differenceAccuracy = (target, data1, data2) => {
     if (data1.length != data2.length) return null;
     let i = 0;
@@ -132,6 +125,7 @@ class GameRoom extends React.Component {
     width = +width;
     height = +height;
     const { contextBlended } = this.state;
+    const { toggleReady } = this.props;
     for (let r = 0; r < 6; ++r) {
       let sx = 0,
         sy = 1 / 3 * r * height,
@@ -163,17 +157,29 @@ class GameRoom extends React.Component {
       // calculate an average between of the color values of the note area
       average = Math.round(average / (blendedData.data.length * 0.25));
       if (average > 10) {
-        let widget = this.state.widgets[r];
+        let widget = this.props.widgets[r];
         if (widget) {
-          console.log(widget.name);
-          this.socket.emit('press box', widget);
+          if (widget.ready) {
+            this.buttonPress(widget);
+
+          }
         }
       }
     }
   };
 
+  async buttonPress (widget) {
+    await toggleReady(widget);
+    console.log(widget.name);
+    this.socket.emit('press box', widget);
+    setTimeout(async () => {
+      await toggleReady(widget);
+    }, 2000);
+  }
+
   componentDidMount() {
     const { width, height } = this;
+    console.log(this.props);
     connectToEasyRTC(+width, +height);
     this.update();
   }
@@ -200,4 +206,15 @@ class GameRoom extends React.Component {
   }
 }
 
-export default GameRoom;
+const mapDispatchToProps = (dispatch) => ({
+  getWidgets: (widgets) => dispatch(getWidgets(widgets)),
+  toggleReady: (widget) => dispatch(toggleReady(widget))
+});
+
+const mapStateToProps = (state) => ({
+  widgets: state.widgets
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
+
+
