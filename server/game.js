@@ -7,6 +7,7 @@ class Game {
   }
 
   async startGame() {
+    console.log('WE MADE IT')
     const level = new Level(this, this.level);
     await level.selectWidgets();
     level.sendWidgets();

@@ -5,6 +5,7 @@ import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
 import { getWidgets } from '../../store/widgets';
+import { getCommand } from '../../store/commands';
 import {
   getContextSource,
   getContextBlended,
@@ -34,7 +35,7 @@ class GameRoom extends React.Component {
       this.setState({ isPlayerOne: true });
     });
     this.socket.on('send player widgets', widgets => {
-      console.log('sent the widgets!', widgets);
+      //console.log('sent the widgets!', widgets);
       const newWidgets = new Array(6);
       newWidgets.fill(null);
       let index = 0;
@@ -46,6 +47,10 @@ class GameRoom extends React.Component {
         }
       }
       this.props.getWidgets(newWidgets);
+    });
+    this.socket.on('issue command', command => {
+      //console.log('issuing commands', command);
+      this.props.getCommand(command);
     });
 
     this.canvasSourceRef = React.createRef();
@@ -93,6 +98,7 @@ class GameRoom extends React.Component {
   }
 
   async componentWillUnmount() {
+    this.socket.emit('disconnect');
     this.socket.disconnect();
     cancelAnimationFrame(this.interval);
     await easyrtc.disconnect();
@@ -119,6 +125,7 @@ class GameRoom extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   getWidgets: widgets => dispatch(getWidgets(widgets)),
+  getCommand: command => dispatch(getCommand(command)),
   getContextSource: contextSource => dispatch(getContextSource(contextSource)),
   getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
   getVideo: video => dispatch(getVideo(video))

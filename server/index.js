@@ -26,7 +26,7 @@ socketServer.on('connection', socket => {
     console.log('A client has disconnected!: ', socket.id);
   });
   socket.on('press box', payload => {
-    console.log(socket.id, payload);
+    //console.log(socket.id, payload);
   });
 
   socket.on('request game start', async () => {
@@ -38,7 +38,7 @@ socketServer.on('connection', socket => {
       });
       socket.emit('set sail');
       socket.broadcast.emit('set sail');
-      const game = new Game(players);
+      const game = await new Game(players);
       game.startGame();
     }
     socket.on('disconnect', () => {

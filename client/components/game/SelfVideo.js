@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import Widget from './Widget';
 
 const SelfVideo = (props) => {
-  const { width, height, canvasSourceRef, canvasBlendedRef, videoRef } = props;
+  const { width, height, canvasSourceRef, canvasBlendedRef, videoRef, command } = props;
   const container = { width: +width };
+  const commandDiv = { top: +height * .75};
+  console.log(command, 'COMMAND')
   return (
     <div id="self-video-div" style={container}>
       <video
@@ -33,13 +35,17 @@ const SelfVideo = (props) => {
         <Widget id="right-widgets" add={0} />
         <Widget id="left-widgets" add={3} />
       </div>
+      <div id="commands" style={commandDiv}>
+        <p id="commandParagraph">{command}</p>
+      </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   width: state.motionDetection.dimensions.width,
-  height: state.motionDetection.dimensions.height
+  height: state.motionDetection.dimensions.height,
+  command: state.commands
 });
 
 export default connect(mapStateToProps)(SelfVideo);
