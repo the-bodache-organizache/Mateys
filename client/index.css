@@ -90,3 +90,22 @@ canvas {
 .hide {
   visibility: hidden;
 }
+
+/* COMMANDS */
+
+#commands {
+  position: absolute;
+  -webkit-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+#commandParagraph {
+  color: #c27e18;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+  font-size: 2em;
+  font-weight: bold;
+}

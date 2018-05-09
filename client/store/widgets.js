@@ -1,6 +1,5 @@
 const GET_WIDGETS = 'GET_WIDGETS';
 const TOGGLE_READY = 'TOGGLE_READY';
-
 const initialState = [];
 
 export const getWidgets = widgets => ({

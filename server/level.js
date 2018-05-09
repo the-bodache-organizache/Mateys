@@ -5,7 +5,7 @@ class Level {
     this.game = game;
     this.widgets = [];
     this.seconds = 10;
-    this.health = 5;
+    this.health = 10;
     this.score = 0;
     this.targetScore = 10;
     this.level = level;
@@ -58,7 +58,6 @@ class Level {
     }));
     const commandInterval = setInterval(() => {
       this.health -= this.activeCommands.length;
-      if (this.score >= this.targetScore) this.game.nextLevel();
       if (this.health <= 0) this.game.end();
       this.activeCommands = [];
       const widget1 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
@@ -66,11 +65,11 @@ class Level {
       while (widget2.id === widget1.id) {
         widget2 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
       }
-      this.game.players[0].emit("issue command", widget1.command);
-      this.game.players[1].emit("issue command", widget2.command);
+      this.game.players[0].emit('issue command', widget1.command);
+      this.game.players[1].emit('issue command', widget2.command);
       this.activeCommands.push(widget1.command);
       this.activeCommands.push(widget2.command);
-    }, seconds * 1000);
+    }, this.seconds * 1000);
   }
 }
 

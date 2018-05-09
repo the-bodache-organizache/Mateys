@@ -6,9 +6,10 @@ import history from '../history';
 import user from './user';
 import members from './members';
 import widgets from './widgets';
+import commands from './commands';
 import motionDetection from './motionDetection';
 
-const reducer = combineReducers({ user, members, widgets, motionDetection });
+const reducer = combineReducers({ user, members, widgets, motionDetection, commands });
 
 const store = createStore(
   reducer,
