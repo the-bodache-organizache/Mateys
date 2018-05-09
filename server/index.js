@@ -27,7 +27,6 @@ socketServer.on('connection', socket => {
   });
   socket.on('press box', payload => {
     console.log(socket.id, payload);
-    socket.broadcast.emit('the box was pressed!', payload);
   });
 
   socket.on('request game start', async () => {
@@ -40,8 +39,7 @@ socketServer.on('connection', socket => {
       socket.emit('set sail');
       socket.broadcast.emit('set sail');
       const game = new Game(players);
-      await game.selectWidgets();
-      game.sendWidgets();
+      game.startGame();
     }
     socket.on('disconnect', () => {
       players = players.filter(player => player.id !== socket.id);
