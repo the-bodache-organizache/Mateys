@@ -32,7 +32,6 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
     if (average > 10) {
       let widget = widgets[r];
       if (widget) {
-        console.log(widget.name);
         socket.emit('press box', widget);
       }
     }

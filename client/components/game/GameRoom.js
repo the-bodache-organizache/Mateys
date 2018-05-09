@@ -71,7 +71,7 @@ class GameRoom extends React.Component {
     drawVideo(+width, +height, video, contextSource);
     blend(+width, +height, contextSource, contextBlended, lastImageData);
     checkAreas(+width, +height, contextBlended, widgets, socket);
-    this.interval = requestAnimationFrame(this.update);
+    this.interval = requestAnimationFrame(this.detectMotion);
   };
 
   async componentDidMount() {
@@ -88,8 +88,9 @@ class GameRoom extends React.Component {
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
       getVideo(videoRef.current)
     ]);
+    console.log(this.props.contextSource.prototype.drawImage(this.props.video, 0, 0, this.props.width, this.props.height));
     connectToEasyRTC(+width, +height);
-    this.detectMotion();
+    // this.detectMotion();
   }
 
   componentWillUnmount() {
