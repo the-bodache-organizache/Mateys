@@ -17,6 +17,10 @@ const Widget = db.define('widget', {
     validate: {
       notEmpty: true
     }
+  },
+  ready: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false
   }
 });
 

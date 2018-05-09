@@ -4,7 +4,7 @@ import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
-import { getWidgets } from '../../store/widgets';
+import { getWidgets, toggleReady } from '../../store/widgets';
 import { connectToEasyRTC, motionDetection } from '../../../scripts/';
 
 class GameRoom extends React.Component {
@@ -158,8 +158,12 @@ class GameRoom extends React.Component {
       if (average > 10) {
         let widget = this.props.widgets[r];
         if (widget) {
-          console.log(widget.name);
-          this.socket.emit('press box', widget);
+          if (widget.ready) {
+            
+            console.log(widget.name);
+            this.socket.emit('press box', widget);
+            
+          }
         }
       }
     }
@@ -195,7 +199,8 @@ class GameRoom extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getWidgets: (widgets) => dispatch(getWidgets(widgets))
+  getWidgets: (widgets) => dispatch(getWidgets(widgets)),
+  toggleReady: (widget) => dispatch(toggleReady(widget))
 });
 
 const mapStateToProps = (state) => ({
