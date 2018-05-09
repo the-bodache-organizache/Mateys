@@ -6,12 +6,13 @@ import history from '../history';
 import user from './user';
 import members from './members';
 import widgets from './widgets';
+import motionDetection from './motionDetection';
 
-const reducer = combineReducers({ user, members, widgets });
+const reducer = combineReducers({ user, members, widgets, motionDetection });
 
 const store = createStore(
   reducer,
-  applyMiddleware(thunks.withExtraArgument({ axios, history }), logger)
+  applyMiddleware(thunks.withExtraArgument({ axios, history }))
 );
 
 export default store;

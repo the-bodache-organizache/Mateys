@@ -1,4 +1,4 @@
-export default class motionDetection {
+class MotionDetection {
 
   drawVideo = (video, contextSource) => {
     contextSource.drawImage(video, 0, 0, video.width, video.height);
@@ -49,3 +49,5 @@ export default class motionDetection {
     return value > 0x15 ? 0xff : 0;
   }
 }
+
+export default new MotionDetection();

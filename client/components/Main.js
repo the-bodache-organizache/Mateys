@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { Routes, Navbar } from './nav';
 import { Load } from './load';
 import { me } from '../store/user';
+import { getDimensions } from '../store/motionDetection';
 
 const Main = () => {
   return (
@@ -16,7 +17,8 @@ const Main = () => {
 };
 
 const mapDispatch = dispatch => ({
-  load: () => dispatch(me())
+  load: () => dispatch(me()),
+  getDimensions: (width, height) => dispatch(getDimensions(width, height))
 });
 
 export default compose(withRouter, connect(null, mapDispatch), Load)(Main);

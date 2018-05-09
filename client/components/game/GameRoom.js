@@ -4,8 +4,18 @@ import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
 import CallerVideo from './CallerVideo';
-import { getWidgets, toggleReady } from '../../store/widgets';
-import { connectToEasyRTC, motionDetection } from '../../../scripts/';
+import { getWidgets } from '../../store/widgets';
+import {
+  getContextSource,
+  getContextBlended,
+  getVideo
+} from '../../store/motionDetection';
+import {
+  connectToEasyRTC,
+  drawVideo,
+  blend,
+  checkAreas
+} from '../../../scripts/';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -24,197 +34,105 @@ class GameRoom extends React.Component {
       this.setState({ isPlayerOne: true });
     });
     this.socket.on('send player widgets', widgets => {
-      console.log('sent the widgets!', widgets)
+      console.log('sent the widgets!', widgets);
       const newWidgets = new Array(6);
       newWidgets.fill(null);
       let index = 0;
       while (index < widgets.length) {
-        const newIndex = (Math.round(Math.random() * 5));
+        const newIndex = Math.round(Math.random() * 6);
         if (!newWidgets[newIndex]) {
           newWidgets[newIndex] = widgets[index];
           index++;
         }
       }
-      console.log(props);
-      console.log(this.props);
       this.props.getWidgets(newWidgets);
     });
 
-    this.width = `${Math.floor(window.innerWidth * 0.5)}`;
-    this.height = `${Math.floor(window.innerHeight * 0.5)}`;
+    this.canvasSourceRef = React.createRef();
+    this.canvasBlendedRef = React.createRef();
+    this.videoRef = React.createRef();
 
     this.state = {
-      contextSource: null,
-      contextBlended: null,
       isPlayerOne: false,
-      lastImageData: {
-        data: []
-      }
     };
   }
 
-  update = async () => {
-    await this.setState({
-      contextSource: document.getElementById('canvas-source').getContext('2d'),
-      contextBlended: document.getElementById('canvas-blended').getContext('2d')
-    });
-    this.drawVideo();
-    this.blend();
-    this.checkAreas();
-    this.interval = requestAnimationFrame(this.update);
+  detectMotion = () => {
+    const {
+      width,
+      height,
+      contextSource,
+      contextBlended,
+      video,
+      lastImageData,
+      widgets
+    } = this.props;
+    const { socket } = this;
+    drawVideo(+width, +height, video, contextSource);
+    blend(+width, +height, contextSource, contextBlended, lastImageData);
+    checkAreas(+width, +height, contextBlended, widgets, socket);
+    this.interval = requestAnimationFrame(this.detectMotion);
   };
 
-  drawVideo = () => {
-    const video = document.getElementById('selfVideo');
-    const { contextSource } = this.state;
-    contextSource.drawImage(video, 0, 0, video.width, video.height);
-  };
-
-  blend = () => {
-    const { width, height, differenceAccuracy } = this;
-    const { contextSource, contextBlended, lastImageData } = this.state;
-    let sourceData = contextSource.getImageData(0, 0, width, height);
-
-    // create an image if the previous image doesn’t exist
-    if (!lastImageData)
-      this.setState({
-        lastImageData: sourceData
-      });
-
-    // create a ImageData instance to receive the blended result
-    let blendedData = contextSource.createImageData(width, height);
-
-    //blend the 2 images
-    differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
-    // draw the result in a canvas
-    contextBlended.putImageData(blendedData, 0, 0);
-    // store the current webcam image
-    this.setState({
-      lastImageData: sourceData
-    });
-  };
-
-  fastAbs = value => {
-    // funky bitwise, equal Math.abs
-    return (value ^ (value >> 31)) - (value >> 31);
-  };
-
-  threshold = value => {
-    // return white or black
-    return value > 0x15 ? 0xff : 0;
-  };
-
-  differenceAccuracy = (target, data1, data2) => {
-    if (data1.length != data2.length) return null;
-    let i = 0;
-    while (i < data1.length * 0.25) {
-      let average1 = (data1[4 * i] + data1[4 * i + 1] + data1[4 * i + 2]) / 3;
-      let average2 = (data2[4 * i] + data2[4 * i + 1] + data2[4 * i + 2]) / 3;
-      let diff = this.threshold(this.fastAbs(average1 - average2));
-      target[4 * i] = diff;
-      target[4 * i + 1] = diff;
-      target[4 * i + 2] = diff;
-      target[4 * i + 3] = 0xff;
-      ++i;
-    }
-  };
-
-  checkAreas = () => {
-    // loop over the note areas
-    let { width, height } = this;
-    width = +width;
-    height = +height;
-    const { contextBlended } = this.state;
-    const { toggleReady } = this.props;
-    for (let r = 0; r < 6; ++r) {
-      let sx = 0,
-        sy = 1 / 3 * r * height,
-        sw = 50,
-        sh = height * 0.3;
-      if (r >= 1) {
-        sy = 1 / 3 * r * height + height * 0.05;
-      }
-      if (r >= 3) {
-        sx = width - 50;
-        sy = 1 / 3 * (r - 3) * height;
-      }
-      if (r >= 4) {
-        sy = 1 / 3 * (r - 3) * height + height * 0.05;
-      }
-      let blendedData = contextBlended.getImageData(sx, sy, sw, sh);
-      let i = 0;
-      let average = 0;
-      // loop over the pixels
-      while (i < blendedData.data.length * 0.25) {
-        // make an average between the color channel
-        average +=
-          (blendedData.data[i * 4] +
-            blendedData.data[i * 4 + 1] +
-            blendedData.data[i * 4 + 2]) /
-          3;
-        ++i;
-      }
-      // calculate an average between of the color values of the note area
-      average = Math.round(average / (blendedData.data.length * 0.25));
-      if (average > 10) {
-        let widget = this.props.widgets[r];
-        if (widget) {
-          if (widget.ready) {
-            this.buttonPress(widget);
-
-          }
-        }
-      }
-    }
-  };
-
-  async buttonPress (widget) {
-    await toggleReady(widget);
-    console.log(widget.name);
-    this.socket.emit('press box', widget);
-    setTimeout(async () => {
-      await toggleReady(widget);
-    }, 2000);
-  }
-
-  componentDidMount() {
-    const { width, height } = this;
-    console.log(this.props);
+  async componentDidMount() {
+    const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
+    const {
+      width,
+      height,
+      getContextSource,
+      getContextBlended,
+      getVideo
+    } = this.props;
+    await Promise.all([
+      getContextSource(canvasSourceRef.current.getContext('2d')),
+      getContextBlended(canvasBlendedRef.current.getContext('2d')),
+      getVideo(videoRef.current)
+    ]);
     connectToEasyRTC(+width, +height);
-    this.update();
+    this.detectMotion();
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     this.socket.disconnect();
     cancelAnimationFrame(this.interval);
-    easyrtc.disconnect();
+    await easyrtc.disconnect();
   }
 
   render() {
-    const { width, height } = this;
-
+    const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     return (
       <div id="game">
-        <SelfVideo width={width} height={height} />
+        <SelfVideo
+          canvasSourceRef={canvasSourceRef}
+          canvasBlendedRef={canvasBlendedRef}
+          videoRef={videoRef}
+        />
         <div id="bottom-panel">
           <ScorePanel />
           <ConnectControls />
-          <CallerVideo width={width} height={height} />
+          <CallerVideo />
         </div>
       </div>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  getWidgets: (widgets) => dispatch(getWidgets(widgets)),
-  toggleReady: (widget) => dispatch(toggleReady(widget))
+const mapDispatchToProps = dispatch => ({
+  getWidgets: widgets => dispatch(getWidgets(widgets)),
+  getContextSource: contextSource => dispatch(getContextSource(contextSource)),
+  getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
+  getVideo: video => dispatch(getVideo(video))
 });
 
-const mapStateToProps = (state) => ({
-  widgets: state.widgets
+const mapStateToProps = state => ({
+  widgets: state.widgets,
+  width: state.motionDetection.dimensions.width,
+  height: state.motionDetection.dimensions.height,
+  contextSource: state.motionDetection.contextSource,
+  contextBlended: state.motionDetection.contextBlended,
+  video: state.motionDetection.video,
+  lastImageData: state.motionDetection.lastImageData
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
-
 

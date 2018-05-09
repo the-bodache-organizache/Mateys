@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const CallerVideo = (props) => {
   const { width, height } = props;
@@ -7,11 +8,16 @@ const CallerVideo = (props) => {
       <video
         autoPlay="autoplay"
         id="callerVideo"
-        width={width / 4}
-        height={height / 4}
+        width={+width / 4}
+        height={+height / 4}
       />
     </div>
   );
 }
 
-export default CallerVideo;
+const mapStateToProps = (state) => ({
+  width: state.motionDetection.dimensions.width,
+  height: state.motionDetection.dimensions.height
+});
+
+export default connect(mapStateToProps)(CallerVideo);
