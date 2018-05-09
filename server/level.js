@@ -65,7 +65,6 @@ class Level {
       while (widget2.id === widget1.id) {
         widget2 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
       }
-      console.log('WE MADE IT to PLAY')
       this.game.players[0].emit('issue command', widget1.command);
       this.game.players[1].emit('issue command', widget2.command);
       this.activeCommands.push(widget1.command);
