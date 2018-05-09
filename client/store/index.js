@@ -12,7 +12,7 @@ const reducer = combineReducers({ user, members, widgets, motionDetection });
 
 const store = createStore(
   reducer,
-  applyMiddleware(thunks.withExtraArgument({ axios, history }), logger)
+  applyMiddleware(thunks.withExtraArgument({ axios, history }))
 );
 
 export default store;
