@@ -29,7 +29,7 @@ class GameRoom extends React.Component {
       newWidgets.fill(null);
       let index = 0;
       while (index < widgets.length) {
-        const newIndex = (Math.round(Math.random() * 6));
+        const newIndex = (Math.round(Math.random() * 5));
         if (!newWidgets[newIndex]) {
           newWidgets[newIndex] = widgets[index];
           index++;
@@ -161,7 +161,7 @@ class GameRoom extends React.Component {
         if (widget) {
           if (widget.ready) {
             this.buttonPress(widget);
-            
+
           }
         }
       }
