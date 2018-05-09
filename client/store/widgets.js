@@ -21,9 +21,7 @@ export default (state = initialState, action) => {
     case GET_WIDGETS:
       return action.widgets;
     case TOGGLE_READY:
-      return state.map(
-        widget => (widget.id === action.widget.id ? action.widget : widget)
-      );
+      return state.map(widget => (widget && widget.id === action.widget.id ? action.widget : widget));
     default:
       return state;
   }

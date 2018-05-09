@@ -125,6 +125,7 @@ class GameRoom extends React.Component {
     width = +width;
     height = +height;
     const { contextBlended } = this.state;
+    const { toggleReady } = this.props;
     for (let r = 0; r < 6; ++r) {
       let sx = 0,
         sy = 1 / 3 * r * height,
@@ -159,15 +160,22 @@ class GameRoom extends React.Component {
         let widget = this.props.widgets[r];
         if (widget) {
           if (widget.ready) {
-            
-            console.log(widget.name);
-            this.socket.emit('press box', widget);
+            this.buttonPress(widget);
             
           }
         }
       }
     }
   };
+
+  async buttonPress (widget) {
+    await toggleReady(widget);
+    console.log(widget.name);
+    this.socket.emit('press box', widget);
+    setTimeout(async () => {
+      await toggleReady(widget);
+    }, 5000);
+  }
 
   componentDidMount() {
     const { width, height } = this;
@@ -208,3 +216,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
+
+
