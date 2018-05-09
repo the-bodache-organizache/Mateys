@@ -40,7 +40,7 @@ class GameRoom extends React.Component {
       newWidgets.fill(null);
       let index = 0;
       while (index < widgets.length) {
-        const newIndex = Math.round(Math.random() * 6);
+        const newIndex = Math.floor(Math.random() * 6);
         if (!newWidgets[newIndex]) {
           newWidgets[newIndex] = widgets[index];
           index++;

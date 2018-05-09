@@ -78,12 +78,17 @@ canvas {
   background-color: white;
   opacity: 0.6;
   border: solid 2px red;
+  transform: scaleX(-1);
 }
 
 #widgets-div {
   position: absolute;
   display: flex;
   justify-content: space-between;
+}
+
+.hide {
+  visibility: hidden;
 }
 
 /* COMMANDS */
