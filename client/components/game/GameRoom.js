@@ -88,15 +88,14 @@ class GameRoom extends React.Component {
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
       getVideo(videoRef.current)
     ]);
-    console.log(this.props.contextSource.prototype.drawImage(this.props.video, 0, 0, this.props.width, this.props.height));
     connectToEasyRTC(+width, +height);
-    // this.detectMotion();
+    this.detectMotion();
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     this.socket.disconnect();
     cancelAnimationFrame(this.interval);
-    easyrtc.disconnect();
+    await easyrtc.disconnect();
   }
 
   render() {
