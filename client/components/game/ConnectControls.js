@@ -47,7 +47,7 @@ class ConnectControls extends Component {
     const { setListeners } = this;
     const { ready } = this.state;
     const button =
-      isConnected ? (
+      (isConnected && !ready) ? (
         <div id="start-game">
           <button onClick={() => {
             const { webSocket } = easyrtc;
