@@ -10,6 +10,7 @@ class Level {
     this.targetScore = 10;
     this.level = level;
     this.activeCommands = [];
+    this.intervalId = null;
   }
 
   async selectWidgets() {
@@ -39,24 +40,29 @@ class Level {
     }
     this.game.players[0].emit('send player widgets', player1Widgets);
     this.game.players[1].emit('send player widgets', player2Widgets);
-    console.log(player1Widgets);
-    console.log(player2Widgets)
+    // console.log(player1Widgets);
+    // console.log(player2Widgets)
   }
 
   play() {
     this.game.players.forEach(player => player.on('press box', payload => {
-      const index = this.activeCommands.indexOf(payload.command);
-      if (index >= 0) {
-        this.score++;
-        this.activeCommands.splice(index, 1);
+      if (this.score < this.targetScore) {
+        const index = this.activeCommands.indexOf(payload.command);
+        if (index >= 0) {
+          this.score++;
+          this.activeCommands.splice(index, 1);
+        }
+        else {
+          this.health--;
+        }
+        if (this.score >= this.targetScore) {
+          console.log("NEW LEVEL STARTING *******")
+          this.game.nextLevel();
+        }
+        if (this.health <= 0) this.game.end();
       }
-      else {
-        this.health--;
-      }
-      if (this.score >= this.targetScore) this.game.nextLevel();
-      if (this.health <= 0) this.game.end();
     }));
-    const commandInterval = setInterval(() => {
+      this.intervalId = setInterval(() => {
       this.health -= this.activeCommands.length;
       if (this.health <= 0) this.game.end();
       this.activeCommands = [];
@@ -69,6 +75,9 @@ class Level {
       this.game.players[1].emit('issue command', widget2.command);
       this.activeCommands.push(widget1.command);
       this.activeCommands.push(widget2.command);
+      console.log('HEALTH:', this.health)
+      console.log('SCORE:', this.score)
+      console.log('LEVEL:', this.level)
     }, this.seconds * 1000);
   }
 }
