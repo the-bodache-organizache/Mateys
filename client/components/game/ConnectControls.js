@@ -40,6 +40,9 @@ class ConnectControls extends Component {
     socket.on('issue command', command => {
       this.props.getCommand(command);
     });
+    socket.on('move status', payload => console.log(payload));
+    socket.on('next level', () => this.props.getCommand('Next Level'));
+    socket.on('game over', () => this.props.getCommand('Game Over'));
   }
 
   render() {
