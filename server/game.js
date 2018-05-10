@@ -52,12 +52,19 @@ class Game {
   }
 
   play() {
+    this.players.forEach(player => player.removeAllListeners('press box'));
+
     this.players.forEach(player => player.on('press box', payload => {
       if (this.score < this.targetScore) {
-        player.emit('move status', {
+        const status = {
           expected: this.activeCommands,
-          actual: payload.command
-        });
+          actual: payload.command,
+          health: this.health,
+          score: this.score,
+          level: this.level
+        };
+        console.log(status);
+        player.emit('move status', status);
         const index = this.activeCommands.indexOf(payload.command);
         if (index >= 0) {
           this.score++;
