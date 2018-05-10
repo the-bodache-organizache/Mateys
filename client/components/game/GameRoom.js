@@ -11,6 +11,7 @@ import {
   getContextBlended,
   getVideo
 } from '../../store/motionDetection';
+import { connected, setPlayerOne } from '../../store/connected';
 import {
   connectToEasyRTC,
   drawVideo,
@@ -32,7 +33,7 @@ class GameRoom extends React.Component {
     });
     this.socket.on('notify player one', payload => {
       console.log('notify player one', payload);
-      this.setState({ isPlayerOne: true });
+      this.props.setPlayerOne(true);
     });
     this.socket.on('send player widgets', widgets => {
       //console.log('sent the widgets!', widgets);
@@ -56,10 +57,6 @@ class GameRoom extends React.Component {
     this.canvasSourceRef = React.createRef();
     this.canvasBlendedRef = React.createRef();
     this.videoRef = React.createRef();
-
-    this.state = {
-      isPlayerOne: false,
-    };
   }
 
   detectMotion = () => {
@@ -86,14 +83,16 @@ class GameRoom extends React.Component {
       height,
       getContextSource,
       getContextBlended,
-      getVideo
+      getVideo,
+      connected
     } = this.props;
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
       getVideo(videoRef.current)
     ]);
-    connectToEasyRTC(+width, +height);
+    await connectToEasyRTC(+width, +height);
+    connected(true);
     this.detectMotion();
   }
 
@@ -128,7 +127,9 @@ const mapDispatchToProps = dispatch => ({
   getCommand: command => dispatch(getCommand(command)),
   getContextSource: contextSource => dispatch(getContextSource(contextSource)),
   getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
-  getVideo: video => dispatch(getVideo(video))
+  getVideo: video => dispatch(getVideo(video)),
+  connected: isConnected => dispatch(connected(isConnected)),
+  setPlayerOne: isPlayerOne => dispatch(setPlayerOne(isPlayerOne))
 });
 
 const mapStateToProps = state => ({
@@ -138,7 +139,7 @@ const mapStateToProps = state => ({
   contextSource: state.motionDetection.contextSource,
   contextBlended: state.motionDetection.contextBlended,
   video: state.motionDetection.video,
-  lastImageData: state.motionDetection.lastImageData
+  lastImageData: state.motionDetection.lastImageData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
