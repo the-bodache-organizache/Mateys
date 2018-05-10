@@ -54,6 +54,10 @@ class Game {
   play() {
     this.players.forEach(player => player.on('press box', payload => {
       if (this.score < this.targetScore) {
+        player.emit('move status', {
+          expected: this.activeCommands,
+          actual: payload.command
+        });
         const index = this.activeCommands.indexOf(payload.command);
         if (index >= 0) {
           this.score++;
