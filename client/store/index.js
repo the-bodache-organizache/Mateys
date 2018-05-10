@@ -7,10 +7,10 @@ import user from './user';
 import members from './members';
 import widgets from './widgets';
 import commands from './commands';
-import connected from './connected';
+import connection from './connection';
 import motionDetection from './motionDetection';
 
-const reducer = combineReducers({ user, members, widgets, motionDetection, commands, connected });
+const reducer = combineReducers({ user, members, widgets, motionDetection, commands, connection });
 
 const store = createStore(
   reducer,
