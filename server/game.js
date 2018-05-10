@@ -107,6 +107,7 @@ class Game {
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
+    this.players.forEach(player => player.emit('next level'));
     this.startGame();
   }
 

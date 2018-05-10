@@ -55,6 +55,10 @@ class GameRoom extends React.Component {
 
     this.socket.on('move status', payload => console.log(payload));
 
+    this.socket.on('next level', () => this.props.getCommand('Next Level'));
+    
+    this.socket.on('game over', () => this.props.getCommand('Game Over'));
+
     this.canvasSourceRef = React.createRef();
     this.canvasBlendedRef = React.createRef();
     this.videoRef = React.createRef();
