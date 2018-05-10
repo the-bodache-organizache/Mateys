@@ -69,27 +69,32 @@ class Game {
         if (this.health <= 0) this.end();
       }
     }));
-      this.intervalId = setInterval(() => {
-      this.health -= this.activeCommands.length;
-      if (this.health <= 0) this.end();
-      this.activeCommands = [];
-      const widget1 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
-      let widget2 = widget1;
-      while (widget2.id === widget1.id) {
-        widget2 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
-      }
-      this.players[0].emit('issue command', widget1.command);
-      this.players[1].emit('issue command', widget2.command);
-      this.activeCommands.push(widget1.command);
-      this.activeCommands.push(widget2.command);
-      console.log('HEALTH:', this.health);
-      console.log('SCORE:', this.score);
-      console.log('LEVEL:', this.level);
+      
+      const intervalId = setInterval(() => {
+        this.health -= this.activeCommands.length;
+        if (this.health <= 0) this.end();
+        this.activeCommands = [];
+        const widget1 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
+        let widget2 = widget1;
+        while (widget2.id === widget1.id) {
+          widget2 = this.widgets[Math.floor(Math.random() * this.widgets.length)];
+        }
+        this.players[0].emit('issue command', widget1.command);
+        this.players[1].emit('issue command', widget2.command);
+        this.activeCommands.push(widget1.command);
+        this.activeCommands.push(widget2.command);
+        console.log('HEALTH:', this.health);
+        console.log('SCORE:', this.score);
+        console.log('LEVEL:', this.level);
+        console.log("intervalId", intervalId);
     }, this.seconds * 1000);
+    this.intervalId = intervalId;
   }
 
   nextLevel() {
     this.level++;
+    this.score = 0;
+    this.health = 10;
     clearInterval(this.intervalId);
     this.startGame();
   }
