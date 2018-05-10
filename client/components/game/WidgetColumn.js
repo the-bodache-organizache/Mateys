@@ -7,7 +7,6 @@ const WidgetColumn = props => {
     height: +height * 0.3,
     margin: +height * 0.025
   };
-  console.log("widgets", widgets);
   return (
     <div id={id}>
       <div id={`widget${0 + add}`} className={`widget ${!widgets[0 + add] && 'hide'}`} style={widgetStyle} >{widgets[0 + add] && widgets[0 + add].name}</div>
