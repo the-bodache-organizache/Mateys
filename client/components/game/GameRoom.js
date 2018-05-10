@@ -33,12 +33,11 @@ class GameRoom extends React.Component {
       contextBlended,
       video,
       lastImageData,
-      widgets,
-      socket
+      widgets
     } = this.props;
     drawVideo(+width, +height, video, contextSource);
     blend(+width, +height, contextSource, contextBlended, lastImageData);
-    checkAreas(+width, +height, contextBlended, widgets, socket);
+    checkAreas(+width, +height, contextBlended, widgets, easyrtc.webSocket);
     this.interval = requestAnimationFrame(this.detectMotion);
   };
 
@@ -59,7 +58,7 @@ class GameRoom extends React.Component {
     ]);
     await connectToEasyRTC(+width, +height);
     isConnected(true);
-    // this.detectMotion();
+    this.detectMotion();
   }
 
   async componentWillUnmount() {
