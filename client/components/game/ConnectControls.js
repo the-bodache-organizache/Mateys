@@ -31,7 +31,7 @@ class ConnectControls extends Component {
       this.props.getCommand(command);
     });
     socket.on('move status', payload => console.log(payload)); // this is probably where we save score to store so we can post in scoreboard
-    socket.on('next level', () => this.props.getCommand('Next Level'));
+    socket.on('next level', payload => this.props.getCommand(`Level ${payload.level}`));
     socket.on('game over', () => this.props.getCommand('Game Over'));
   };
 

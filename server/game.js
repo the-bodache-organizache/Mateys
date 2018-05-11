@@ -5,7 +5,7 @@ class Game {
     this.players = players;
     this.level = 1;
     this.widgets = [];
-    this.seconds = 10;
+    this.seconds = 8;
     this.health = 10;
     this.score = 0;
     this.targetScore = 10;
@@ -115,10 +115,13 @@ class Game {
 
   nextLevel() {
     this.level++;
+    this.seconds -= Math.floor(this.level / 2);
+    this.targetScore += this.level;
+
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.emit('next level'));
+    this.players.forEach(player => player.emit('next level', { level: this.level }));
     this.startGame();
   }
 
