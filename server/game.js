@@ -124,13 +124,12 @@ class Game {
     
     this.startGame();
   }
-  
+
   sendStatus() {
     this.players.forEach(player => player.emit('move status', status));
   }
 
   end() {
-    console.log("****************GAME OVER****************")
     this.players.forEach(player => player.emit('game over'));
   }
 }
