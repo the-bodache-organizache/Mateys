@@ -12,9 +12,11 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  const { room } = req.body;
+  const room = Object.keys(req.body).join('');
   try {
-    const resolvedRoom = await Rooms.create(room);
+    const resolvedRoom = await Rooms.create({
+      name: room
+    });
     res.json(resolvedRoom);
   } catch (err) {
     next(err);

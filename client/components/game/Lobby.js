@@ -1,15 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Rooms from './Rooms';
+import { createRoom } from '../../store/rooms';
 
 class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.socket = io(window.location.origin);
-  }
-
-  componentDidMount() {
-    
   }
 
   componentWillUnmount() {
@@ -19,10 +16,18 @@ class Lobby extends React.Component {
   }
 
   render() {
-
+    const { createRoom } = this.props;
     return (
       <div id="game">
-        <button type="button" onClick={() => this.socket.emit('create room', this.socket.id)} />
+        <button
+          type="button"
+          onClick={() => {
+            const { id } = this.socket;
+            createRoom(this.socket.id);
+            console.log(id);
+            //this.socket.emit('create room', this.socket.id);
+          }
+        } />
         <Rooms />
       </div>
     );
@@ -30,11 +35,7 @@ class Lobby extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-
+  createRoom: (room) => dispatch(createRoom(room))
 });
 
-const mapStateToProps = state => ({
- 
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Lobby);
+export default connect(null, mapDispatchToProps)(Lobby);
