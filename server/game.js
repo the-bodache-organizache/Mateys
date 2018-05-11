@@ -121,11 +121,15 @@ class Game {
     clearInterval(this.intervalId);
     this.players.forEach(player => player.emit('next level', { level: this.level }));
     this.sendStatus()
-    
     this.startGame();
   }
 
   sendStatus() {
+    const status = {
+      health: this.health,
+      score: this.score,
+      level: this.level
+    };
     this.players.forEach(player => player.emit('move status', status));
   }
 
