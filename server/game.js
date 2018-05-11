@@ -51,6 +51,33 @@ class Game {
     // console.log(player2Widgets)
   }
 
+  // handlePressBox(payload) {
+  //   if (this.score < this.targetScore) {
+  //     const status = {
+  //       expected: this.activeCommands,
+  //       actual: payload.command,
+  //       health: this.health,
+  //       score: this.score,
+  //       level: this.level
+  //     };
+  //     //console.log(status);
+  //     player.emit('move status', status);
+  //     const index = this.activeCommands.indexOf(payload.command);
+  //     if (index >= 0) {
+  //       this.score++;
+  //       this.activeCommands.splice(index, 1);
+  //     }
+  //     else {
+  //       this.health--;
+  //     }
+  //     if (this.score >= this.targetScore) {
+        
+  //       this.nextLevel();
+  //     }
+  //     if (this.health <= 0) this.end();
+  //   }
+  // }
+
   play() {
     this.players.forEach(player => player.removeAllListeners('press box'));
 
@@ -63,7 +90,7 @@ class Game {
           score: this.score,
           level: this.level
         };
-        console.log(status);
+        //console.log(status);
         player.emit('move status', status);
         const index = this.activeCommands.indexOf(payload.command);
         if (index >= 0) {
@@ -74,7 +101,7 @@ class Game {
           this.health--;
         }
         if (this.score >= this.targetScore) {
-          console.log("NEW LEVEL STARTING *******")
+          
           this.nextLevel();
         }
         if (this.health <= 0) this.end();
@@ -97,7 +124,7 @@ class Game {
         console.log('HEALTH:', this.health);
         console.log('SCORE:', this.score);
         console.log('LEVEL:', this.level);
-        console.log("intervalId", intervalId);
+        //console.log("intervalId", intervalId);
     }, this.seconds * 1000);
     this.intervalId = intervalId;
   }

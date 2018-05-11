@@ -21,7 +21,7 @@ let players = [];
 
 socketServer.on('connection', socket => {
   
-  // console.log(players.length);
+  
   socket.on('disconnect', () => {
     console.log('A client has disconnected!: ', socket.id);
   });
