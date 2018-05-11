@@ -23,11 +23,11 @@ class Lobby extends React.Component {
           type="button"
           onClick={() => {
             const { id } = this.socket;
-            createRoom(this.socket.id);
-            console.log(id);
-            //this.socket.emit('create room', this.socket.id);
+            createRoom(id);
+            this.socket.emit('create room');
           }
-        } />
+        }>Create Room
+        </button>
         <Rooms />
       </div>
     );

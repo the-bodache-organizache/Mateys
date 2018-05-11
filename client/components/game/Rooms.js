@@ -1,4 +1,5 @@
 import React from 'react';
+import Room from './Room';
 
 const Rooms = () => (
   <div id="score-panel">
