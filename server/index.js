@@ -1,13 +1,12 @@
 const { db } = require('./db');
 const app = require('./app');
 const PORT = process.env.PORT || 8080;
+const env = process.env.NODE_ENV || 'development';
 
 const http = require('http');
 const socketIo = require('socket.io');
 const easyrtc = require('easyrtc');
 const Game = require('./game');
-
-const env = process.env.NODE_ENV || 'development';
 
 process.title = 'node-easyrtc';
 
@@ -18,30 +17,19 @@ const webServer = http.createServer(app);
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
 let players = [];
+let socketEvents = {};
 
 socketServer.on('connection', socket => {
-  
-  
-  socket.on('disconnect', () => {
-    console.log('A client has disconnected!: ', socket.id);
-  });
-  socket.on('press box', payload => {
-    //console.log(socket.id, payload);
-  });
-
-  socket.on('request game start', async () => {
+  socket.on('REQUEST_GAME_START', async (payload) => {
+    socketEvents = {...payload};
     console.log('Another client has connected!: ', socket.id);
     players.push(socket);
     if (players.length >= 2) {
-      players[0].emit('notify player one', {
-        numPlayers: players.length
-      });
-      socket.emit('set sail');
-      socket.broadcast.emit('set sail');
       const game = await new Game(players);
       game.startGame();
     }
     socket.on('disconnect', () => {
+      console.log('A client has disconnected!: ', socket.id);
       players = players.filter(player => player.id !== socket.id);
       console.log(players.length);
     });
@@ -148,3 +136,5 @@ db.sync().then(() => {
   console.log('The database is synced');
   webServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 });
+
+module.exports = socketEvents;

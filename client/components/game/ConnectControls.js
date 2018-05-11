@@ -3,27 +3,17 @@ import { connect } from 'react-redux';
 import { getWidgets } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
-import { connectToEasyRTC } from '../../../scripts';
+import { socketEvents } from '../../../scripts';
 
 class ConnectControls extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       ready: false
-    }
+    };
   }
 
-  setListeners = (socket) => {
-    socket.on('the box was pressed!', payload => {
-      console.log('the box was pressed!!!!');
-    });
-    socket.on('set sail', payload => {
-      console.log('set sail!!!!!');
-    });
-    socket.on('notify player one', payload => {
-      console.log('notify player one', payload);
-      this.props.setPlayerOne(true);
-    });
+  setListeners = socket => {
     socket.on('send player widgets', widgets => {
       const newWidgets = new Array(6);
       newWidgets.fill(null);
@@ -40,28 +30,35 @@ class ConnectControls extends Component {
     socket.on('issue command', command => {
       this.props.getCommand(command);
     });
-    socket.on('move status', payload => console.log(payload));
+    socket.on('move status', payload => console.log(payload)); // this is probably where we save score to store so we can post in scoreboard
     socket.on('next level', () => this.props.getCommand('Next Level'));
     socket.on('game over', () => this.props.getCommand('Game Over'));
-  }
+  };
 
   render() {
+    const { REQUEST_GAME_START } = socketEvents;
     const { isConnected, isPlayerOne, setSocket } = this.props;
     const { setListeners } = this;
     const { ready } = this.state;
     const button =
-      (isConnected && !ready) ? (
+      isConnected && !ready ? (
         <div id="start-game">
-          <button onClick={() => {
-            const { webSocket } = easyrtc;
-            this.disabled = true;
-            setSocket(webSocket);
-            setListeners(webSocket);
-            this.setState({ready: true})
-            webSocket.emit('request game start');
-          }}>Start game</button>
+          <button
+            type="button"
+            onClick={() => {
+              const { webSocket } = easyrtc;
+              setSocket(webSocket);
+              setListeners(webSocket);
+              this.setState({ ready: true });
+              webSocket.emit(REQUEST_GAME_START, socketEvents);
+            }}
+          >
+            Set sail!
+          </button>
         </div>
-      ) : undefined;
+      ) : (
+        undefined
+      );
     return (
       <div id="connectControls">
         <div id="iam">Not yet connected...</div>
