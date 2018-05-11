@@ -14,6 +14,7 @@ class Game {
     this.numOfWidgets = 4;
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
+    this.randomIndex = this.randomIndex.bind(this);
   }
 
   async startGame() {
@@ -28,6 +29,7 @@ class Game {
   }
 
   async selectWidgets() {
+    this.widgets = [];
     const { randomIndex, widgets, numOfWidgets } = this;
     const dbWidgets = await Widget.findAll();
     while (widgets.length < numOfWidgets) {
@@ -66,14 +68,13 @@ class Game {
       nextLevel,
       end
     } = this;
-    let { activeCommands } = this;
     players.forEach(player => player.removeAllListeners('press box'));
 
     players.forEach(player => player.on('press box', payload => {
-      const index = activeCommands.indexOf(payload.command);
+      const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         const status = {
-          expected: activeCommands,
+          expected: this.activeCommands,
           actual: payload.command,
           health: this.health,
           score: this.score,
@@ -95,9 +96,9 @@ class Game {
       const { randomIndex, widgets } = this;
       const [ player1, player2 ] = this.players;
       const { length } = this.widgets;
-      this.health -= activeCommands.length;
+      this.health -= this.activeCommands.length;
       if (this.health <= 0) end();
-      activeCommands = [];
+      this.activeCommands = [];
       const widget1 = widgets[randomIndex(length)];
       let widget2 = widget1;
       while (widget2.id === widget1.id) {
@@ -105,7 +106,7 @@ class Game {
       }
       player1.emit('issue command', widget1.command);
       player2.emit('issue command', widget2.command);
-      activeCommands.push(widget1.command, widget2.command);
+      this.activeCommands.push(widget1.command, widget2.command);
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
       console.log('LEVEL:', this.level);
