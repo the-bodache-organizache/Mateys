@@ -81,13 +81,7 @@ class Game {
         }
         if (this.score >= this.targetScore) nextLevel();
         if (this.health <= 0) end();
-        const status = {
-          health: this.health,
-          score: this.score,
-          level: this.level
-        };
-        player.emit('move status', status);
-        player.broadcast.emit('move status', status);
+        this.sendStatus();
       }
     }));
 
@@ -109,6 +103,7 @@ class Game {
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
       console.log('LEVEL:', this.level);
+      this.sendStatus();
     }, this.seconds * 1000);
   }
 
