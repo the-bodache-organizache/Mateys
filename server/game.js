@@ -73,15 +73,6 @@ class Game {
     players.forEach(player => player.on('press box', payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
-        const status = {
-          expected: this.activeCommands,
-          actual: payload.command,
-          health: this.health,
-          score: this.score,
-          level: this.level
-        };
-        player.emit('move status', status);
-        player.broadcast.emit('move status', status);
         if (index >= 0) {
           this.score++;
           this.activeCommands.splice(index, 1);
@@ -90,6 +81,13 @@ class Game {
         }
         if (this.score >= this.targetScore) nextLevel();
         if (this.health <= 0) end();
+        const status = {
+          health: this.health,
+          score: this.score,
+          level: this.level
+        };
+        player.emit('move status', status);
+        player.broadcast.emit('move status', status);
       }
     }));
 
@@ -122,7 +120,13 @@ class Game {
     this.health = 10;
     clearInterval(this.intervalId);
     this.players.forEach(player => player.emit('next level', { level: this.level }));
+    this.sendStatus()
+    
     this.startGame();
+  }
+  
+  sendStatus() {
+    this.players.forEach(player => player.emit('move status', status));
   }
 
   end() {
