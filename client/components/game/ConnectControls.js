@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getWidgets } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
-import { connectToEasyRTC } from '../../../scripts';
+import { socketEvents } from '../../../scripts';
 
 class ConnectControls extends Component {
   constructor(props) {
@@ -36,6 +36,7 @@ class ConnectControls extends Component {
   };
 
   render() {
+    const { REQUEST_GAME_START } = socketEvents;
     const { isConnected, isPlayerOne, setSocket } = this.props;
     const { setListeners } = this;
     const { ready } = this.state;
@@ -49,7 +50,7 @@ class ConnectControls extends Component {
               setSocket(webSocket);
               setListeners(webSocket);
               this.setState({ ready: true });
-              webSocket.emit('request game start');
+              webSocket.emit(REQUEST_GAME_START, socketEvents);
             }}
           >
             Set sail!

@@ -17,12 +17,11 @@ const webServer = http.createServer(app);
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
 let players = [];
+let socketEvents = {};
 
 socketServer.on('connection', socket => {
-  socket.on('press box', payload => {
-    //console.log(socket.id, payload);
-  });
-  socket.on('request game start', async () => {
+  socket.on('REQUEST_GAME_START', async (payload) => {
+    socketEvents = {...payload};
     console.log('Another client has connected!: ', socket.id);
     players.push(socket);
     if (players.length >= 2) {
@@ -137,3 +136,5 @@ db.sync().then(() => {
   console.log('The database is synced');
   webServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 });
+
+module.exports = socketEvents;
