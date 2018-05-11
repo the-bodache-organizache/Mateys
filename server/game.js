@@ -116,8 +116,8 @@ class Game {
 
   nextLevel() {
     this.level++;
-    this.seconds -= 1;
-    this.targetScore += 2;
+    this.seconds -= 0.8;
+    this.targetScore += 1;
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
