@@ -5,7 +5,7 @@ class Game {
     this.players = players;
     this.level = 1;
     this.widgets = [];
-    this.seconds = 10;
+    this.seconds = 8;
     this.health = 10;
     this.score = 0;
     this.targetScore = 10;
@@ -73,14 +73,6 @@ class Game {
     players.forEach(player => player.on('press box', payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
-        const status = {
-          expected: this.activeCommands,
-          actual: payload.command,
-          health: this.health,
-          score: this.score,
-          level: this.level
-        };
-        player.emit('move status', status);
         if (index >= 0) {
           this.score++;
           this.activeCommands.splice(index, 1);
@@ -89,6 +81,7 @@ class Game {
         }
         if (this.score >= this.targetScore) nextLevel();
         if (this.health <= 0) end();
+        this.sendStatus();
       }
     }));
 
@@ -110,20 +103,32 @@ class Game {
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
       console.log('LEVEL:', this.level);
+      this.sendStatus();
     }, this.seconds * 1000);
   }
 
   nextLevel() {
     this.level++;
+    this.seconds -= 0.8;
+    this.targetScore += 1;
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.emit('next level'));
+    this.players.forEach(player => player.emit('next level', { level: this.level }));
+    this.sendStatus()
     this.startGame();
   }
 
+  sendStatus() {
+    const status = {
+      health: this.health,
+      score: this.score,
+      level: this.level
+    };
+    this.players.forEach(player => player.emit('move status', status));
+  }
+
   end() {
-    console.log("****************GAME OVER****************")
     this.players.forEach(player => player.emit('game over'));
   }
 }
