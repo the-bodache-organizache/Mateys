@@ -9,8 +9,9 @@ import widgets from './widgets';
 import commands from './commands';
 import connection from './connection';
 import motionDetection from './motionDetection';
+import rooms from './rooms';
 
-const reducer = combineReducers({ user, members, widgets, motionDetection, commands, connection });
+const reducer = combineReducers({ user, members, widgets, motionDetection, commands, connection, rooms });
 
 const store = createStore(
   reducer,
