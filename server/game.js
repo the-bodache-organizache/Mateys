@@ -12,6 +12,8 @@ class Game {
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
+    this.nextLevel = this.nextLevel.bind(this);
+    this.end = this.end.bind(this);
   }
 
   async startGame() {
@@ -61,10 +63,6 @@ class Game {
   play() {
     const {
       players,
-      score,
-      targetScore,
-      health,
-      level,
       nextLevel,
       end
     } = this;
@@ -73,13 +71,13 @@ class Game {
 
     players.forEach(player => player.on('press box', payload => {
       const index = activeCommands.indexOf(payload.command);
-      if (score < targetScore) {
+      if (this.score < this.targetScore) {
         const status = {
           expected: activeCommands,
           actual: payload.command,
-          health: health,
-          score: score,
-          level: level
+          health: this.health,
+          score: this.score,
+          level: this.level
         };
         player.emit('move status', status);
         if (index >= 0) {
@@ -88,8 +86,8 @@ class Game {
         } else {
           this.health--;
         }
-        if (score >= targetScore) nextLevel();
-        if (health <= 0) end();
+        if (this.score >= this.targetScore) nextLevel();
+        if (this.health <= 0) end();
       }
     }));
 
