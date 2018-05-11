@@ -5,7 +5,7 @@ const Welcome = () => {
   return (
     <div id="welcome">
       <Link to='/game'>
-        <h1>Game Room</h1>
+        <h1>Game</h1>
       </Link>
     </div>
   );
