@@ -4,6 +4,7 @@ import { getWidgets } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
 import { socketEvents } from '../../../scripts';
+import { getGameStatus } from '../../store/game-status';
 
 class ConnectControls extends Component {
   constructor(props) {
@@ -30,9 +31,9 @@ class ConnectControls extends Component {
     socket.on('issue command', command => {
       this.props.getCommand(command);
     });
-    socket.on('move status', payload => console.log(payload)); // this is probably where we save score to store so we can post in scoreboard
     socket.on('next level', payload => this.props.getCommand(`Level ${payload.level}`));
     socket.on('game over', () => this.props.getCommand('Game Over'));
+    socket.on('move status', status => this.props.getGameStatus(status));
   };
 
   render() {
@@ -75,13 +76,15 @@ const mapDispatchToProps = dispatch => ({
   getWidgets: widgets => dispatch(getWidgets(widgets)),
   getCommand: command => dispatch(getCommand(command)),
   setPlayerOne: isPlayerOne => dispatch(setPlayerOne(isPlayerOne)),
-  setSocket: socket => dispatch(setSocket(socket))
+  setSocket: socket => dispatch(setSocket(socket)),
+  getGameStatus: status => dispatch(getGameStatus(status))
 });
 
 const mapStateToProps = state => ({
   isConnected: state.connection.connected,
   isPlayerOne: state.connection.isPlayerOne,
-  socket: state.connection.socket
+  socket: state.connection.socket,
+  status: state.status
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectControls);

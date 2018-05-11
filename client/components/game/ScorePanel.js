@@ -1,11 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const ScorePanel = () => (
+const ScorePanel = ({ status }) => (
   <div id="score-panel">
-    <h1>Dummy score panel</h1>
-    <h2>Score bar</h2>
-    <h3>Timer?</h3>
+    <h2>Level: {status.level}</h2>
+    <h2>Score: {status.score}</h2>
+    <h2>Health: {status.health}</h2>
   </div>
 );
 
-export default ScorePanel;
+const mapState = state => ({
+  status: state.gameStatus
+});
+
+export default connect(mapState)(ScorePanel);

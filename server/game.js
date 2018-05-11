@@ -81,6 +81,7 @@ class Game {
           level: this.level
         };
         player.emit('move status', status);
+        player.broadcast.emit('move status', status);
         if (index >= 0) {
           this.score++;
           this.activeCommands.splice(index, 1);
@@ -117,7 +118,6 @@ class Game {
     this.level++;
     this.seconds -= Math.floor(this.level / 2);
     this.targetScore += this.level;
-
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
