@@ -15,6 +15,7 @@ class Game {
   }
 
   async startGame() {
+    const { selectWidgets, sendWidgets, play } = this;
     try {
       await this.selectWidgets();
       this.sendWidgets();
@@ -37,18 +38,20 @@ class Game {
   }
 
   sendWidgets() {
+    const { widgets } = this;
+    const [ player1, player2 ] = this.players;
     const player1Widgets = [];
     const player2Widgets = [];
 
-    for (let i = 0; i < this.widgets.length; i++) {
+    for (let i = 0; i < widgets.length; i++) {
       if ((i % 2) === 0) {
-        player1Widgets.push(this.widgets[i]);
+        player1Widgets.push(widgets[i]);
       } else {
-        player2Widgets.push(this.widgets[i]);
+        player2Widgets.push(widgets[i]);
       }
     }
-    this.players[0].emit('send player widgets', player1Widgets);
-    this.players[1].emit('send player widgets', player2Widgets);
+    player1.emit('send player widgets', player1Widgets);
+    player2.emit('send player widgets', player2Widgets);
   }
 
   randomIndex(length) {
@@ -95,7 +98,7 @@ class Game {
       const [ player1, player2 ] = this.players;
       const { length } = this.widgets;
       this.health -= activeCommands.length;
-      if (this.health <= 0) this.end();
+      if (this.health <= 0) end();
       activeCommands = [];
       const widget1 = widgets[randomIndex(length)];
       let widget2 = widget1;
