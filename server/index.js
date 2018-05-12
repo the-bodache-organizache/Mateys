@@ -26,11 +26,12 @@ socketServer.on('connection', socket => {
 
   const { REQUEST_GAME_START, DISCONNECT } = socketEvents;
 
-  socket.on(REQUEST_GAME_START, () => {
+  socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);
+    socketEvents = payload;
     players.push(socket);
     if (players.length >= 2) {
-      const game = new Game(players);
+      const game = await new Game(players);
       game.startGame();
     }
     socket.on(DISCONNECT, () => {
