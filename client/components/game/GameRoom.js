@@ -49,14 +49,15 @@ class GameRoom extends React.Component {
       getContextSource,
       getContextBlended,
       getVideo,
-      isConnected
+      isConnected,
+      roomId
     } = this.props;
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
       getVideo(videoRef.current)
     ]);
-    await connectToEasyRTC(+width, +height);
+    await connectToEasyRTC(+width, +height, roomId);
     isConnected(true);
     this.detectMotion();
   }
@@ -95,15 +96,19 @@ const mapDispatchToProps = dispatch => ({
   isConnected: connected => dispatch(isConnected(connected))
 });
 
-const mapStateToProps = state => ({
-  widgets: state.widgets,
-  width: state.motionDetection.dimensions.width,
-  height: state.motionDetection.dimensions.height,
-  contextSource: state.motionDetection.contextSource,
-  contextBlended: state.motionDetection.contextBlended,
-  video: state.motionDetection.video,
-  lastImageData: state.motionDetection.lastImageData,
-  socket: state.connection.socket
-});
+const mapStateToProps = (state, ownProps) => {
+  const roomId = ownProps.match.params.roomId;
+  return {
+    widgets: state.widgets,
+    width: state.motionDetection.dimensions.width,
+    height: state.motionDetection.dimensions.height,
+    contextSource: state.motionDetection.contextSource,
+    contextBlended: state.motionDetection.contextBlended,
+    video: state.motionDetection.video,
+    lastImageData: state.motionDetection.lastImageData,
+    socket: state.connection.socket,
+    roomId
+  }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
