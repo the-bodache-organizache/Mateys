@@ -20,15 +20,20 @@ let players = [];
 let socketEvents = {};
 
 socketServer.on('connection', socket => {
-  socket.on('REQUEST_GAME_START', async (payload) => {
-    socketEvents = {...payload};
+  socket.on('SEND_EVENTS', payload => {
+    socketEvents = payload;
+  });
+
+  const { REQUEST_GAME_START, DISCONNECT } = socketEvents;
+
+  socket.on(REQUEST_GAME_START, () => {
     console.log('Another client has connected!: ', socket.id);
     players.push(socket);
     if (players.length >= 2) {
-      const game = await new Game(players);
+      const game = new Game(players);
       game.startGame();
     }
-    socket.on('disconnect', () => {
+    socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
       players = players.filter(player => player.id !== socket.id);
       console.log(players.length);
@@ -36,6 +41,7 @@ socketServer.on('connection', socket => {
   });
 });
 
+// *********************** EASYRTC *************************
 // easyrtc.setOption('logLevel', 'debug');
 
 // Overriding the default easyrtcAuth listener, only so we can directly access its callback

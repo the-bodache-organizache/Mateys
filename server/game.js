@@ -1,4 +1,5 @@
 const Widget = require('./db/widget');
+const socketEvents = require('./socketEvents');
 
 class Game {
   constructor(players) {
@@ -12,6 +13,9 @@ class Game {
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
+    this.selectWidgets = this.selectWidgets.bind(this);
+    this.sendWidgets = this.sendWidgets.bind(this);
+    this.play = this.play.bind(this);
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
@@ -20,9 +24,9 @@ class Game {
   async startGame() {
     const { selectWidgets, sendWidgets, play } = this;
     try {
-      await this.selectWidgets();
-      this.sendWidgets();
-      this.play();
+      await selectWidgets();
+      sendWidgets();
+      play();
     } catch (err) {
       console.log(`Game couldn't start!`);
     }
@@ -42,6 +46,7 @@ class Game {
   }
 
   sendWidgets() {
+    const { SEND_WIDGETS } = socketEvents;
     const { widgets } = this;
     const [ player1, player2 ] = this.players;
     const player1Widgets = [];
@@ -54,8 +59,8 @@ class Game {
         player2Widgets.push(widgets[i]);
       }
     }
-    player1.emit('send player widgets', player1Widgets);
-    player2.emit('send player widgets', player2Widgets);
+    player1.emit(SEND_WIDGETS, player1Widgets);
+    player2.emit(SEND_WIDGETS, player2Widgets);
   }
 
   randomIndex(length) {
@@ -63,14 +68,15 @@ class Game {
   }
 
   play() {
+    const { WIDGET_PRESSED } = socketEvents;
     const {
       players,
       nextLevel,
       end
     } = this;
-    players.forEach(player => player.removeAllListeners('press box'));
+    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
 
-    players.forEach(player => player.on('press box', payload => {
+    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
@@ -86,6 +92,7 @@ class Game {
     }));
 
     this.intervalId = setInterval(() => {
+      const { ISSUE_COMMAND } = socketEvents;
       const { randomIndex, widgets } = this;
       const [ player1, player2 ] = this.players;
       const { length } = this.widgets;
@@ -97,8 +104,8 @@ class Game {
       while (widget2.id === widget1.id) {
         widget2 = widgets[randomIndex(length)];
       }
-      player1.emit('issue command', widget1.command);
-      player2.emit('issue command', widget2.command);
+      player1.emit(ISSUE_COMMAND, widget1.command);
+      player2.emit(ISSUE_COMMAND, widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
@@ -108,28 +115,31 @@ class Game {
   }
 
   nextLevel() {
+    const { NEXT_LEVEL } = socketEvents;
     this.level++;
     this.seconds -= 0.8;
     this.targetScore += 1;
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.emit('next level', { level: this.level }));
+    this.players.forEach(player => player.emit(NEXT_LEVEL, { level: this.level }));
     this.sendStatus()
     this.startGame();
   }
 
   sendStatus() {
+    const { MOVE_STATUS } = socketEvents;
     const status = {
       health: this.health,
       score: this.score,
       level: this.level
     };
-    this.players.forEach(player => player.emit('move status', status));
+    this.players.forEach(player => player.emit(MOVE_STATUS, status));
   }
 
   end() {
-    this.players.forEach(player => player.emit('game over'));
+    const { GAME_OVER } = socketEvents;
+    this.players.forEach(player => player.emit(GAME_OVER));
   }
 }
 

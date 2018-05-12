@@ -15,7 +15,14 @@ class ConnectControls extends Component {
   }
 
   setListeners = socket => {
-    socket.on('send player widgets', widgets => {
+    const {
+      SEND_WIDGETS,
+      ISSUE_COMMAND,
+      NEXT_LEVEL,
+      GAME_OVER,
+      MOVE_STATUS
+    } = socketEvents;
+    socket.on(SEND_WIDGETS, widgets => {
       const newWidgets = new Array(6);
       newWidgets.fill(null);
       let index = 0;
@@ -28,12 +35,12 @@ class ConnectControls extends Component {
       }
       this.props.getWidgets(newWidgets);
     });
-    socket.on('issue command', command => {
+    socket.on(ISSUE_COMMAND, command => {
       this.props.getCommand(command);
     });
-    socket.on('next level', payload => this.props.getCommand(`Level ${payload.level}`));
-    socket.on('game over', () => this.props.getCommand('Game Over'));
-    socket.on('move status', status => this.props.getGameStatus(status));
+    socket.on(NEXT_LEVEL, payload => this.props.getCommand(`Level ${payload.level}`));
+    socket.on(GAME_OVER, () => this.props.getCommand('Game Over'));
+    socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
   };
 
   render() {
@@ -51,7 +58,7 @@ class ConnectControls extends Component {
               setSocket(webSocket);
               setListeners(webSocket);
               this.setState({ ready: true });
-              webSocket.emit(REQUEST_GAME_START, socketEvents);
+              webSocket.emit(REQUEST_GAME_START);
             }}
           >
             Set sail!

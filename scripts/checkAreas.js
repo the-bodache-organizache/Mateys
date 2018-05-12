@@ -1,7 +1,9 @@
 import store from '../client/store';
 import { toggleReady } from '../client/store/widgets';
+import socketEvents from './socketEvents';
 
 const checkAreas = (width, height, contextBlended, widgets, socket) => {
+  const { WIDGET_PRESSED } = socketEvents;
   for (let r = 0; r < 6; ++r) {
     let sx = 0,
       sy = 1 / 3 * r * height,
@@ -38,7 +40,7 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
         if (widget.ready) {
           store.dispatch(toggleReady(widget));
           console.log(widget);
-          socket.emit('press box', widget);
+          socket.emit(WIDGET_PRESSED, widget);
           setTimeout(() => {
             store.dispatch(toggleReady(widget));
           }, 2000);

@@ -1,4 +1,4 @@
-export default (videoWidth, videoHeight) => {
+export default (videoWidth, videoHeight, roomId) => {
   var selfEasyrtcid = '';
 
   function connect() {
@@ -11,6 +11,7 @@ export default (videoWidth, videoHeight) => {
       loginSuccess,
       loginFailure
     );
+    easyrtc.joinRoom(roomId, null, loginSuccess, loginFailure);
   }
 
   function clearConnectList() {

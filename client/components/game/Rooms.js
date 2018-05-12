@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Room from './Room';
 
 const Rooms = (props) => {
@@ -10,7 +11,9 @@ const Rooms = (props) => {
       <h3> List of Rooms here </h3>
       {
         rooms.map(room => (
-          <Room key={room.id} />
+          <Link key={room.id} to={`/game/${room.name}`}>
+            <Room room={room}/>
+          </Link>
         ))
       }
     </div>
