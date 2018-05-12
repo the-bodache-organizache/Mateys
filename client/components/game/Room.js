@@ -1,8 +1,11 @@
 import React from 'react';
 
 const Room = (props) => {
+  const { room } = props;
   return (
-    <h1>Room</h1>
+    <div id="room-link">
+      <h1>{room.name}</h1>
+    </div>
   )
 }
 

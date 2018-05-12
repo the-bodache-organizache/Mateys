@@ -62,7 +62,7 @@ class GameRoom extends React.Component {
   }
 
   async componentWillUnmount() {
-    const { socket } = this.props;
+    const socket = this.props.socket || easyrtc.webSocket;
     socket.emit('disconnect');
     socket.disconnect();
     cancelAnimationFrame(this.interval);

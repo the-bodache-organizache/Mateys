@@ -6,12 +6,15 @@ import { createRoom } from '../../store/rooms';
 class Lobby extends React.Component {
   constructor(props) {
     super(props);
+    this.socket = null;
+  }
+
+  componentWillMount() {
     this.socket = io(window.location.origin);
   }
 
   componentWillUnmount() {
-    const { socket } = this.props;
-    socket.emit('disconnect');
+    const { socket } = this;
     socket.disconnect();
   }
 

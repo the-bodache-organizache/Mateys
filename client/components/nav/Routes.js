@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Welcome from '../Welcome';
-import { Home } from '../user';
 import { GameRoom, Lobby } from '../game';
 import NoMatch from './NoMatch';
 
