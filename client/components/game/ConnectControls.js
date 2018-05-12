@@ -58,7 +58,7 @@ class ConnectControls extends Component {
               setSocket(webSocket);
               setListeners(webSocket);
               this.setState({ ready: true });
-              webSocket.emit(REQUEST_GAME_START);
+              webSocket.emit(REQUEST_GAME_START, socketEvents);
             }}
           >
             Set sail!
