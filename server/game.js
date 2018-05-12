@@ -1,4 +1,5 @@
 const Widget = require('./db/widget');
+const socketEvents = require('./socketEvents');
 
 class Game {
   constructor(players) {
@@ -42,6 +43,7 @@ class Game {
   }
 
   sendWidgets() {
+    const { SEND_WIDGETS } = socketEvents;
     const { widgets } = this;
     const [ player1, player2 ] = this.players;
     const player1Widgets = [];
@@ -54,8 +56,8 @@ class Game {
         player2Widgets.push(widgets[i]);
       }
     }
-    player1.emit('send player widgets', player1Widgets);
-    player2.emit('send player widgets', player2Widgets);
+    player1.emit(SEND_WIDGETS, player1Widgets);
+    player2.emit(SEND_WIDGETS, player2Widgets);
   }
 
   randomIndex(length) {
@@ -86,6 +88,7 @@ class Game {
     }));
 
     this.intervalId = setInterval(() => {
+      const { ISSUE_COMMAND } = socketEvents;
       const { randomIndex, widgets } = this;
       const [ player1, player2 ] = this.players;
       const { length } = this.widgets;
@@ -97,8 +100,8 @@ class Game {
       while (widget2.id === widget1.id) {
         widget2 = widgets[randomIndex(length)];
       }
-      player1.emit('issue command', widget1.command);
-      player2.emit('issue command', widget2.command);
+      player1.emit(ISSUE_COMMAND, widget1.command);
+      player2.emit(ISSUE_COMMAND, widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
@@ -108,28 +111,31 @@ class Game {
   }
 
   nextLevel() {
+    const { NEXT_LEVEL } = socketEvents;
     this.level++;
     this.seconds -= 0.8;
     this.targetScore += 1;
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.emit('next level', { level: this.level }));
+    this.players.forEach(player => player.emit(NEXT_LEVEL, { level: this.level }));
     this.sendStatus()
     this.startGame();
   }
 
   sendStatus() {
+    const { MOVE_STATUS } = socketEvents;
     const status = {
       health: this.health,
       score: this.score,
       level: this.level
     };
-    this.players.forEach(player => player.emit('move status', status));
+    this.players.forEach(player => player.emit(MOVE_STATUS, status));
   }
 
   end() {
-    this.players.forEach(player => player.emit('game over'));
+    const { GAME_OVER } = socketEvents;
+    this.players.forEach(player => player.emit(GAME_OVER));
   }
 }
 

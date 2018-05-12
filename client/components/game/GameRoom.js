@@ -16,6 +16,7 @@ import {
   blend,
   checkAreas
 } from '../../../scripts/';
+import { socketEvents } from '../../../scripts';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -64,7 +65,8 @@ class GameRoom extends React.Component {
 
   async componentWillUnmount() {
     const socket = this.props.socket || easyrtc.webSocket;
-    socket.emit('disconnect');
+    const { DISCONNECT } = socketEvents;
+    socket.emit(DISCONNECT);
     socket.disconnect();
     cancelAnimationFrame(this.interval);
     await easyrtc.disconnect();

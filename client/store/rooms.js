@@ -14,7 +14,7 @@ export const createdRoom = room => ({
 
 export const getRooms = () => {
   return (dispatch, _, {axios}) => {
-    axios.get('/api/rooms')
+    return axios.get('/api/rooms')
       .then(res => res.data)
       .then(rooms => dispatch(gotRooms(rooms)))
       .catch(console.error.bind(console));
