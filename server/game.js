@@ -13,6 +13,9 @@ class Game {
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
+    this.selectWidgets = this.selectWidgets.bind(this);
+    this.sendWidgets = this.sendWidgets.bind(this);
+    this.play = this.play.bind(this);
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
@@ -21,9 +24,9 @@ class Game {
   async startGame() {
     const { selectWidgets, sendWidgets, play } = this;
     try {
-      await this.selectWidgets();
-      this.sendWidgets();
-      this.play();
+      await selectWidgets();
+      sendWidgets();
+      play();
     } catch (err) {
       console.log(`Game couldn't start!`);
     }
@@ -65,14 +68,15 @@ class Game {
   }
 
   play() {
+    const { WIDGET_PRESSED } = socketEvents;
     const {
       players,
       nextLevel,
       end
     } = this;
-    players.forEach(player => player.removeAllListeners('press box'));
+    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
 
-    players.forEach(player => player.on('press box', payload => {
+    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
