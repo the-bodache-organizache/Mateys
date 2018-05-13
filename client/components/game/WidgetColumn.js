@@ -18,7 +18,7 @@ const WidgetColumn = props => {
         }
         return (<Widget key={index + add} widget={widget} index={index+add} color={color} />)
       })}
-     
+
     </div>
   );
 };
@@ -26,7 +26,7 @@ const WidgetColumn = props => {
 const mapStateToProps = state => ({
   widgets: state.widgets,
   // width: state.motionDetection.dimensions.width,
-  // height: state.motionDetection.dimensions.height
+  //height: state.motionDetection.dimensions.height
 });
 
 export default connect(mapStateToProps)(WidgetColumn);
