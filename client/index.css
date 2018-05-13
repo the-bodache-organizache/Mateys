@@ -77,7 +77,6 @@ canvas {
   width: 50px;
   background-color: white;
   opacity: 0.6;
-  border: solid 2px red;
   transform: scaleX(-1);
 }
 
