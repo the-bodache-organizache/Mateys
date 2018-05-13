@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Rooms from './Rooms';
 import { createRoom, getRooms } from '../../store/rooms';
-import { socketEvents } from '../../../scripts';
+import { socketEvents, shipNameGenerator, pirateDictionary } from '../../../scripts';
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -18,20 +18,33 @@ class Lobby extends React.Component {
     this.socket.disconnect();
   }
 
+  warning(portFull) {
+    if (portFull) {
+      return (
+       <span className="port-full">Port is full! Pick a crew.</span>
+      );
+    }
+  }
+
   render() {
-    const { createRoom } = this.props;
+    const { createRoom, rooms } = this.props;
     const { CREATE_ROOM } = socketEvents;
+    const portFull = rooms.length > 10;
+    const { warning } = this;
     return (
       <div id="game">
         <button
           type="button"
           onClick={() => {
-            const { id } = this.socket;
-            createRoom(id);
+            const shipName = shipNameGenerator(pirateDictionary);
+            createRoom(shipName);
             this.socket.emit(CREATE_ROOM);
-          }
-        }>Start a crew
+          }}
+          disabled={portFull}
+        >
+          Start a crew
         </button>
+        {warning(portFull)}
         <Rooms />
       </div>
     );
@@ -43,4 +56,8 @@ const mapDispatchToProps = dispatch => ({
   getRooms: () => dispatch(getRooms())
 });
 
-export default connect(null, mapDispatchToProps)(Lobby);
+const mapStateToProps = state => ({
+  rooms: state.rooms
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Lobby);

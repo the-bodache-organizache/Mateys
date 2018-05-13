@@ -1,5 +1,5 @@
 const randomNumber = (length) => {
-  return Math.floor(Math.random() * length);
+  return Math.round(Math.random() * length);
 }
 
 const shipNameGenerator = (dictionary) => {

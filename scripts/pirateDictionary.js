@@ -1,9 +1,4 @@
 export default {
-  article: [
-    'The',
-    'A',
-    'An'
-  ],
   adjective: [
     'Adventerous',
     'Assaulted',
@@ -311,4 +306,4 @@ export default {
       'Yo-ho-hos'
     ]
   }
-}
+};
