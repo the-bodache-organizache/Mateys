@@ -143,5 +143,3 @@ db.sync().then(() => {
   console.log('The database is synced');
   webServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 });
-
-module.exports = socketEvents;

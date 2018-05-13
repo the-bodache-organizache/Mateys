@@ -7,8 +7,8 @@ const Rooms = (props) => {
   const { rooms } = props;
   return (
     <div id="score-panel">
-      <h1>Join Room:</h1>
-      <h3> List of Rooms here </h3>
+      <h1>Join Crew:</h1>
+      <h3> List of Ships here </h3>
       {
         rooms.map(room => (
           <Link key={room.id} to={`/game/${room.name}`}>

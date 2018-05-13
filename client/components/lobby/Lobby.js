@@ -12,12 +12,6 @@ class Lobby extends React.Component {
 
   componentWillMount() {
     this.socket.emit('SEND_EVENTS', socketEvents);
-    const { CREATE_ROOM } = socketEvents;
-    const { getRooms } = this.props;
-    this.socket.on(CREATE_ROOM, () => {
-      console.log('I heard a room was created');
-      getRooms()
-    });
   }
 
   componentWillUnmount() {
@@ -36,7 +30,7 @@ class Lobby extends React.Component {
             createRoom(id);
             this.socket.emit(CREATE_ROOM);
           }
-        }>Create Room
+        }>Start a crew
         </button>
         <Rooms />
       </div>

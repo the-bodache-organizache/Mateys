@@ -1,7 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Welcome from '../Welcome';
-import { GameRoom, Lobby } from '../game';
+import { GameRoom } from '../game';
+import { Lobby } from '../lobby';
 import NoMatch from './NoMatch';
 
 const Routes = () => (

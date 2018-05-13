@@ -3,12 +3,8 @@ import { connect } from 'react-redux';
 import Widget from './Widget';
 
 const WidgetColumn = props => {
-  const { id, width, height, add, widgets } = props;
+  const { id, add, widgets } = props;
   const theseWidgets = widgets.slice(add, add + 3);
-  const widgetStyle = {
-    height: +height * 0.3,
-    margin: +height * 0.025
-  };
   return (
     <div id={id}>
       {theseWidgets.map((widget, index) => {
@@ -24,9 +20,7 @@ const WidgetColumn = props => {
 };
 
 const mapStateToProps = state => ({
-  widgets: state.widgets,
-  // width: state.motionDetection.dimensions.width,
-  //height: state.motionDetection.dimensions.height
+  widgets: state.widgets
 });
 
 export default connect(mapStateToProps)(WidgetColumn);

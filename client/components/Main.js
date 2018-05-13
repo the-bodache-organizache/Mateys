@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Routes, Navbar } from './nav';
 import { Load } from './load';
-import { me } from '../store/user';
 import { getDimensions } from '../store/motionDetection';
 import { getRooms } from '../store/rooms';
 
@@ -19,7 +18,6 @@ const Main = () => {
 
 const mapDispatch = dispatch => ({
   load: async () => {
-    await dispatch(me());
     await dispatch(getRooms());
   },
   getDimensions: (width, height) => dispatch(getDimensions(width, height))
