@@ -16,7 +16,6 @@ const WidgetColumn = props => {
         if (widget && !widget.ready) {
           color = 'red';
         }
-        console.log(color);
         return (<Widget key={index + add} widget={widget} index={index+add} color={color} />)
       })}
      
