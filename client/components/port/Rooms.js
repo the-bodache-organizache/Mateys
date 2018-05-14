@@ -6,9 +6,7 @@ import Room from './Room';
 const Rooms = (props) => {
   const { rooms } = props;
   return (
-    <div id="score-panel">
-      <h1>Join Crew:</h1>
-      <h3> List of Ships here </h3>
+    <div id="crew-list">
       {
         rooms.map(room => (
           <Link key={room.id} to={`/game/${room.name}`}>

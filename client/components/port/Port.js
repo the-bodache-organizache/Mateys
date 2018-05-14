@@ -32,7 +32,7 @@ class Lobby extends React.Component {
     const portFull = rooms.length >= 10;
     const { warning } = this;
     return (
-      <div id="port">
+      <div id="port" className="main-panel">
         <button
           type="button"
           onClick={() => {
@@ -45,6 +45,7 @@ class Lobby extends React.Component {
           Start a crew
         </button>
         {warning(portFull)}
+        <h1>Join Crew:</h1>
         <Rooms />
       </div>
     );

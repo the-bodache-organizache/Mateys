@@ -77,7 +77,7 @@ class GameRoom extends React.Component {
   render() {
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     return (
-      <div id="game">
+      <div id="game" className="main-panel">
         <div id="ship-name">
           <Ship />
         </div>
@@ -87,7 +87,7 @@ class GameRoom extends React.Component {
             canvasBlendedRef={canvasBlendedRef}
             videoRef={videoRef}
           />
-          <div id="bottom-panel">
+          <div id="bottom-panel" className="sub-panel">
             <CallerVideo />
             <ConnectControls />
             <ScorePanel />
