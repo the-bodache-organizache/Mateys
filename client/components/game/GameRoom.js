@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+
 import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
@@ -127,4 +129,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GameRoom);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GameRoom));
