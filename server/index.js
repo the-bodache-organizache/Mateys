@@ -16,7 +16,7 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
-let players = [];
+let rooms = {};
 let socketEvents = {};
 
 socketServer.on('connection', socket => {
@@ -32,17 +32,25 @@ socketServer.on('connection', socket => {
 
   socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);
-    const { socketEvents, myRoom } = payload;
-    players.push(socket);
-    if (players.length >= 2) {
-      const game = await new Game(players, myRoom);
+    const { socketEvents, myRoom} = payload;
+    const roomName = myRoom.name;
+    if (!rooms[roomName]) {
+      rooms[roomName] = [];
+    }
+    rooms[roomName].push(socket);
+    console.log(rooms);
+    if (rooms[roomName].length >= 2) {
+      const game = await new Game(rooms[roomName], myRoom);
       game.startGame();
-      socket.on(DISCONNECT, () => {game.end()});
+      socket.on(DISCONNECT, () => {
+        game.end();
+        rooms[roomName] = [];
+      });
     }
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
-      players = players.filter(player => player.id !== socket.id);
-      console.log(players.length);
+      rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
+      console.log(rooms[roomName].length);
     });
   });
 });
