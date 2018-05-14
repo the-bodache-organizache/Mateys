@@ -24,9 +24,9 @@ socketServer.on('connection', socket => {
     socketEvents = payload;
   });
 
-  const { REQUEST_GAME_START, DISCONNECT, CREATE_ROOM } = socketEvents;
+  const { REQUEST_GAME_START, DISCONNECT, EDIT_ROOM } = socketEvents;
 
-  socket.on(CREATE_ROOM, () => {
+  socket.on(EDIT_ROOM, () => {
     socket.broadcast.emit('RERENDER_PAGE');
   });
 

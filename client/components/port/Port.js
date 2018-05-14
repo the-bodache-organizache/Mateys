@@ -28,7 +28,7 @@ class Lobby extends React.Component {
 
   render() {
     const { createRoom, rooms } = this.props;
-    const { CREATE_ROOM } = socketEvents;
+    const { EDIT_ROOM } = socketEvents;
     const portFull = rooms.length >= 50;
     const { warning } = this;
     return (
@@ -38,7 +38,7 @@ class Lobby extends React.Component {
           onClick={() => {
             const shipName = shipNameGenerator(pirateDictionary);
             createRoom(shipName);
-            this.socket.emit(CREATE_ROOM);
+            this.socket.emit(EDIT_ROOM);
           }}
           disabled={portFull}
         >

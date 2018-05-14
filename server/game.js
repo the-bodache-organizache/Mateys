@@ -1,4 +1,4 @@
-const Widget = require('./db/widget');
+const { Widget, Rooms } = require('./db');
 
 class Game {
   constructor(players, room) {
@@ -128,10 +128,15 @@ class Game {
     this.players.forEach(player => player.emit('MOVE_STATUS', status));
   }
 
-  end() {
+  async end() {
     this.players.forEach(player => player.emit('GAME_OVER'));
     clearInterval(this.intervalId);
     this.players.forEach(player => player.leave(this.room.name));
+    await Rooms.destroy({ where: {name: this.room.name }});
+    this.players.forEach(player => {
+      player.broadcast.emit('RERENDER_PAGE');
+      player.emit('RERENDER_PAGE');
+    });
   }
 }
 
