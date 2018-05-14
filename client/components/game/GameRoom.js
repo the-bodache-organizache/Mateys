@@ -24,6 +24,7 @@ class GameRoom extends React.Component {
     this.canvasSourceRef = React.createRef();
     this.canvasBlendedRef = React.createRef();
     this.videoRef = React.createRef();
+    this.cleanUp = this.cleanUp.bind(this);
   }
 
   detectMotion = () => {
@@ -43,6 +44,7 @@ class GameRoom extends React.Component {
   };
 
   async componentDidMount() {
+    window.addEventListener('beforeunload', this.cleanUp);
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     const {
       width,
@@ -63,7 +65,12 @@ class GameRoom extends React.Component {
     this.detectMotion();
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
+    this.cleanUp();
+    window.removeEventListener('beforeunload', this.cleanUp);
+  }
+
+  async cleanUp () {
     const socket = this.props.socket || easyrtc.webSocket;
     const { DISCONNECT } = socketEvents;
     socket.emit(DISCONNECT);
