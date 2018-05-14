@@ -13,7 +13,16 @@ class Rooms extends React.Component {
       console.log('rerender the page!');
       this.props.getRooms();
     });
+    this.audioRef = React.createRef();
+    // this.soundContext = new AudioContext();
+    // this.bufferLoader = new BufferLoader(this.soundContext, [
+    //   'audio/click.mp3'
+    // ])
   }
+
+  // loadSounds() {
+
+  // }
 
   handleClick (room) {
     this.props.myRoom(room);
@@ -22,11 +31,15 @@ class Rooms extends React.Component {
 
   render () {
     const { rooms } = this.props;
+    const { audioRef } = this;
     return (
       <div id="crew-list">
+        <audio ref={audioRef}>
+          <source src="audio/click.mp3" />
+        </audio>
         {
           rooms.map(room => (
-            <Link key={room.id} to={`/game/${room.name}`} onClick={() => this.handleClick(room)}>
+            <Link key={room.id} to={`/game/${room.name}`} onClick={() => this.handleClick(room)} onMouseEnter={() => audioRef.current.play()}>
               <Room room={room} />
             </Link>
           ))
