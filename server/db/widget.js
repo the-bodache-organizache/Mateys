@@ -21,6 +21,10 @@ const Widget = db.define('widget', {
   ready: {
     type: Sequelize.BOOLEAN,
     allowNull: false
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    defaultValue: '/widget-images/cody.png'
   }
 });
 

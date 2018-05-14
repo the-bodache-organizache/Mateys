@@ -24,7 +24,11 @@ socketServer.on('connection', socket => {
     socketEvents = payload;
   });
 
-  const { REQUEST_GAME_START, DISCONNECT } = socketEvents;
+  const { REQUEST_GAME_START, DISCONNECT, CREATE_ROOM } = socketEvents;
+
+  socket.on(CREATE_ROOM, () => {
+    socket.broadcast.emit('RERENDER_PAGE');
+  });
 
   socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);

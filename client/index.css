@@ -137,10 +137,14 @@ canvas {
 
 /* WIDGETS */
 .widget {
-  width: 50px;
+  width: 100px;
   background-color: white;
-  opacity: 0.6;
   transform: scaleX(-1);
+}
+
+.widget-img {
+  width: 100px;
+  height: 100%;
 }
 
 #widgets-div {
@@ -166,9 +170,9 @@ canvas {
 
 #commandParagraph {
   color: #c27e18;
-  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
-  font-size: 2em;
+  font-size: 3em;
   font-weight: bold;
 }
 
