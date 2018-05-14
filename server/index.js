@@ -28,11 +28,12 @@ socketServer.on('connection', socket => {
 
   socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);
-    socketEvents = payload;
+    const { socketEvents, myRoom} = payload;
     players.push(socket);
     if (players.length >= 2) {
-      const game = await new Game(players);
+      const game = await new Game(players, myRoom);
       game.startGame();
+      socket.on(DISCONNECT, () => {game.end()});
     }
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);

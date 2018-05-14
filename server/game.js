@@ -1,7 +1,7 @@
 const Widget = require('./db/widget');
 
 class Game {
-  constructor(players) {
+  constructor(players, room) {
     this.players = players;
     this.level = 1;
     this.widgets = [];
@@ -15,6 +15,7 @@ class Game {
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
+    this.room = room;
   }
 
   async startGame() {
@@ -129,6 +130,8 @@ class Game {
 
   end() {
     this.players.forEach(player => player.emit('GAME_OVER'));
+    clearInterval(this.intervalId);
+    this.players.forEach(player => player.leave(this.room.name));
   }
 }
 

@@ -9,8 +9,9 @@ import connection from './connection';
 import motionDetection from './motionDetection';
 import gameStatus from './game-status';
 import rooms from './rooms';
+import myRoom from './myRoom';
 
-const reducer = combineReducers({ widgets, motionDetection, commands, connection, gameStatus, rooms });
+const reducer = combineReducers({ widgets, motionDetection, commands, connection, gameStatus, rooms, myRoom });
 
 const store = createStore(
   reducer,
