@@ -5,6 +5,7 @@ import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
 import { socketEvents } from '../../../scripts';
 import { getGameStatus } from '../../store/game-status';
+import { leaveRoom } from '../../store/myRoom';
 
 class ConnectControls extends Component {
   constructor(props) {
@@ -39,13 +40,16 @@ class ConnectControls extends Component {
       this.props.getCommand(command);
     });
     socket.on(NEXT_LEVEL, payload => this.props.getCommand(`Level ${payload.level}`));
-    socket.on(GAME_OVER, () => this.props.getCommand('Game Over'));
     socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
+    socket.on(GAME_OVER, () => {
+      this.props.leaveRoom();
+      this.props.getCommand('Game Over');
+    });
   };
 
   render() {
     const { REQUEST_GAME_START } = socketEvents;
-    const { isConnected, isPlayerOne, setSocket } = this.props;
+    const { isConnected, isPlayerOne, setSocket, myRoom } = this.props;
     const { setListeners } = this;
     const { ready } = this.state;
     const button =
@@ -58,7 +62,7 @@ class ConnectControls extends Component {
               setSocket(webSocket);
               setListeners(webSocket);
               this.setState({ ready: true });
-              webSocket.emit(REQUEST_GAME_START, socketEvents);
+              webSocket.emit(REQUEST_GAME_START, {socketEvents, myRoom});
             }}
           >
             Set sail!
@@ -84,14 +88,16 @@ const mapDispatchToProps = dispatch => ({
   getCommand: command => dispatch(getCommand(command)),
   setPlayerOne: isPlayerOne => dispatch(setPlayerOne(isPlayerOne)),
   setSocket: socket => dispatch(setSocket(socket)),
-  getGameStatus: status => dispatch(getGameStatus(status))
+  getGameStatus: status => dispatch(getGameStatus(status)),
+  leaveRoom: () => dispatch(leaveRoom())
 });
 
 const mapStateToProps = state => ({
   isConnected: state.connection.connected,
   isPlayerOne: state.connection.isPlayerOne,
   socket: state.connection.socket,
-  status: state.status
+  status: state.status,
+  myRoom: state.myRoom
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectControls);
