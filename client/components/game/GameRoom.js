@@ -14,9 +14,9 @@ import {
   connectToEasyRTC,
   drawVideo,
   blend,
-  checkAreas
-} from '../../../scripts/';
-import { socketEvents } from '../../../scripts';
+  checkAreas,
+  socketEvents
+} from '../../utils/';
 import Ship from './Ship';
 
 class GameRoom extends React.Component {

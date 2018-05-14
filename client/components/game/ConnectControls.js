@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getWidgets } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
-import { socketEvents } from '../../../scripts';
+import { socketEvents } from '../../utils';
 import { getGameStatus } from '../../store/game-status';
 import { leaveRoom } from '../../store/myRoom';
 
