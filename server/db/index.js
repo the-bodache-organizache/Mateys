@@ -1,5 +1,4 @@
 const db = require('./database');
-const User = require('./user');
 const Widget = require('./widget');
 const Rooms = require('./rooms');
 
@@ -7,7 +6,6 @@ const Rooms = require('./rooms');
 
 module.exports = {
   db,
-  User,
   Widget,
   Rooms
 };

@@ -1,5 +1,4 @@
 const Widget = require('./db/widget');
-const socketEvents = require('./index');
 
 class Game {
   constructor(players, room) {

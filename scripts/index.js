@@ -6,3 +6,5 @@ export { default as fastAbs } from './fastAbs';
 export { default as threshold } from './threshold';
 export { default as checkAreas } from './checkAreas';
 export { default as socketEvents } from './socketEvents';
+export { default as pirateDictionary } from './pirateDictionary';
+export { default as shipNameGenerator } from './shipNameGenerator';

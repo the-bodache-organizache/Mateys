@@ -18,9 +18,7 @@ class Rooms extends React.Component {
   render () {
     const { rooms } = this.props;
     return (
-      <div id="score-panel">
-        <h1>Join Room:</h1>
-        <h3> List of Rooms here </h3>
+      <div id="crew-list">
         {
           rooms.map(room => (
             <Link key={room.id} to={`/game/${room.name}`} onClick={() => this.handleClick(room)}>

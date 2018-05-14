@@ -17,6 +17,7 @@ import {
   checkAreas
 } from '../../../scripts/';
 import { socketEvents } from '../../../scripts';
+import Ship from './Ship';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -55,12 +56,13 @@ class GameRoom extends React.Component {
       isConnected,
       roomId
     } = this.props;
+    const roomNoSpaces = roomId.split(' ').join('');
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
       getVideo(videoRef.current)
     ]);
-    await connectToEasyRTC(+width, +height, roomId);
+    await connectToEasyRTC(+width, +height, roomNoSpaces);
     isConnected(true);
     this.detectMotion();
   }
@@ -70,28 +72,33 @@ class GameRoom extends React.Component {
     window.removeEventListener('beforeunload', this.cleanUp);
   }
 
-  async cleanUp () {
+  cleanUp () {
     const socket = this.props.socket || easyrtc.webSocket;
     const { DISCONNECT } = socketEvents;
     socket.emit(DISCONNECT);
     socket.disconnect();
     cancelAnimationFrame(this.interval);
-    await easyrtc.disconnect();
+    easyrtc.disconnect();
   }
 
   render() {
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     return (
-      <div id="game">
-        <SelfVideo
-          canvasSourceRef={canvasSourceRef}
-          canvasBlendedRef={canvasBlendedRef}
-          videoRef={videoRef}
-        />
-        <div id="bottom-panel">
-          <ScorePanel />
-          <ConnectControls />
-          <CallerVideo />
+      <div id="game" className="main-panel">
+        <div id="ship-name">
+          <Ship />
+        </div>
+        <div id="game-area">
+          <SelfVideo
+            canvasSourceRef={canvasSourceRef}
+            canvasBlendedRef={canvasBlendedRef}
+            videoRef={videoRef}
+          />
+          <div id="bottom-panel" className="sub-panel">
+            <CallerVideo />
+            <ConnectControls />
+            <ScorePanel />
+          </div>
         </div>
       </div>
     );

@@ -1,3 +1,13 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
 #app {
   width: 100vw;
   height: 100vh;
@@ -6,11 +16,8 @@
   background-size: cover;
   background-attachment: fixed;
   overflow-x: hidden;
-}
-
-form {
-  max-width: 50%;
-  min-width: 50%;
+  padding-bottom: 2em;
+  font-family: 'Exo 2', sans-serif;
 }
 
 #main {
@@ -20,8 +27,20 @@ form {
   align-items: center;
 }
 
+.main-panel {
+  color: #e3d0c2;
+  background-color: rgba(63, 45, 31, 0.6);
+  border-radius: 5px;
+}
+
+.sub-panel {
+  color: #19120c;
+  background-color: rgba(197, 141, 92, 0.7);
+  border-radius: 5px;
+}
+
 #logo {
-  padding: 1em;
+  padding-top: 1em;
 }
 
 #welcome {
@@ -36,10 +55,52 @@ form {
   justify-content: center;
 }
 
-/* GAME ROOM */
+/* PORT */
+#port {
+  padding: 2em;
+  width: 75vw;
+}
 
+#crew-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#room-link {
+  width: 20em;
+  height: 7em;
+  padding: 0.5em;
+  margin: 0.25em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75em;
+  transition: 0.5s;
+}
+
+#room-link:hover {
+  opacity: 0.7;
+  box-shadow: 0px 0px 0px 1px lightgrey;
+}
+
+/* GAME ROOM */
 #game {
-  margin: 0 5em;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#ship-name {
+  margin-bottom: 0.25em;
+  font-size: 3em;
+  align-self: center;
+}
+
+#game-area {
+  display: flex;
+  padding: 0 1.5em;
+  padding-bottom: 1.5em;
 }
 
 #self-video-div {
@@ -56,6 +117,7 @@ form {
 video {
   border: solid 5px black;
   background-color: black;
+  border-radius: 5px;
 }
 
 canvas {
@@ -67,9 +129,10 @@ canvas {
 
 #bottom-panel {
   display: flex;
+  flex-direction: column;
   margin: 1em;
+  padding: 1em;
   justify-content: space-between;
-  background-color: sandybrown;
 }
 
 /* WIDGETS */
