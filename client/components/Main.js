@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactAudioPlayer from 'react-audio-player';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -12,6 +13,13 @@ const Main = () => {
     <div id="main">
       <Navbar />
       <Routes />
+      <ReactAudioPlayer
+        className="port-sounds"
+        src="/audio/port.mp3"
+        autoPlay
+        loop
+        volume={0.1}
+      />
     </div>
   );
 };
