@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 const Welcome = () => {
   return (
     <div id="welcome">
-      <Link to='/lobby'>
-        <h1>Lobby</h1>
+      <Link to='/port'>
+        <h1>Port</h1>
       </Link>
     </div>
   );

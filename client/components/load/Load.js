@@ -8,8 +8,8 @@ const Load = OtherComponent =>
       error: false
     };
     componentDidMount() {
-      const width = `${Math.floor(window.innerWidth * 0.5)}`;
-      const height = `${Math.floor(window.innerHeight * 0.5)}`;
+      const width = `${Math.floor(window.innerWidth * 0.7)}`;
+      const height = `${Math.floor(window.innerHeight * 0.7)}`;
       this.props
         .load()
         .then(() => this.setState({ loaded: true }))

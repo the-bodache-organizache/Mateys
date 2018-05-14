@@ -29,10 +29,10 @@ class Lobby extends React.Component {
   render() {
     const { createRoom, rooms } = this.props;
     const { CREATE_ROOM } = socketEvents;
-    const portFull = rooms.length > 10;
+    const portFull = rooms.length >= 10;
     const { warning } = this;
     return (
-      <div id="game">
+      <div id="port">
         <button
           type="button"
           onClick={() => {
