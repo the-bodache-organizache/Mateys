@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Rooms from './Rooms';
 import { createRoom, getRooms } from '../../store/rooms';
-import { socketEvents, shipNameGenerator, pirateDictionary } from '../../../scripts';
+import { socketEvents, shipNameGenerator, pirateDictionary } from '../../utils';
 
 class Lobby extends React.Component {
   constructor(props) {
