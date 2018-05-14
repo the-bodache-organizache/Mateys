@@ -3,6 +3,7 @@ const GET_CONTEXT_SOURCE = 'GET_CONTEXT_SOURCE';
 const GET_CONTEXT_BLENDED = 'GET_CONTEXT_BLENDED';
 const GET_VIDEO = 'GET_VIDEO';
 const GET_LAST_IMAGE_DATA = 'GET_LAST_IMAGE_DATA';
+// actions in past tense
 
 const initialState = {
   dimensions: {

@@ -40,8 +40,8 @@ socketServer.on('connection', socket => {
     rooms[roomName].push(socket);
     console.log(rooms);
     if (rooms[roomName].length >= 2) {
-      const game = await new Game(rooms[roomName], myRoom);
-      game.startGame();
+      const game = new Game(rooms[roomName], myRoom);
+      await game.startGame();
       socket.on(DISCONNECT, () => {
         game.end();
         rooms[roomName] = [];

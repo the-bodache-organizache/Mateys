@@ -35,9 +35,9 @@ class Lobby extends React.Component {
       <div id="port" className="main-panel">
         <button
           type="button"
-          onClick={() => {
+          onClick={async () => {
             const shipName = shipNameGenerator(pirateDictionary);
-            createRoom(shipName);
+            await createRoom(shipName);
             this.socket.emit(EDIT_ROOM);
           }}
           disabled={portFull}
