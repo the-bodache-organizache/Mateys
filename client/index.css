@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 #app {
@@ -49,12 +50,12 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(99, 63, 8, 0.6);
+  background-color: rgba(63, 45, 31, 0.6);
   border-radius: 5px;
 }
 
 #ship-name {
-  color: whitesmoke;
+  color: #e3d0c2;
   margin-bottom: 0.25em;
   font-size: 3em;
   align-self: center;
@@ -93,8 +94,10 @@ canvas {
   display: flex;
   flex-direction: column;
   margin: 1em;
+  padding: 1em;
   justify-content: space-between;
-  background-color: sandybrown;
+  background-color: rgba(197, 141, 92, 0.7);
+  border-radius: 5px;
 }
 
 /* WIDGETS */
