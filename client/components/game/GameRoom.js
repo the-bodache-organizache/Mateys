@@ -77,7 +77,8 @@ class GameRoom extends React.Component {
   cleanUp () {
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
-      const { DISCONNECT } = socketEvents;
+      const { DISCONNECT, EDIT_ROOM } = socketEvents;
+      socket.emit(EDIT_ROOM);
       socket.emit(DISCONNECT);
       socket.disconnect();
       easyrtc.disconnect();
