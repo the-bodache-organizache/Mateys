@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Rooms from './Rooms';
-import { createRoom, getRooms } from '../../store/rooms';
+import { createRoom } from '../../store/rooms';
 import { socketEvents, shipNameGenerator, pirateDictionary } from '../../utils';
 
 class Lobby extends React.Component {
@@ -29,7 +29,7 @@ class Lobby extends React.Component {
   render() {
     const { createRoom, rooms } = this.props;
     const { CREATE_ROOM } = socketEvents;
-    const portFull = rooms.length >= 10;
+    const portFull = rooms.length >= 50;
     const { warning } = this;
     return (
       <div id="port" className="main-panel">
@@ -46,7 +46,7 @@ class Lobby extends React.Component {
         </button>
         {warning(portFull)}
         <h1>Join Crew:</h1>
-        <Rooms />
+        <Rooms socket={this.socket}/>
       </div>
     );
   }
@@ -54,7 +54,6 @@ class Lobby extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   createRoom: (room) => dispatch(createRoom(room)),
-  getRooms: () => dispatch(getRooms())
 });
 
 const mapStateToProps = state => ({

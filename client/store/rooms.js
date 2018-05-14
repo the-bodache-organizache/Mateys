@@ -13,8 +13,8 @@ export const createdRoom = room => ({
 });
 
 export const getRooms = () => {
-  return (dispatch, _, {axios}) => {
-    return axios.get('/api/rooms')
+  return async (dispatch, _, {axios}) => {
+    await axios.get('/api/rooms')
       .then(res => res.data)
       .then(rooms => dispatch(gotRooms(rooms)))
       .catch(console.error.bind(console));
@@ -22,8 +22,8 @@ export const getRooms = () => {
 }
 
 export const createRoom = (room) => {
-  return (dispatch, _, {axios}) => {
-    axios.post('/api/rooms', room)
+  return async (dispatch, _, {axios}) => {
+    await axios.post('/api/rooms', room)
       .then(res => res.data)
       .then(room => dispatch(createdRoom(room)))
       .catch(console.error.bind(console));

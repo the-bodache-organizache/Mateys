@@ -10,7 +10,13 @@ const Widget = props => {
   };
 
   return (
-    <div id={`widget${index}`} className={`widget ${!widget && 'hide'}`} style={widgetStyle} >{widget && widget.name}</div>
+    <div
+      id={`widget${index}`}
+      className={`widget ${!widget && 'hide'}`}
+      style={widgetStyle}
+    >
+      {widget && <img className="widget-img" src={`${widget.imageUrl}`} />}
+    </div>
   );
 };
 

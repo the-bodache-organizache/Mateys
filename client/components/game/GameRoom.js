@@ -74,11 +74,13 @@ class GameRoom extends React.Component {
 
   cleanUp () {
     const socket = this.props.socket || easyrtc.webSocket;
-    const { DISCONNECT } = socketEvents;
-    socket.emit(DISCONNECT);
-    socket.disconnect();
+    if (socket) {
+      const { DISCONNECT } = socketEvents;
+      socket.emit(DISCONNECT);
+      socket.disconnect();
+      easyrtc.disconnect();
+    }
     cancelAnimationFrame(this.interval);
-    easyrtc.disconnect();
   }
 
   render() {

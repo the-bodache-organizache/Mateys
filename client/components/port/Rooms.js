@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Room from './Room';
 import { myRoom } from '../../store/myRoom';
+import { getRooms } from '../../store/rooms';
 
 class Rooms extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.props.socket.on('RERENDER_PAGE', () => {
+      console.log('rerender the page!');
+      this.props.getRooms();
+    });
   }
 
   handleClick (room) {
@@ -36,7 +41,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  myRoom: (room) => dispatch(myRoom(room))
+  myRoom: (room) => dispatch(myRoom(room)),
+  getRooms: () => dispatch(getRooms())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Rooms);
