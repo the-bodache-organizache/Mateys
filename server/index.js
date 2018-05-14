@@ -33,6 +33,7 @@ socketServer.on('connection', socket => {
     if (players.length >= 2) {
       const game = await new Game(players, myRoom);
       game.startGame();
+      socket.on(DISCONNECT, () => {game.end()});
     }
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
