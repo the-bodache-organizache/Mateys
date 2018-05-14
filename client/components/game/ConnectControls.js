@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+
 import { getWidgets } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
@@ -44,6 +46,9 @@ class ConnectControls extends Component {
     socket.on(GAME_OVER, () => {
       this.props.leaveRoom();
       this.props.getCommand('Game Over');
+      setTimeout(() => {
+        this.props.history.push('/port');
+      }, 5000)
     });
   };
 
@@ -92,12 +97,13 @@ const mapDispatchToProps = dispatch => ({
   leaveRoom: () => dispatch(leaveRoom())
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   isConnected: state.connection.connected,
   isPlayerOne: state.connection.isPlayerOne,
   socket: state.connection.socket,
   status: state.status,
-  myRoom: state.myRoom
+  myRoom: state.myRoom,
+  history: ownProps.history
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectControls);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConnectControls));

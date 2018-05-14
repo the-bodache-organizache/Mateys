@@ -115,7 +115,7 @@ class Game {
     this.health = 10;
     clearInterval(this.intervalId);
     this.players.forEach(player => player.emit('NEXT_LEVEL', { level: this.level }));
-    this.sendStatus()
+    this.sendStatus();
     this.startGame();
   }
 
