@@ -2,12 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Rooms from './Rooms';
 import { createRoom } from '../../store/rooms';
+import { setSocket } from '../../store/connection';
 import { socketEvents, shipNameGenerator, pirateDictionary } from '../../utils';
 
-class Lobby extends React.Component {
+class Port extends React.Component {
   constructor(props) {
     super(props);
     this.socket = io(window.location.origin);
+    this.props.setSocket(this.socket);
   }
 
   componentWillMount() {
@@ -54,10 +56,11 @@ class Lobby extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   createRoom: (room) => dispatch(createRoom(room)),
+  setSocket: socket => dispatch(setSocket(socket))
 });
 
 const mapStateToProps = state => ({
   rooms: state.rooms
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Lobby);
+export default connect(mapStateToProps, mapDispatchToProps)(Port);

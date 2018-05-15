@@ -46,6 +46,10 @@ class GameRoom extends React.Component {
     this.interval = requestAnimationFrame(this.detectMotion);
   };
 
+  componentWillMount() {
+    
+  }
+
   async componentDidMount() {
     window.addEventListener('beforeunload', this.cleanUp);
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
@@ -56,9 +60,9 @@ class GameRoom extends React.Component {
       getContextBlended,
       getVideo,
       isConnected,
-      roomId
+      myRoom,
     } = this.props;
-    const roomNoSpaces = roomId.split(' ').join('');
+    const roomNoSpaces = myRoom.name.split(' ').join('');
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
@@ -67,6 +71,8 @@ class GameRoom extends React.Component {
     await connectToEasyRTC(+width, +height, roomNoSpaces);
     isConnected(true);
     this.detectMotion();
+    console.log(this.props.socket);
+    this.props.socket.emit('ENTER_ROOM', myRoom.name);
   }
 
   componentWillUnmount() {
@@ -118,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state, ownProps) => {
-  const roomId = ownProps.match.params.roomId;
+  // const roomId = ownProps.match.params.roomId;
   return {
     widgets: state.widgets,
     width: state.motionDetection.dimensions.width,
@@ -128,7 +134,7 @@ const mapStateToProps = (state, ownProps) => {
     video: state.motionDetection.video,
     lastImageData: state.motionDetection.lastImageData,
     socket: state.connection.socket,
-    roomId
+    myRoom: state.myRoom
   }
 };
 

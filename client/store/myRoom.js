@@ -2,7 +2,7 @@ const MY_ROOM = 'MY_ROOM';
 const LEAVE_ROOM = 'LEAVE_ROOM';
 const initialState = {};
 
-export const myRoom = room => ({
+export const getMyRoom = room => ({
   type: MY_ROOM,
   room
 });
