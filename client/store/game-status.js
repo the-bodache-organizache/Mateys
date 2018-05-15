@@ -1,5 +1,5 @@
 const GET_GAME_STATUS = 'GET_GAME_STATUS';
-const initialState = {}; // ADD INITIAL GAME STATUS VALUES
+const initialState = {health: 10, score: 0, level: 1};
 
 export const getGameStatus = status => ({
   type: GET_GAME_STATUS,

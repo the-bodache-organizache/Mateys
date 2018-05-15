@@ -15,6 +15,7 @@ class ConnectControls extends Component {
     this.state = {
       ready: false
     };
+    this.resetState = this.resetState.bind(this);
   }
 
   setListeners = socket => {
@@ -43,14 +44,22 @@ class ConnectControls extends Component {
     });
     socket.on(NEXT_LEVEL, payload => this.props.getCommand(`Level ${payload.level}`));
     socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
-    socket.on(GAME_OVER, () => {
-      this.props.leaveRoom();
-      this.props.getCommand('Game Over');
-      setTimeout(() => {
-        this.props.history.push('/port');
-      }, 5000)
-    });
+    socket.on(GAME_OVER, () => {this.resetState()});
   };
+
+  resetState() {
+    //resetting the local state in store to pregame settings
+    this.props.getCommand('Game Over');
+    this.props.leaveRoom();
+    setTimeout(() => {
+      this.props.getGameStatus({health: 10, score: 0, level: 1});
+      this.props.getCommand('');
+      const resetWidgets = new Array(6);
+      resetWidgets.fill(null);
+      this.props.getWidgets(resetWidgets);
+      this.props.history.push('/port');
+    }, 5000);
+  }
 
   render() {
     const { REQUEST_GAME_START } = socketEvents;
