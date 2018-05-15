@@ -19,6 +19,7 @@ const seed = async () => {
     Widget.create({name: 'cody', command: 'Pet Cody!', ready: true, imageUrl: '/widget-images/pirate-cody.png'}),
     Widget.create({name: 'duel', command: 'Duel!', ready: true, imageUrl: '/widget-images/duel.png'}),
     Widget.create({name: 'treasure', command: 'Grab the treasure!', ready: true, imageUrl: '/widget-images/treasure.png'}),
+    Widget.create({name: 'flag', command: 'Raise the Jolly Roger!', ready: true, imageUrl: '/widget-images/flag.png'})
   ]);
 
   console.log(`seeded successfully`);
