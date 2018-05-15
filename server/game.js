@@ -1,4 +1,5 @@
 const { Widget, Rooms } = require('./db');
+const socketEvents = require('../client/utils/socketEvents');
 
 class Game {
   constructor(players, room) {
@@ -24,7 +25,7 @@ class Game {
       this.sendWidgets();
       this.play();
     } catch (err) {
-      console.log(`Game couldn't start!`);
+      console.error.bind(err);
     }
   }
 
@@ -42,6 +43,7 @@ class Game {
   }
 
   sendWidgets() {
+    const { SEND_WIDGETS } = socketEvents;
     const { widgets } = this;
     const [ player1, player2 ] = this.players;
     const player1Widgets = [];
@@ -54,8 +56,8 @@ class Game {
         player2Widgets.push(widgets[i]);
       }
     }
-    player1.emit('SEND_WIDGETS', player1Widgets);
-    player2.emit('SEND_WIDGETS', player2Widgets);
+    player1.emit(SEND_WIDGETS, player1Widgets);
+    player2.emit(SEND_WIDGETS, player2Widgets);
   }
 
   randomIndex(length) {
@@ -68,15 +70,23 @@ class Game {
       nextLevel,
       end
     } = this;
-    players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
+    const {
+      WIDGET_PRESSED,
+      RIGHT_MOVE,
+      WRONG_MOVE,
+      ISSUE_COMMAND
+    } = socketEvents;
+    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
 
-    players.forEach(player => player.on('WIDGET_PRESSED', payload => {
+    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
+          player.emit(RIGHT_MOVE);
           this.score++;
           this.activeCommands.splice(index, 1);
         } else {
+          player.emit(WRONG_MOVE);
           this.health--;
         }
         if (this.score >= this.targetScore) nextLevel();
@@ -97,8 +107,8 @@ class Game {
       while (widget2.id === widget1.id) {
         widget2 = widgets[randomIndex(length)];
       }
-      player1.emit('ISSUE_COMMAND', widget1.command);
-      player2.emit('ISSUE_COMMAND', widget2.command);
+      player1.emit(ISSUE_COMMAND, widget1.command);
+      player2.emit(ISSUE_COMMAND, widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
       console.log('HEALTH:', this.health);
       console.log('SCORE:', this.score);
@@ -108,34 +118,37 @@ class Game {
   }
 
   nextLevel() {
+    const { NEXT_LEVEL } = socketEvents;
     this.level++;
     this.seconds -= 0.8;
     this.targetScore += 1;
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.emit('NEXT_LEVEL', { level: this.level }));
+    this.players.forEach(player => player.emit(NEXT_LEVEL, { level: this.level }));
     this.sendStatus();
     this.startGame();
   }
 
   sendStatus() {
+    const { MOVE_STATUS } = socketEvents;
     const status = {
       health: this.health,
       score: this.score,
       level: this.level
     };
-    this.players.forEach(player => player.emit('MOVE_STATUS', status));
+    this.players.forEach(player => player.emit(MOVE_STATUS, status));
   }
 
   async end() {
-    this.players.forEach(player => player.emit('GAME_OVER'));
+    const { GAME_OVER, RERENDER_PAGE } = socketEvents;
+    this.players.forEach(player => player.emit(GAME_OVER));
     clearInterval(this.intervalId);
     this.players.forEach(player => player.leave(this.room.name));
     await Rooms.destroy({ where: {name: this.room.name }});
     this.players.forEach(player => {
-      player.broadcast.emit('RERENDER_PAGE');
-      player.emit('RERENDER_PAGE');
+      player.broadcast.emit(RERENDER_PAGE);
+      player.emit(RERENDER_PAGE);
     });
   }
 }
