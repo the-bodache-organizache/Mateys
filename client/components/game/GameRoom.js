@@ -60,9 +60,9 @@ class GameRoom extends React.Component {
       getContextBlended,
       getVideo,
       isConnected,
-      roomId
+      myRoom,
     } = this.props;
-    const roomNoSpaces = roomId.split(' ').join('');
+    const roomNoSpaces = myRoom.name.split(' ').join('');
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
       getContextBlended(canvasBlendedRef.current.getContext('2d')),
@@ -72,7 +72,7 @@ class GameRoom extends React.Component {
     isConnected(true);
     this.detectMotion();
     console.log(this.props.socket);
-    this.props.socket.emit('ENTER_ROOM', roomId);
+    this.props.socket.emit('ENTER_ROOM', myRoom.name);
   }
 
   componentWillUnmount() {
@@ -124,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state, ownProps) => {
-  const roomId = ownProps.match.params.roomId;
+  // const roomId = ownProps.match.params.roomId;
   return {
     widgets: state.widgets,
     width: state.motionDetection.dimensions.width,
@@ -134,7 +134,7 @@ const mapStateToProps = (state, ownProps) => {
     video: state.motionDetection.video,
     lastImageData: state.motionDetection.lastImageData,
     socket: state.connection.socket,
-    roomId
+    myRoom: state.myRoom
   }
 };
 

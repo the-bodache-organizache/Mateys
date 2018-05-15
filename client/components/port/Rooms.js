@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Room from './Room';
-import { myRoom } from '../../store/myRoom';
+import { getMyRoom } from '../../store/myRoom';
 import { getRooms } from '../../store/rooms';
 
 class Rooms extends React.Component {
@@ -25,7 +25,7 @@ class Rooms extends React.Component {
   // }
 
   handleClick (room) {
-    this.props.myRoom(room);
+    this.props.getMyRoom(room);
     console.log(room);
   }
 
@@ -39,7 +39,7 @@ class Rooms extends React.Component {
         </audio>
         {
           rooms.map(room => (
-            <Link key={room.id} to={`/game/${room.name}`} onClick={() => this.handleClick(room)} onMouseEnter={() => audioRef.current.play()}>
+            <Link key={room.id} to="/game" onClick={() => this.handleClick(room)} onMouseEnter={() => audioRef.current.play()}>
               <Room room={room} />
             </Link>
           ))
@@ -54,7 +54,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  myRoom: (room) => dispatch(myRoom(room)),
+  getMyRoom: (room) => dispatch(getMyRoom(room)),
   getRooms: () => dispatch(getRooms())
 });
 

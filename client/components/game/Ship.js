@@ -3,14 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const Ship = (props) => {
-  const { roomId } = props;
-  return roomId;
+  const { myRoom } = props;
+  return myRoom.name;
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { roomId } = ownProps.match.params;
+  // const { roomId } = ownProps.match.params;
   return {
-    roomId
+    myRoom: state.myRoom
   }
 }
 

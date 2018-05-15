@@ -50,7 +50,6 @@ class ConnectControls extends Component {
   resetState() {
     //resetting the local state in store to pregame settings
     this.props.getCommand('Game Over');
-    this.props.leaveRoom();
     setTimeout(() => {
       this.props.getGameStatus({health: 10, score: 0, level: 1});
       this.props.getCommand('');
@@ -58,6 +57,7 @@ class ConnectControls extends Component {
       resetWidgets.fill(null);
       this.props.getWidgets(resetWidgets);
       this.props.history.push('/port');
+      this.props.leaveRoom();
     }, 5000);
   }
 
