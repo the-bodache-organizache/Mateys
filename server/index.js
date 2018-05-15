@@ -20,8 +20,18 @@ let rooms = {};
 let socketEvents = {};
 
 socketServer.on('connection', socket => {
+  console.log('A client has connected');
   socket.on('SEND_EVENTS', payload => {
     socketEvents = payload;
+  });
+
+  socket.on('ENTER_ROOM', roomName => {
+
+    console.log('WTF!!!');
+    if (socketServer.sockets.clients(roomName).length > 2) {
+      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
+      // socket.disconnect();
+    }
   });
 
   const { REQUEST_GAME_START, DISCONNECT, EDIT_ROOM } = socketEvents;
