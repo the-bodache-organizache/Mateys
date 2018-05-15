@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { NoMatch } from '../nav'
 import SelfVideo from './SelfVideo';
 import ScorePanel from './ScorePanel';
 import ConnectControls from './ConnectControls';
@@ -94,7 +95,8 @@ class GameRoom extends React.Component {
 
   render() {
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
-    return (
+    const { myRoom } = this.props;
+    return myRoom.name ? (
       <div id="game" className="main-panel">
         <div id="ship-name">
           <Ship />
@@ -112,6 +114,8 @@ class GameRoom extends React.Component {
           </div>
         </div>
       </div>
+    ) : (
+      <NoMatch />
     );
   }
 }
