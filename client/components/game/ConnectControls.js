@@ -8,6 +8,7 @@ import { setPlayerOne, setSocket } from '../../store/connection';
 import { socketEvents } from '../../utils';
 import { getGameStatus } from '../../store/game-status';
 import { leaveRoom } from '../../store/myRoom';
+import { playSound } from '../../utils';
 
 class ConnectControls extends Component {
   constructor(props) {
@@ -26,6 +27,11 @@ class ConnectControls extends Component {
       GAME_OVER,
       MOVE_STATUS
     } = socketEvents;
+    const {
+      levelup,
+      gameover
+    } = this.props.sounds;
+
     socket.on(SEND_WIDGETS, widgets => {
       const newWidgets = new Array(6);
       newWidgets.fill(null);
@@ -39,16 +45,23 @@ class ConnectControls extends Component {
       }
       this.props.getWidgets(newWidgets);
     });
+
     socket.on(ISSUE_COMMAND, command => {
       this.props.getCommand(command);
     });
-    socket.on(NEXT_LEVEL, payload => this.props.getCommand(`Level ${payload.level}`));
+
+    socket.on(NEXT_LEVEL, payload => {
+      playSound(levelup);
+      this.props.getCommand(`Level ${payload.level}`);
+    });
+
     socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
     socket.on(GAME_OVER, () => {this.resetState()});
   };
 
   resetState() {
     //resetting the local state in store to pregame settings
+    playSound(this.props.sounds.gameover);
     this.props.getCommand('Game Over');
     setTimeout(() => {
       this.props.getGameStatus({health: 10, score: 0, level: 1});
@@ -112,7 +125,8 @@ const mapStateToProps = (state, ownProps) => ({
   socket: state.connection.socket,
   status: state.status,
   myRoom: state.myRoom,
-  history: ownProps.history
+  history: ownProps.history,
+  sounds: state.sounds
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConnectControls));

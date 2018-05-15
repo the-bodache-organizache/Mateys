@@ -79,7 +79,7 @@ a {
   justify-content: center;
   align-items: center;
   font-size: 0.75em;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 
 #room-link:hover {
