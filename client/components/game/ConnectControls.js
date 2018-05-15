@@ -25,11 +25,15 @@ class ConnectControls extends Component {
       ISSUE_COMMAND,
       NEXT_LEVEL,
       GAME_OVER,
-      MOVE_STATUS
+      MOVE_STATUS,
+      RIGHT_MOVE,
+      WRONG_MOVE
     } = socketEvents;
     const {
       levelup,
-      gameover
+      gameover,
+      correct,
+      wrong
     } = this.props.sounds;
 
     socket.on(SEND_WIDGETS, widgets => {
@@ -57,6 +61,8 @@ class ConnectControls extends Component {
 
     socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
     socket.on(GAME_OVER, () => {this.resetState()});
+    socket.on(RIGHT_MOVE, () => playSound(correct));
+    socket.on(WRONG_MOVE, () => playSound(wrong));
   };
 
   resetState() {
