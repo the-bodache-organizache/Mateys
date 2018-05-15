@@ -63,12 +63,12 @@ class ConnectControls extends Component {
     //resetting the local state in store to pregame settings
     playSound(this.props.sounds.gameover);
     this.props.getCommand('Game Over');
+    const resetWidgets = new Array(6);
+    resetWidgets.fill(null);
+    this.props.getWidgets(resetWidgets);
     setTimeout(() => {
       this.props.getGameStatus({health: 10, score: 0, level: 1});
       this.props.getCommand('');
-      const resetWidgets = new Array(6);
-      resetWidgets.fill(null);
-      this.props.getWidgets(resetWidgets);
       this.props.history.push('/port');
       this.props.leaveRoom();
     }, 5000);
