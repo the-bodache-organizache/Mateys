@@ -46,6 +46,10 @@ class GameRoom extends React.Component {
     this.interval = requestAnimationFrame(this.detectMotion);
   };
 
+  componentWillMount() {
+    
+  }
+
   async componentDidMount() {
     window.addEventListener('beforeunload', this.cleanUp);
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
@@ -67,6 +71,8 @@ class GameRoom extends React.Component {
     await connectToEasyRTC(+width, +height, roomNoSpaces);
     isConnected(true);
     this.detectMotion();
+    console.log(this.props.socket);
+    this.props.socket.emit('ENTER_ROOM', roomId);
   }
 
   componentWillUnmount() {
