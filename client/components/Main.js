@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactAudioPlayer from 'react-audio-player';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -12,7 +11,6 @@ import { playSound } from '../utils';
 
 const Main = (props) => {
   const { port } = props.sounds;
-  console.log(props);
   return (
     <div id="main">
       <Navbar />

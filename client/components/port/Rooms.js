@@ -11,14 +11,12 @@ class Rooms extends React.Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.props.socket.on('RERENDER_PAGE', () => {
-      console.log('rerender the page!');
       this.props.getRooms();
     });
   }
 
   handleClick(room) {
     this.props.myRoom(room);
-    console.log(room);
   }
 
   render() {
