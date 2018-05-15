@@ -49,6 +49,7 @@ class GameRoom extends React.Component {
 
   async componentDidMount() {
     window.addEventListener('beforeunload', this.cleanUp);
+    const { ENTER_ROOM } = socketEvents;
     const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
     const {
       width,
@@ -69,7 +70,6 @@ class GameRoom extends React.Component {
     isConnected(true);
     this.detectMotion();
     console.log(this.props.socket);
-    
   }
 
   componentWillUnmount() {

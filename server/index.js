@@ -1,5 +1,6 @@
 const { db } = require('./db');
 const app = require('./app');
+const socketEvents = require('../client/utils/socketEvents');
 const PORT = process.env.PORT || 8080;
 const env = process.env.NODE_ENV || 'development';
 
@@ -17,37 +18,37 @@ const webServer = http.createServer(app);
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
 let rooms = {};
-let socketEvents = {};
 
 socketServer.on('connection', socket => {
   console.log('A client has connected');
-  socket.on('SEND_EVENTS', payload => {
-    socketEvents = payload;
-  });
 
-  socket.on('ENTER_ROOM', room => {
-    // console.log(socketServer.sockets.adapter.rooms);
-    // if (socketServer.sockets.adapter.rooms[room].length >= 2) {
-    //   console.log('Room Full!');
-    //   socket.emit('ROOM_FULL');
-    // }
-  });
+  const {
+    ENTER_ROOM,
+    RERENDER_PAGE,
+    REQUEST_GAME_START,
+    DISCONNECT,
+    EDIT_ROOM
+  } = socketEvents;
 
-  const { REQUEST_GAME_START, DISCONNECT, EDIT_ROOM } = socketEvents;
+  socket.on(ENTER_ROOM, roomName => {
+    if (socketServer.sockets.clients(roomName).length > 2) {
+      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
+      // socket.disconnect();
+    }
+  });
 
   socket.on(EDIT_ROOM, () => {
-    socket.broadcast.emit('RERENDER_PAGE');
+    socket.broadcast.emit(RERENDER_PAGE);
   });
 
   socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);
-    const { socketEvents, myRoom} = payload;
+    const { myRoom } = payload;
     const roomName = myRoom.name;
     if (!rooms[roomName]) {
       rooms[roomName] = [];
     }
     rooms[roomName].push(socket);
-    console.log(rooms);
     if (rooms[roomName].length >= 2) {
       const game = new Game(rooms[roomName], myRoom);
       await game.startGame();
@@ -59,7 +60,6 @@ socketServer.on('connection', socket => {
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
       rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
-      console.log(rooms[roomName].length);
     });
   });
 });
