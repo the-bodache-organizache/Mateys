@@ -25,13 +25,12 @@ socketServer.on('connection', socket => {
     socketEvents = payload;
   });
 
-  socket.on('ENTER_ROOM', roomName => {
-
-    console.log('WTF!!!');
-    if (socketServer.sockets.clients(roomName).length > 2) {
-      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
-      // socket.disconnect();
-    }
+  socket.on('ENTER_ROOM', room => {
+    // console.log(socketServer.sockets.adapter.rooms);
+    // if (socketServer.sockets.adapter.rooms[room].length >= 2) {
+    //   console.log('Room Full!');
+    //   socket.emit('ROOM_FULL');
+    // }
   });
 
   const { REQUEST_GAME_START, DISCONNECT, EDIT_ROOM } = socketEvents;
