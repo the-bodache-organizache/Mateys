@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Room from './Room';
 import { getMyRoom } from '../../store/myRoom';
@@ -10,6 +11,7 @@ class Rooms extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.requestRoomEnter = this.requestRoomEnter.bind(this);
     this.props.socket.on('RERENDER_PAGE', () => {
       this.props.getRooms();
     });
@@ -17,7 +19,23 @@ class Rooms extends React.Component {
 
 
   handleClick (room) {
-    this.props.getMyRoom(room);
+    const { getMyRoom } = this.props;
+    getMyRoom(room);
+    this.requestRoomEnter(room);
+  }
+
+  requestRoomEnter (room) {
+    const { socket, history } = this.props;
+    socket.emit('REQUEST_ROOM_ENTER', room);
+    socket.on('ROOM_ENTER_RESPONSE', response => {
+      if (response) {
+        this.props.history.push('/game');
+      } else {
+        alert("TOO MANY PEOPLE YOU IDIOT!!!!!");
+      }
+      socket.removeAllListeners('ROOM_ENTER_RESPONSE');
+    });
+
   }
 
   render() {
@@ -27,25 +45,42 @@ class Rooms extends React.Component {
       <div id="crew-list">
 
         {rooms.map(room => (
-          <Link
+          <button
             key={room.id}
-            to="/game"
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
               playSound(click);
             }}
           >
             <Room room={room} />
-          </Link>
+          </button>
         ))}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
+{/* <div id="crew-list">
+
+{rooms.map(room => (
+  <Link
+    key={room.id}
+    to="/game"
+    onClick={() => this.handleClick(room)}
+    onMouseEnter={() => {
+      playSound(click);
+    }}
+  >
+    <Room room={room} />
+  </Link>
+))}
+</div>
+); */}
+
+const mapStateToProps = (state, ownProps) => ({
   rooms: state.rooms,
-  sounds: state.sounds
+  sounds: state.sounds,
+  history: ownProps.history
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -53,4 +88,4 @@ const mapDispatchToProps = dispatch => ({
   getRooms: () => dispatch(getRooms())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Rooms);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Rooms));

@@ -20,6 +20,7 @@ class Game {
 
   async startGame() {
     try {
+      console.log('THE PLAUERS', this.players)
       await this.selectWidgets();
       this.sendWidgets();
       this.play();
@@ -42,8 +43,10 @@ class Game {
   }
 
   sendWidgets() {
+    console.log('trying to send widgets')
     const { widgets } = this;
     const [ player1, player2 ] = this.players;
+    console.log(player1, player2)
     const player1Widgets = [];
     const player2Widgets = [];
 

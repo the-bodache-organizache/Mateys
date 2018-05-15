@@ -25,13 +25,20 @@ socketServer.on('connection', socket => {
     socketEvents = payload;
   });
 
-  socket.on('ENTER_ROOM', roomName => {
-
-    console.log('WTF!!!');
-    if (socketServer.sockets.clients(roomName).length > 2) {
-      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
-      // socket.disconnect();
+  socket.on('REQUEST_ROOM_ENTER', room => {
+    const roomName = room.name;
+    let approve = true;
+    if (!rooms[roomName]) {
+      rooms[roomName] = [];
     }
+    if (rooms[roomName].length < 2) {
+      rooms[roomName].push(socket);
+    } else {
+      approve = false;
+    }
+    socket.emit('ROOM_ENTER_RESPONSE', approve);
+    console.log(rooms);
+    
   });
 
   const { REQUEST_GAME_START, DISCONNECT, EDIT_ROOM } = socketEvents;
@@ -43,20 +50,15 @@ socketServer.on('connection', socket => {
   socket.on(REQUEST_GAME_START, async (payload) => {
     console.log('Another client has connected!: ', socket.id);
     const { socketEvents, myRoom} = payload;
+    console.log("MY ROOM!!!", myRoom)
     const roomName = myRoom.name;
-    if (!rooms[roomName]) {
-      rooms[roomName] = [];
-    }
-    rooms[roomName].push(socket);
-    console.log(rooms);
-    if (rooms[roomName].length >= 2) {
       const game = new Game(rooms[roomName], myRoom);
       await game.startGame();
       socket.on(DISCONNECT, () => {
         game.end();
         rooms[roomName] = [];
       });
-    }
+
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
       rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
