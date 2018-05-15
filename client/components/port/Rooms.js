@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Room from './Room';
 import { myRoom } from '../../store/myRoom';
 import { getRooms } from '../../store/rooms';
+const play = require('audio-play');
+const load = require('audio-loader');
 
 class Rooms extends React.Component {
   constructor(props) {
@@ -14,36 +16,53 @@ class Rooms extends React.Component {
       this.props.getRooms();
     });
     this.audioRef = React.createRef();
-    // this.soundContext = new AudioContext();
-    // this.bufferLoader = new BufferLoader(this.soundContext, [
-    //   'audio/click.mp3'
-    // ])
+    this.buffer = null;
+    this.playSound = this.playSound.bind(this);
+    this.loadSounds = this.loadSounds.bind(this);
   }
 
-  // loadSounds() {
+  async loadSounds() {
+    this.buffer = await load('audio/click.mp3')
+      .catch(error => console.error.bind(error));
+  }
 
-  // }
+  async componentDidMount() {
+    await this.loadSounds();
+  }
 
-  handleClick (room) {
+  playSound(buffer) {
+    play(buffer, {
+      start: 0,
+      end: buffer.duration
+    });
+  }
+
+  handleClick(room) {
     this.props.myRoom(room);
     console.log(room);
   }
 
-  render () {
+  render() {
     const { rooms } = this.props;
     const { audioRef } = this;
+    console.log(this.buffer);
     return (
       <div id="crew-list">
-        <audio ref={audioRef}>
+        {/* <audio ref={audioRef}>
           <source src="audio/click.mp3" />
-        </audio>
-        {
-          rooms.map(room => (
-            <Link key={room.id} to={`/game/${room.name}`} onClick={() => this.handleClick(room)} onMouseEnter={() => audioRef.current.play()}>
-              <Room room={room} />
-            </Link>
-          ))
-        }
+        </audio> */}
+        {rooms.map(room => (
+          <Link
+            key={room.id}
+            to={`/game/${room.name}`}
+            onClick={() => this.handleClick(room)}
+            onMouseEnter={() => {
+              this.playSound(this.buffer);
+            }}
+          >
+            <Room room={room} />
+          </Link>
+        ))}
       </div>
     );
   }
@@ -54,7 +73,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  myRoom: (room) => dispatch(myRoom(room)),
+  myRoom: room => dispatch(myRoom(room)),
   getRooms: () => dispatch(getRooms())
 });
 
