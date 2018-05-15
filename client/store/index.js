@@ -10,8 +10,18 @@ import motionDetection from './motionDetection';
 import gameStatus from './game-status';
 import rooms from './rooms';
 import myRoom from './myRoom';
+import sounds from './sounds';
 
-const reducer = combineReducers({ widgets, motionDetection, commands, connection, gameStatus, rooms, myRoom });
+const reducer = combineReducers({
+  widgets,
+  motionDetection,
+  commands,
+  connection,
+  gameStatus,
+  rooms,
+  myRoom,
+  sounds
+});
 
 const store = createStore(
   reducer,

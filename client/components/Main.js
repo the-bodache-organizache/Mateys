@@ -7,19 +7,17 @@ import { Routes, Navbar } from './nav';
 import { Load } from './load';
 import { getDimensions } from '../store/motionDetection';
 import { getRooms } from '../store/rooms';
+import { bufferSound } from '../store/sounds';
+import { playSound } from '../utils';
 
-const Main = () => {
+const Main = (props) => {
+  const { port } = props.sounds;
+  console.log(props);
   return (
     <div id="main">
       <Navbar />
       <Routes />
-      <ReactAudioPlayer
-        className="port-sounds"
-        src="/audio/port.mp3"
-        autoPlay
-        loop
-        volume={0.1}
-      />
+      { playSound(port, true, 0.1) }
     </div>
   );
 };
@@ -27,8 +25,20 @@ const Main = () => {
 const mapDispatch = dispatch => ({
   load: async () => {
     await dispatch(getRooms());
+    await Promise.all([
+      dispatch(bufferSound('audio/click.mp3')),
+      dispatch(bufferSound('audio/correct.wav')),
+      dispatch(bufferSound('audio/gameover.wav')),
+      dispatch(bufferSound('audio/levelup.mp3')),
+      dispatch(bufferSound('audio/port.mp3')),
+      dispatch(bufferSound('audio/wrong.wav'))
+    ])
   },
   getDimensions: (width, height) => dispatch(getDimensions(width, height))
 });
 
-export default compose(withRouter, connect(null, mapDispatch), Load)(Main);
+const mapStateToProps = state => ({
+  sounds: state.sounds
+});
+
+export default compose(withRouter, connect(mapStateToProps, mapDispatch), Load)(Main);

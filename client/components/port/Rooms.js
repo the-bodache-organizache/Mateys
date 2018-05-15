@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import Room from './Room';
 import { myRoom } from '../../store/myRoom';
 import { getRooms } from '../../store/rooms';
-const play = require('audio-play');
-const load = require('audio-loader');
+import { playSound } from '../../utils';
 
 class Rooms extends React.Component {
   constructor(props) {
@@ -14,26 +13,6 @@ class Rooms extends React.Component {
     this.props.socket.on('RERENDER_PAGE', () => {
       console.log('rerender the page!');
       this.props.getRooms();
-    });
-    this.audioRef = React.createRef();
-    this.buffer = null;
-    this.playSound = this.playSound.bind(this);
-    this.loadSounds = this.loadSounds.bind(this);
-  }
-
-  async loadSounds() {
-    this.buffer = await load('audio/click.mp3')
-      .catch(error => console.error.bind(error));
-  }
-
-  async componentDidMount() {
-    await this.loadSounds();
-  }
-
-  playSound(buffer) {
-    play(buffer, {
-      start: 0,
-      end: buffer.duration
     });
   }
 
@@ -44,20 +23,16 @@ class Rooms extends React.Component {
 
   render() {
     const { rooms } = this.props;
-    const { audioRef } = this;
-    console.log(this.buffer);
+    const { click } = this.props.sounds;
     return (
       <div id="crew-list">
-        {/* <audio ref={audioRef}>
-          <source src="audio/click.mp3" />
-        </audio> */}
         {rooms.map(room => (
           <Link
             key={room.id}
             to={`/game/${room.name}`}
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
-              this.playSound(this.buffer);
+              playSound(click);
             }}
           >
             <Room room={room} />
@@ -69,7 +44,8 @@ class Rooms extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  rooms: state.rooms
+  rooms: state.rooms,
+  sounds: state.sounds
 });
 
 const mapDispatchToProps = dispatch => ({
