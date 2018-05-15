@@ -47,10 +47,6 @@ class GameRoom extends React.Component {
     this.interval = requestAnimationFrame(this.detectMotion);
   };
 
-  componentWillMount() {
-
-  }
-
   async componentDidMount() {
     window.addEventListener('beforeunload', this.cleanUp);
     const { ENTER_ROOM } = socketEvents;
@@ -74,7 +70,6 @@ class GameRoom extends React.Component {
     isConnected(true);
     this.detectMotion();
     console.log(this.props.socket);
-    this.props.socket.emit(ENTER_ROOM, myRoom.name);
   }
 
   componentWillUnmount() {

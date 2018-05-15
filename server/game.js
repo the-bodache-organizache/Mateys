@@ -9,7 +9,7 @@ class Game {
     this.seconds = 8;
     this.health = 10;
     this.score = 0;
-    this.targetScore = 10;
+    this.targetScore = 4;
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
@@ -120,8 +120,13 @@ class Game {
   nextLevel() {
     const { NEXT_LEVEL } = socketEvents;
     this.level++;
-    this.seconds -= 0.8;
-    this.targetScore += 1;
+    if (this.seconds >= 4.4) {
+      this.seconds -= 0.4;
+    }
+    if (this.targetScore < 18) this.targetScore += 1;
+    if (this.level % 2 === 0) {
+      if (this.numOfWidgets <= 10) this.numOfWidgets += 2;
+    }
     this.score = 0;
     this.health = 10;
     clearInterval(this.intervalId);
@@ -135,6 +140,7 @@ class Game {
     const status = {
       health: this.health,
       score: this.score,
+      targetScore: this.targetScore,
       level: this.level
     };
     this.players.forEach(player => player.emit(MOVE_STATUS, status));

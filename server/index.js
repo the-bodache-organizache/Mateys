@@ -21,6 +21,7 @@ let rooms = {};
 
 socketServer.on('connection', socket => {
   console.log('A client has connected');
+
   const {
     ENTER_ROOM,
     RERENDER_PAGE,
