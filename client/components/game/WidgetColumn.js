@@ -8,11 +8,11 @@ const WidgetColumn = props => {
   return (
     <div id={id}>
       {theseWidgets.map((widget, index) => {
-        let color = 'green'
+        let opacity = '1'
         if (widget && !widget.ready) {
-          color = 'red';
+          opacity = '0.25';
         }
-        return (<Widget key={index + add} widget={widget} index={index+add} color={color} />)
+        return (<Widget key={index + add} widget={widget} index={index+add} opacity={opacity} />)
       })}
 
     </div>
