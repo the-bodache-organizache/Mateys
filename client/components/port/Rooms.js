@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Room from './Room';
 import { getMyRoom } from '../../store/myRoom';
@@ -19,6 +20,8 @@ class Rooms extends React.Component {
   handleClick (room) {
     this.props.getMyRoom(room);
     this.props.socket.emit('ENTER_ROOM', this.props.myRoom.name);
+    this.props.socket.emit('EDIT_ROOM');
+    this.props.history.push('/game')
   }
 
   render() {
@@ -31,9 +34,10 @@ class Rooms extends React.Component {
             key={room.id}
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
+              if (room.occupancy < 2)
               playSound(click);
             }}
-            class={room.occupancy >= 2 ? 'disabled' : ''}
+            disabled={room.occupancy >= 2 ? true : false}
           >
             <Room room={room} />
           </button>
@@ -43,10 +47,11 @@ class Rooms extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   rooms: state.rooms,
   sounds: state.sounds,
-  myRoom: state.myRoom
+  myRoom: state.myRoom,
+  history: ownProps.history
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -54,4 +59,4 @@ const mapDispatchToProps = dispatch => ({
   getRooms: () => dispatch(getRooms())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Rooms);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Rooms));
