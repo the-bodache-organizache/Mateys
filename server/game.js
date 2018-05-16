@@ -70,9 +70,6 @@ class Game {
     } = this;
     players.forEach(player => player.emit('ACTIVATE_WIDGETS'));
     players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
-    //console.log('before', this.widgets);
-    //this.widgets.forEach(widget => widget.ready = true);
-    //console.log('after', this.widgets)
     players.forEach(player => player.on('WIDGET_PRESSED', payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
@@ -103,9 +100,6 @@ class Game {
       player1.emit('ISSUE_COMMAND', widget1.command);
       player2.emit('ISSUE_COMMAND', widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
-      //console.log('HEALTH:', this.health);
-      //console.log('SCORE:', this.score);
-      //console.log('LEVEL:', this.level);
       this.sendStatus();
     }, this.seconds * 1000);
   }
