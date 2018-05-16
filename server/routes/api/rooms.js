@@ -23,6 +23,24 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+
+router.put('/', async (req, res, next) => {
+  const room = req.body;
+  try {
+    const [numOfRows, resolvedRooms] = await Rooms.update({
+      occupancy: room.occupancy
+    },
+    {
+      where: { id: room.id },
+      returning: true,
+      plain: true
+    });
+    res.json(resolvedRooms[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete('/:id', async (req, res, next) => {
   try {
     const destroyed = await Rooms.destroy({ where: { id: req.params.id }});
@@ -37,4 +55,4 @@ router.delete('/:id', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-})
+});

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Room from './Room';
 import { getMyRoom } from '../../store/myRoom';
@@ -10,15 +11,16 @@ class Rooms extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-    this.props.socket.on('RERENDER_PAGE', () => {
-      this.props.getRooms();
-    });
+    // this.props.socket.on('RERENDER_PAGE', () => {
+    //   this.props.getRooms();
+    // });
   }
 
-
-  handleClick (room) {
+  handleClick(room) {
     this.props.getMyRoom(room);
     this.props.socket.emit('ENTER_ROOM', this.props.myRoom.name);
+    this.props.socket.emit('EDIT_ROOM');
+    this.props.history.push('/game');
   }
 
   render() {
@@ -27,31 +29,32 @@ class Rooms extends React.Component {
     return (
       <div id="crew-list">
         {rooms.map(room => (
-          <Link
+          <button
             key={room.id}
-            to="/game"
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
-              playSound(click);
+              if (room.occupancy < 2) playSound(click);
             }}
+            disabled={room.occupancy >= 2 ? true : false}
           >
             <Room room={room} />
-          </Link>
+          </button>
         ))}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   rooms: state.rooms,
   sounds: state.sounds,
-  myRoom: state.myRoom
+  myRoom: state.myRoom,
+  history: ownProps.history
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMyRoom: (room) => dispatch(getMyRoom(room)),
-  getRooms: () => dispatch(getRooms())
+  getMyRoom: room => dispatch(getMyRoom(room)),
+  //getRooms: () => dispatch(getRooms())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Rooms);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Rooms));

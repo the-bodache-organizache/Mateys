@@ -6,14 +6,9 @@ import { setSocket } from '../../store/connection';
 import { socketEvents, shipNameGenerator, pirateDictionary } from '../../utils';
 
 class Port extends React.Component {
-  constructor(props) {
-    super(props);
-    this.socket = io(window.location.origin);
-    this.props.setSocket(this.socket);
-  }
 
   componentWillUnmount() {
-    this.socket.disconnect();
+    this.props.socket.disconnect();
   }
 
   warning(portFull) {
@@ -36,7 +31,7 @@ class Port extends React.Component {
           onClick={async () => {
             const shipName = shipNameGenerator(pirateDictionary);
             await createRoom(shipName);
-            this.socket.emit(EDIT_ROOM);
+            this.props.socket.emit(EDIT_ROOM);
           }}
           disabled={portFull}
         >
@@ -44,7 +39,7 @@ class Port extends React.Component {
         </button>
         {warning(portFull)}
         <h1>Join Crew:</h1>
-        <Rooms socket={this.socket}/>
+        <Rooms socket={this.props.socket}/>
       </div>
     );
   }
@@ -56,7 +51,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  rooms: state.rooms
+  rooms: state.rooms,
+  socket: state.connection.socket
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Port);
