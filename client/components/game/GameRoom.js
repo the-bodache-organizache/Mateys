@@ -28,6 +28,7 @@ class GameRoom extends React.Component {
     this.canvasSourceRef = React.createRef();
     this.canvasBlendedRef = React.createRef();
     this.videoRef = React.createRef();
+    this.commandRef = React.createRef();
     this.cleanUp = this.cleanUp.bind(this);
   }
 
@@ -90,7 +91,7 @@ class GameRoom extends React.Component {
   }
 
   render() {
-    const { canvasSourceRef, canvasBlendedRef, videoRef } = this;
+    const { canvasSourceRef, canvasBlendedRef, videoRef, commandRef } = this;
     const { myRoom } = this.props;
     return myRoom.name ? (
       <div id="game" className="main-panel">
@@ -102,10 +103,11 @@ class GameRoom extends React.Component {
             canvasSourceRef={canvasSourceRef}
             canvasBlendedRef={canvasBlendedRef}
             videoRef={videoRef}
+            commandRef={commandRef}
           />
           <div id="bottom-panel" className="sub-panel">
             <CallerVideo />
-            <ConnectControls />
+            <ConnectControls commandRef={commandRef} />
             <ScorePanel />
           </div>
         </div>

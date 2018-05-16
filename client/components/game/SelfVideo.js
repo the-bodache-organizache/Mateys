@@ -9,7 +9,8 @@ const SelfVideo = props => {
     canvasSourceRef,
     canvasBlendedRef,
     videoRef,
-    command
+    command,
+    commandRef
   } = props;
   const container = { width: +width };
   const commandDiv = { top: +height * 0.75 };
@@ -42,7 +43,7 @@ const SelfVideo = props => {
         <WidgetColumn id="left-widgets" add={3} />
       </div>
       <div id="commands" style={commandDiv}>
-        <p id="commandParagraph">{command}</p>
+        <p id="commandParagraph" ref={commandRef}>{command}</p>
       </div>
     </div>
   );
