@@ -14,7 +14,8 @@ class ConnectControls extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: false
+      ready: false,
+      gamesPlayed: 0
     };
     this.resetState = this.resetState.bind(this);
   }
@@ -90,21 +91,17 @@ class ConnectControls extends Component {
     const resetWidgets = new Array(6);
     resetWidgets.fill(null);
     this.props.getWidgets(resetWidgets);
-    setTimeout(() => {
-      this.props.getGameStatus({health: 10, score: 0, level: 1});
-      this.props.getCommand('');
-      this.props.history.push('/port');
-      this.props.leaveRoom();
-    }, 5000);
+    this.props.getGameStatus({health: 10, score: 0, level: 1});
+    this.setState({ ready: false });
   }
 
   render() {
     const { REQUEST_GAME_START } = socketEvents;
     const { isConnected, isPlayerOne, setSocket, myRoom } = this.props;
     const { setListeners } = this;
-    const { ready } = this.state;
+    const { ready, gamesPlayed } = this.state;
     const button =
-      isConnected && !ready ? (
+      isConnected && !ready && !gamesPlayed ? (
         <div id="start-game">
           <button
             type="button"
@@ -112,11 +109,32 @@ class ConnectControls extends Component {
               const { webSocket } = easyrtc;
               setSocket(webSocket);
               setListeners(webSocket);
-              this.setState({ ready: true });
+              this.setState({ ready: true, gamesPlayed: this.state.gamesPlayed + 1 });
               webSocket.emit(REQUEST_GAME_START, {socketEvents, myRoom});
             }}
           >
-            Set sail!
+            Set Sail!
+          </button>
+        </div>
+      ) : isConnected && !ready && gamesPlayed ? (
+        <div id="start-game">
+          <button
+            type="button"
+            onClick={() => {
+              this.setState({ ready: true, gamesPlayed: this.state.gamesPlayed + 1 });
+              webSocket.emit(REQUEST_GAME_RESTART, { myRoom });
+            }}
+          >
+            Sail Again!
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              this.props.leaveRoom();
+              this.props.history.push('/port');
+            }}
+          >
+            Disembark!
           </button>
         </div>
       ) : (

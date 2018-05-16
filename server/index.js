@@ -17,15 +17,17 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
+
 let rooms = {};
 
 socketServer.on('connection', socket => {
-  console.log('A client has connected');
 
+  console.log('A client has connected');
   const {
     ENTER_ROOM,
     RERENDER_PAGE,
     REQUEST_GAME_START,
+    REQUEST_GAME_RESTART,
     DISCONNECT,
     EDIT_ROOM
   } = socketEvents;
@@ -62,7 +64,23 @@ socketServer.on('connection', socket => {
       rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
     });
   });
+
+  socket.on(REQUEST_GAME_RESTART, async (payload) => {
+    const { myRoom } = payload;
+    const roomName = myRoom.name;
+    console.log('Another client has connected!: ', socket.id);
+    await game.startGame();
+    socket.on(DISCONNECT, () => {
+      game.end();
+      rooms[roomName] = [];
+    });
+    socket.on(DISCONNECT, () => {
+      console.log('A client has disconnected!: ', socket.id);
+      rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
+    });
+  });
 });
+// await Rooms.destroy({ where: {name: this.room.name }});
 
 // *********************** EASYRTC *************************
 // easyrtc.setOption('logLevel', 'debug');

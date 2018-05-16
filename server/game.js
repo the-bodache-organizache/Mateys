@@ -3,7 +3,7 @@ const socketEvents = require('../client/utils/socketEvents');
 
 class Game {
   constructor(players, room) {
-    this.players = players;
+    this.startRequests = 0;
     this.level = 1;
     this.widgets = [];
     this.seconds = 8;
@@ -13,19 +13,43 @@ class Game {
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
+
+    this.players = players;
+    this.room = room;
+    
+    console.log('players:', this.players);
+    console.log('room:', this.room);
+    console.log('startRequests:', this.startRequests);
+
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
-    this.room = room;
+  }
+  
+  initialize() {
+    console.log("initialize!");
+    this.startRequests = 0;
+    this.level = 1;
+    this.widgets = [];
+    this.seconds = 8;
+    this.health = 10;
+    this.score = 0;
+    this.targetScore = 6;
+    this.activeCommands = [];
+    this.intervalId = null;
+    this.numOfWidgets = 4;
   }
 
   async startGame() {
-    try {
-      await this.selectWidgets();
-      this.sendWidgets();
-      this.play();
-    } catch (err) {
-      console.error.bind(err);
+    this.startRequests++;
+    if (this.startRequests === 2) {
+      try {
+        await this.selectWidgets();
+        this.sendWidgets();
+        this.play();
+      } catch (err) {
+        console.error.bind(err);
+      }
     }
   }
 
@@ -150,12 +174,12 @@ class Game {
     const { GAME_OVER, RERENDER_PAGE } = socketEvents;
     this.players.forEach(player => player.emit(GAME_OVER));
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.leave(this.room.name));
-    await Rooms.destroy({ where: {name: this.room.name }});
-    this.players.forEach(player => {
-      player.broadcast.emit(RERENDER_PAGE);
-      player.emit(RERENDER_PAGE);
-    });
+    this.initialize();
+    // this.players.forEach(player => player.leave(this.room.name));
+    // this.players.forEach(player => {
+    //   player.broadcast.emit(RERENDER_PAGE);
+    //   player.emit(RERENDER_PAGE);
+    // });
   }
 }
 
