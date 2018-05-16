@@ -65,7 +65,11 @@ class ConnectControls extends Component {
     });
 
     socket.on(ISSUE_COMMAND, command => {
+      this.props.commandRef.current.classList.remove('fade');
       this.props.getCommand(command);
+      setTimeout(() => {
+        this.props.commandRef.current.classList.add('fade');
+      }, 1);
     });
 
     socket.on(NEXT_LEVEL, payload => {
