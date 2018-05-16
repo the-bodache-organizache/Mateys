@@ -22,8 +22,8 @@ const Main = (props) => {
 
 const mapDispatch = dispatch => ({
   load: async () => {
-    await dispatch(getRooms());
     await Promise.all([
+      dispatch(getRooms()),
       dispatch(bufferSound('audio/click.mp3')),
       dispatch(bufferSound('audio/correct.wav')),
       dispatch(bufferSound('audio/gameover.wav')),

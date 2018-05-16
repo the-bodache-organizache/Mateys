@@ -12,10 +12,6 @@ class Port extends React.Component {
     this.props.setSocket(this.socket);
   }
 
-  componentWillMount() {
-    this.socket.emit('SEND_EVENTS', socketEvents);
-  }
-
   componentWillUnmount() {
     this.socket.disconnect();
   }

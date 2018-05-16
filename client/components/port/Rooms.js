@@ -18,6 +18,7 @@ class Rooms extends React.Component {
 
   handleClick (room) {
     this.props.getMyRoom(room);
+    this.props.socket.emit('ENTER_ROOM', this.props.myRoom.name);
   }
 
   render() {
@@ -25,7 +26,6 @@ class Rooms extends React.Component {
     const { click } = this.props.sounds;
     return (
       <div id="crew-list">
-
         {rooms.map(room => (
           <Link
             key={room.id}
@@ -45,7 +45,8 @@ class Rooms extends React.Component {
 
 const mapStateToProps = state => ({
   rooms: state.rooms,
-  sounds: state.sounds
+  sounds: state.sounds,
+  myRoom: state.myRoom
 });
 
 const mapDispatchToProps = dispatch => ({
