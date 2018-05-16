@@ -8,19 +8,33 @@ import { getDimensions } from '../store/motionDetection';
 import { getRooms } from '../store/rooms';
 import { bufferSound } from '../store/sounds';
 import { playSound } from '../utils';
+import { setSocket } from '../store/connection';
 
-const Main = (props) => {
-  const { port } = props.sounds;
-  return (
-    <div id="main">
-      <Navbar />
-      <Routes />
-      { playSound(port, true, 0.1) }
-    </div>
-  );
+class Main extends React.Component {
+  constructor(props) {
+    super(props)
+    this.socket = io(window.location.origin);
+    this.props.setSocket(this.socket);
+    this.socket.on('RERENDER_PAGE', () => {
+      this.props.getRooms();
+    });
+
+  }
+  render () {
+    const { port } = this.props.sounds;
+    return (
+      <div id="main">
+        <Navbar />
+        <Routes />
+        { playSound(port, true, 0.1) }
+      </div>
+    );
+  }
 };
 
 const mapDispatch = dispatch => ({
+  setSocket: socket => dispatch(setSocket(socket)),
+  getRooms: () => dispatch(getRooms()),
   load: async () => {
     await Promise.all([
       dispatch(getRooms()),
@@ -38,5 +52,6 @@ const mapDispatch = dispatch => ({
 const mapStateToProps = state => ({
   sounds: state.sounds
 });
+
 
 export default compose(withRouter, connect(mapStateToProps, mapDispatch), Load)(Main);
