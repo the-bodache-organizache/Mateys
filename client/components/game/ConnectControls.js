@@ -8,6 +8,7 @@ import { socketEvents } from '../../utils';
 import { getGameStatus } from '../../store/game-status';
 import { leaveRoom } from '../../store/myRoom';
 import { playSound } from '../../utils';
+import { deleteRoom } from '../../store/rooms';
 
 class ConnectControls extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class ConnectControls extends Component {
 
   render() {
     const { REQUEST_GAME_START, REQUEST_GAME_RESTART } = socketEvents;
-    const { isConnected, isPlayerOne, setSocket, myRoom } = this.props;
+    const { isConnected, setSocket, myRoom } = this.props;
     const { setListeners } = this;
     const { ready, gamesPlayed } = this.state;
     const firstGame = isConnected && !ready && !gamesPlayed;
@@ -167,12 +168,12 @@ const mapDispatchToProps = dispatch => ({
   setSocket: socket => dispatch(setSocket(socket)),
   getGameStatus: status => dispatch(getGameStatus(status)),
   leaveRoom: () => dispatch(leaveRoom()),
-  toggleReady: widget => dispatch(toggleReady(widget))
+  toggleReady: widget => dispatch(toggleReady(widget)),
+  deleteRoom: room => dispatch(deleteRoom(room))
 });
 
 const mapStateToProps = (state, ownProps) => ({
   isConnected: state.connection.connected,
-  isPlayerOne: state.connection.isPlayerOne,
   socket: state.connection.socket,
   status: state.status,
   myRoom: state.myRoom,
