@@ -79,6 +79,11 @@ class ConnectControls extends Component {
     });
     socket.on(RIGHT_MOVE, () => playSound(correct));
     socket.on(WRONG_MOVE, () => playSound(wrong));
+    socket.on('DELETE_ROOM', async () => {
+      await this.props.deleteRoom(this.props.myRoom);
+      this.props.leaveRoom();
+      this.props.history.push('/port');
+    });
   };
 
   resetState() {
@@ -139,8 +144,7 @@ class ConnectControls extends Component {
           <button
             type="button"
             onClick={() => {
-              this.props.leaveRoom();
-              this.props.history.push('/port');
+              this.props.socket.emit('REQUEST_LEAVE_ROOM', this.props.myRoom);
             }}
           >
             Disembark!

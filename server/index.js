@@ -51,7 +51,8 @@ socketServer.on('connection', socket => {
       rooms[roomName] = {
         room: roomName,
         players: [],
-        startRequests: 0
+        startRequests: 0,
+        leaveRequests: 0
       };
     }
     rooms[roomName].players.push(socket);
@@ -86,9 +87,17 @@ socketServer.on('connection', socket => {
       console.log('A client has disconnected!: ', socket.id);
       rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
     });
+  });
+
+  socket.on('REQUEST_LEAVE_ROOM', (myRoom) => {
+    const roomName = myRoom.name;
+    rooms[roomName].leaveRequests += 1;
+    if (rooms[roomName].leaveRequests === 2) {
+      socket.emit('DELETE_ROOM');
+    }
   })
 });
-// await Rooms.destroy({ where: {name: this.room.name }});
+
 
 // *********************** EASYRTC *************************
 // easyrtc.setOption('logLevel', 'debug');

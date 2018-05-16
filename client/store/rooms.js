@@ -37,10 +37,10 @@ export const createRoom = (room) => {
 }
 
 export const deleteRoom = (room) => {
+  console.log(room);
   return async (dispatch, _, {axios}) => {
-    await axios.delete('/api/rooms', room)
-      .then(res => res.data)
-      .then(room => dispatch(deletedRoom(room)))
+    await axios.delete(`/api/rooms/${room.id}`)
+      .then(() => dispatch(deletedRoom(room)))
       .catch(console.error.bind(console));
   }
 }

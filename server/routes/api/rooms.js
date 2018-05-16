@@ -23,16 +23,14 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.delete('/', async (req, res, next) => {
-  const { room } = req.body;
+router.delete('/:id', async (req, res, next) => {
   try {
-    const destroyed = await Rooms.destroy({ where: { name: room.name }});
+    const destroyed = await Rooms.destroy({ where: { id: req.params.id }});
     if (destroyed) res.json({
-      room,
       message: 'Deleted successfully'
     });
     else {
-      const error = new Error(`No room with that name: ${room.name}`);
+      const error = new Error(`No room with that id`);
       error.status = 400;
       next(error);
     }
