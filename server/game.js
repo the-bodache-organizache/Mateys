@@ -2,8 +2,7 @@ const { Widget, Rooms } = require('./db');
 const socketEvents = require('../client/utils/socketEvents');
 
 class Game {
-  constructor(players, room) {
-    this.players = players;
+  constructor(roomObj) {
     this.level = 1;
     this.widgets = [];
     this.seconds = 8;
@@ -13,10 +12,28 @@ class Game {
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
+
+    this.players = roomObj.players;
+    this.room = roomObj.roomName;
+    this.roomObj = roomObj;
+
+
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
-    this.room = room;
+  }
+
+  initialize() {
+    this.startRequests = 0;
+    this.level = 1;
+    this.widgets = [];
+    this.seconds = 8;
+    this.health = 10;
+    this.score = 0;
+    this.targetScore = 6;
+    this.activeCommands = [];
+    this.intervalId = null;
+    this.numOfWidgets = 4;
   }
 
   async startGame() {
@@ -77,10 +94,10 @@ class Game {
       WRONG_MOVE,
       ISSUE_COMMAND
     } = socketEvents;
-    
+
     players.forEach(player => player.emit('ACTIVATE_WIDGETS'));
-    players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
-    players.forEach(player => player.on('WIDGET_PRESSED', payload => {
+    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
+    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
@@ -149,13 +166,14 @@ class Game {
   async end() {
     const { GAME_OVER, RERENDER_PAGE } = socketEvents;
     this.players.forEach(player => player.emit(GAME_OVER));
+    this.roomObj.startRequests = 0;
     clearInterval(this.intervalId);
-    this.players.forEach(player => player.leave(this.room.name));
-    await Rooms.destroy({ where: {name: this.room.name }});
-    this.players.forEach(player => {
-      player.broadcast.emit(RERENDER_PAGE);
-      player.emit(RERENDER_PAGE);
-    });
+    this.initialize();
+    // this.players.forEach(player => player.leave(this.room.name));
+    // this.players.forEach(player => {
+    //   player.broadcast.emit(RERENDER_PAGE);
+    //   player.emit(RERENDER_PAGE);
+    // });
   }
 }
 

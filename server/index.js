@@ -17,17 +17,20 @@ const webServer = http.createServer(app);
 // Start Socket.io so it attaches itself to Express server
 const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 
+
 let rooms = {};
 
 socketServer.on('connection', socket => {
-  console.log('A client has connected');
 
+  console.log('A client has connected');
   const {
     ENTER_ROOM,
     RERENDER_PAGE,
     REQUEST_GAME_START,
+    REQUEST_GAME_RESTART,
     DISCONNECT,
-    EDIT_ROOM
+    EDIT_ROOM,
+    GAME_OVER
   } = socketEvents;
 
   socket.on(ENTER_ROOM, roomName => {
@@ -41,28 +44,60 @@ socketServer.on('connection', socket => {
     socket.broadcast.emit(RERENDER_PAGE);
   });
 
-  socket.on(REQUEST_GAME_START, async (payload) => {
+  socket.on(REQUEST_GAME_START, async (myRoom) => {
     console.log('Another client has connected!: ', socket.id);
-    const { myRoom } = payload;
     const roomName = myRoom.name;
     if (!rooms[roomName]) {
-      rooms[roomName] = [];
+      rooms[roomName] = {
+        room: roomName,
+        players: [],
+        startRequests: 0,
+        leaveRequests: 0
+      };
     }
-    rooms[roomName].push(socket);
-    if (rooms[roomName].length >= 2) {
-      const game = new Game(rooms[roomName], myRoom);
+    rooms[roomName].players.push(socket);
+    rooms[roomName].startRequests++;
+    if (rooms[roomName].startRequests === 2) {
+      const game = new Game(rooms[roomName]);
       await game.startGame();
       socket.on(DISCONNECT, () => {
         game.end();
-        rooms[roomName] = [];
+        rooms[roomName].players = [];
       });
     }
     socket.on(DISCONNECT, () => {
       console.log('A client has disconnected!: ', socket.id);
-      rooms[roomName] = rooms[roomName].filter(player => player.id !== socket.id);
+      rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
     });
   });
+
+  socket.on(REQUEST_GAME_RESTART, async (myRoom) => {
+    const roomName = myRoom.name;
+    rooms[roomName].startRequests++;
+
+    if (rooms[roomName].startRequests === 2) {
+      const game = new Game(rooms[roomName]);
+      await game.startGame();
+      socket.on(DISCONNECT, () => {
+        game.end();
+        rooms[roomName].players = [];
+      });
+    }
+    socket.on(DISCONNECT, () => {
+      console.log('A client has disconnected!: ', socket.id);
+      rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
+    });
+  });
+
+  socket.on('REQUEST_LEAVE_ROOM', (myRoom) => {
+    const roomName = myRoom.name;
+    rooms[roomName].leaveRequests += 1;
+    if (rooms[roomName].leaveRequests === 2) {
+      socket.emit('DELETE_ROOM');
+    }
+  })
 });
+
 
 // *********************** EASYRTC *************************
 // easyrtc.setOption('logLevel', 'debug');
