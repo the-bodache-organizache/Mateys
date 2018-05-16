@@ -26,17 +26,15 @@ router.post('/', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   const room = req.body;
   try {
-    const resolvedRoom = await Rooms.update({
+    const [numOfRows, resolvedRooms] = await Rooms.update({
       occupancy: room.occupancy
     },
     {
-      where: {
-        id: room.id,
-        returning: true,
-        plain: true
-      }
+      where: { id: room.id },
+      returning: true,
+      plain: true
     });
-    res.json(resolvedRoom);
+    res.json(resolvedRooms[0]);
   } catch (err) {
     next(err);
   }

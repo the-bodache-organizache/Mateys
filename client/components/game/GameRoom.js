@@ -13,6 +13,7 @@ import {
   getVideo
 } from '../../store/motionDetection';
 import { isConnected } from '../../store/connection';
+import { updateRoom } from '../../store/rooms';
 import {
   connectToEasyRTC,
   drawVideo,
@@ -60,7 +61,10 @@ class GameRoom extends React.Component {
       getVideo,
       isConnected,
       myRoom,
+      updateRoom
     } = this.props;
+    myRoom.occupancy++;
+    updateRoom(myRoom);
     const roomNoSpaces = myRoom.name.split(' ').join('');
     await Promise.all([
       getContextSource(canvasSourceRef.current.getContext('2d')),
@@ -79,6 +83,10 @@ class GameRoom extends React.Component {
   }
 
   cleanUp () {
+    const { myRoom, updateRoom } = this.props;
+    myRoom.occupancy--;
+    console.log("THIS IS MY ROOM", myRoom);
+    updateRoom(myRoom);
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
       const { DISCONNECT, EDIT_ROOM } = socketEvents;
@@ -122,7 +130,8 @@ const mapDispatchToProps = dispatch => ({
   getContextSource: contextSource => dispatch(getContextSource(contextSource)),
   getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
   getVideo: video => dispatch(getVideo(video)),
-  isConnected: connected => dispatch(isConnected(connected))
+  isConnected: connected => dispatch(isConnected(connected)),
+  updateRoom: room => dispatch(updateRoom(room))
 });
 
 const mapStateToProps = (state, ownProps) => {
@@ -136,7 +145,7 @@ const mapStateToProps = (state, ownProps) => {
     video: state.motionDetection.video,
     lastImageData: state.motionDetection.lastImageData,
     socket: state.connection.socket,
-    myRoom: state.myRoom
+    myRoom: state.myRoom,
   }
 };
 

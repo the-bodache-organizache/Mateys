@@ -37,10 +37,11 @@ export const createRoom = (room) => {
 }
 
 export const updateRoom = room => {
+  console.log("IN THE THUNK. This is the room", room);
   return async (dispatch, _, {axios}) => {
     await axios.put('api/rooms', room)
       .then(res => res.data)
-      .then(updatedRoom => dispatch(updatedRoom(updatedRoom)))
+      .then(room => dispatch(updatedRoom(room)))
       .catch(console.error.bind(console))
   }
 }
