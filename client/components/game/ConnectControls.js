@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
 import { getWidgets, toggleReady } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
@@ -30,12 +29,7 @@ class ConnectControls extends Component {
       RIGHT_MOVE,
       WRONG_MOVE
     } = socketEvents;
-    const {
-      levelup,
-      gameover,
-      correct,
-      wrong
-    } = this.props.sounds;
+    const { levelup, gameover, correct, wrong } = this.props.sounds;
 
     socket.on(SEND_WIDGETS, widgets => {
       const newWidgets = new Array(6);
@@ -56,10 +50,10 @@ class ConnectControls extends Component {
       for (let i = 0; i < this.props.widgets.length; i++) {
         let widget = this.props.widgets[i];
         if (widget && !widget.ready) {
-            //socket.emit(WIDGET_PRESSED, widget);
+          //socket.emit(WIDGET_PRESSED, widget);
           setTimeout(() => {
             this.props.toggleReady(widget);
-            console.log('AFTER RESET:', widget)
+            console.log('AFTER RESET:', widget);
           }, 2000);
         }
       }
@@ -79,7 +73,9 @@ class ConnectControls extends Component {
     });
 
     socket.on(MOVE_STATUS, status => this.props.getGameStatus(status));
-    socket.on(GAME_OVER, () => {this.resetState()});
+    socket.on(GAME_OVER, () => {
+      this.resetState();
+    });
     socket.on(RIGHT_MOVE, () => playSound(correct));
     socket.on(WRONG_MOVE, () => playSound(wrong));
   };
@@ -91,7 +87,7 @@ class ConnectControls extends Component {
     const resetWidgets = new Array(6);
     resetWidgets.fill(null);
     this.props.getWidgets(resetWidgets);
-    this.props.getGameStatus({health: 10, score: 0, level: 1});
+    this.props.getGameStatus({ health: 10, score: 0, level: 1 });
     this.setState({ ready: false });
   }
 
@@ -100,8 +96,11 @@ class ConnectControls extends Component {
     const { isConnected, isPlayerOne, setSocket, myRoom } = this.props;
     const { setListeners } = this;
     const { ready, gamesPlayed } = this.state;
-    const button =
-      isConnected && !ready && !gamesPlayed ? (
+    const firstGame = isConnected && !ready && !gamesPlayed;
+    const playAgain = isConnected && !ready && gamesPlayed;
+    let button;
+    if (firstGame) {
+      button = (
         <div id="start-game">
           <button
             type="button"
@@ -109,19 +108,27 @@ class ConnectControls extends Component {
               const { webSocket } = easyrtc;
               setSocket(webSocket);
               setListeners(webSocket);
-              this.setState({ ready: true, gamesPlayed: this.state.gamesPlayed + 1 });
-              webSocket.emit(REQUEST_GAME_START, {socketEvents, myRoom});
+              this.setState({
+                ready: true,
+                gamesPlayed: this.state.gamesPlayed + 1
+              });
+              webSocket.emit(REQUEST_GAME_START, { socketEvents, myRoom });
             }}
           >
             Set Sail!
           </button>
         </div>
-      ) : isConnected && !ready && gamesPlayed ? (
+        )
+    } else if (playAgain) {
+      button = (
         <div id="start-game">
           <button
             type="button"
             onClick={() => {
-              this.setState({ ready: true, gamesPlayed: this.state.gamesPlayed + 1 });
+              this.setState({
+                ready: true,
+                gamesPlayed: this.state.gamesPlayed + 1
+              });
               webSocket.emit(REQUEST_GAME_RESTART, { myRoom });
             }}
           >
@@ -137,9 +144,9 @@ class ConnectControls extends Component {
             Disembark!
           </button>
         </div>
-      ) : (
-        undefined
-      );
+      )
+    }
+
     return (
       <div id="connectControls">
         <div id="iam">Not yet connected...</div>
@@ -159,7 +166,7 @@ const mapDispatchToProps = dispatch => ({
   setSocket: socket => dispatch(setSocket(socket)),
   getGameStatus: status => dispatch(getGameStatus(status)),
   leaveRoom: () => dispatch(leaveRoom()),
-  toggleReady: widget => dispatch(toggleReady(widget)),
+  toggleReady: widget => dispatch(toggleReady(widget))
 });
 
 const mapStateToProps = (state, ownProps) => ({
@@ -173,4 +180,6 @@ const mapStateToProps = (state, ownProps) => ({
   widgets: state.widgets
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConnectControls));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ConnectControls)
+);

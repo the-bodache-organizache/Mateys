@@ -3,7 +3,6 @@ const socketEvents = require('../client/utils/socketEvents');
 
 class Game {
   constructor(players, room) {
-    this.startRequests = 0;
     this.level = 1;
     this.widgets = [];
     this.seconds = 8;
@@ -16,18 +15,14 @@ class Game {
 
     this.players = players;
     this.room = room;
-    
-    console.log('players:', this.players);
-    console.log('room:', this.room);
-    console.log('startRequests:', this.startRequests);
+
 
     this.nextLevel = this.nextLevel.bind(this);
     this.end = this.end.bind(this);
     this.randomIndex = this.randomIndex.bind(this);
   }
-  
+
   initialize() {
-    console.log("initialize!");
     this.startRequests = 0;
     this.level = 1;
     this.widgets = [];
@@ -41,15 +36,12 @@ class Game {
   }
 
   async startGame() {
-    this.startRequests++;
-    if (this.startRequests === 2) {
-      try {
-        await this.selectWidgets();
-        this.sendWidgets();
-        this.play();
-      } catch (err) {
-        console.error.bind(err);
-      }
+    try {
+      await this.selectWidgets();
+      this.sendWidgets();
+      this.play();
+    } catch (err) {
+      console.error.bind(err);
     }
   }
 
@@ -101,10 +93,10 @@ class Game {
       WRONG_MOVE,
       ISSUE_COMMAND
     } = socketEvents;
-    
+
     players.forEach(player => player.emit('ACTIVATE_WIDGETS'));
-    players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
-    players.forEach(player => player.on('WIDGET_PRESSED', payload => {
+    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
+    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
