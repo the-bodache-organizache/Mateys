@@ -8,7 +8,7 @@ class Game {
     this.seconds = 8;
     this.health = 10;
     this.score = 0;
-    this.targetScore = 10;
+    this.targetScore = 2;
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
@@ -68,8 +68,11 @@ class Game {
       nextLevel,
       end
     } = this;
+    players.forEach(player => player.emit('ACTIVATE_WIDGETS'));
     players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
-
+    //console.log('before', this.widgets);
+    //this.widgets.forEach(widget => widget.ready = true);
+    //console.log('after', this.widgets)
     players.forEach(player => player.on('WIDGET_PRESSED', payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
@@ -100,14 +103,15 @@ class Game {
       player1.emit('ISSUE_COMMAND', widget1.command);
       player2.emit('ISSUE_COMMAND', widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
-      console.log('HEALTH:', this.health);
-      console.log('SCORE:', this.score);
-      console.log('LEVEL:', this.level);
+      //console.log('HEALTH:', this.health);
+      //console.log('SCORE:', this.score);
+      //console.log('LEVEL:', this.level);
       this.sendStatus();
     }, this.seconds * 1000);
   }
 
   nextLevel() {
+    const [ player1, player2 ] = this.players;
     this.level++;
     this.seconds -= 0.8;
     this.targetScore += 1;
