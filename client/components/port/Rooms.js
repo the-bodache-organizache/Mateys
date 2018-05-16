@@ -27,16 +27,16 @@ class Rooms extends React.Component {
     return (
       <div id="crew-list">
         {rooms.map(room => (
-          <Link
+          <button
             key={room.id}
-            to="/game"
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
               playSound(click);
             }}
+            class={room.occupancy >= 2 ? 'disabled' : ''}
           >
             <Room room={room} />
-          </Link>
+          </button>
         ))}
       </div>
     );
