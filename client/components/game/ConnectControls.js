@@ -48,19 +48,16 @@ class ConnectControls extends Component {
     });
 
     socket.on('ACTIVATE_WIDGETS', () => {
-      console.log('--IN PAUSEFUNC--')
       for (let i = 0; i < this.props.widgets.length; i++) {
         let widget = this.props.widgets[i];
-        console.log('in the for loop', this.props.widgets)
         if (widget && !widget.ready) {
-            console.log('widgets should be disabled', widget);
             //socket.emit(WIDGET_PRESSED, widget);
-            setTimeout(() => {
-              this.props.toggleReady(widget);
-              console.log('AFTER RESET:', widget)
-            }, 2000);
-          }
+          setTimeout(() => {
+            this.props.toggleReady(widget);
+            console.log('AFTER RESET:', widget)
+          }, 2000);
         }
+      }
     });
 
     socket.on(ISSUE_COMMAND, command => {
