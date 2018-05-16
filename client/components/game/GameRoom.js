@@ -78,15 +78,18 @@ class GameRoom extends React.Component {
   }
 
   componentWillUnmount() {
+    console.log('unmount socketlog', this.props.socket);
+    console.log('unmount wbrtclog', easyrtc.webSocket);
     this.cleanUp();
     window.removeEventListener('beforeunload', this.cleanUp);
   }
 
   cleanUp () {
     const { myRoom, updateRoom } = this.props;
-    myRoom.occupancy--;
-    console.log("THIS IS MY ROOM", myRoom);
-    updateRoom(myRoom);
+    if (myRoom.occupany > 0) {
+      myRoom.occupancy--;
+      updateRoom(myRoom);
+    }
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
       const { DISCONNECT, EDIT_ROOM } = socketEvents;

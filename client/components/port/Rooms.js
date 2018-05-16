@@ -11,17 +11,16 @@ class Rooms extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-    this.props.socket.on('RERENDER_PAGE', () => {
-      this.props.getRooms();
-    });
+    // this.props.socket.on('RERENDER_PAGE', () => {
+    //   this.props.getRooms();
+    // });
   }
 
-
-  handleClick (room) {
+  handleClick(room) {
     this.props.getMyRoom(room);
     this.props.socket.emit('ENTER_ROOM', this.props.myRoom.name);
     this.props.socket.emit('EDIT_ROOM');
-    this.props.history.push('/game')
+    this.props.history.push('/game');
   }
 
   render() {
@@ -34,8 +33,7 @@ class Rooms extends React.Component {
             key={room.id}
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
-              if (room.occupancy < 2)
-              playSound(click);
+              if (room.occupancy < 2) playSound(click);
             }}
             disabled={room.occupancy >= 2 ? true : false}
           >
@@ -55,8 +53,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMyRoom: (room) => dispatch(getMyRoom(room)),
-  getRooms: () => dispatch(getRooms())
+  getMyRoom: room => dispatch(getMyRoom(room)),
+  //getRooms: () => dispatch(getRooms())
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Rooms));
