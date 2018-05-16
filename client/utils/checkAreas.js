@@ -39,7 +39,6 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
       if (widget) {
         if (widget.ready) {
           store.dispatch(toggleReady(widget));
-          console.log(widget);
           socket.emit(WIDGET_PRESSED, widget);
           setTimeout(() => {
             store.dispatch(toggleReady(widget));
@@ -48,6 +47,6 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
       }
     }
   }
-}
+};
 
 export default checkAreas;

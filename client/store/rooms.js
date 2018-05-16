@@ -1,6 +1,8 @@
 const GOT_ROOMS = 'GOT_ROOMS';
 const CREATED_ROOM = 'CREATED_ROOM';
 const UPDATE_ROOM = 'UPDATE_ROOM';
+const DELETED_ROOM = 'DELETED_ROOM';
+
 const initialState = [];
 
 export const gotRooms = rooms => ({
@@ -13,10 +15,16 @@ export const createdRoom = room => ({
   room
 });
 
+
 export const updatedRoom = room => ({
   type: UPDATE_ROOM,
   room
-})
+});
+
+export const deletedRoom = room => ({
+  type: DELETED_ROOM,
+  room
+});
 
 export const getRooms = () => {
   return async (dispatch, _, {axios}) => {
@@ -25,7 +33,7 @@ export const getRooms = () => {
       .then(rooms => dispatch(gotRooms(rooms)))
       .catch(console.error.bind(console));
   }
-}
+};
 
 export const createRoom = (room) => {
   return async (dispatch, _, {axios}) => {
@@ -34,7 +42,8 @@ export const createRoom = (room) => {
       .then(room => dispatch(createdRoom(room)))
       .catch(console.error.bind(console));
   }
-}
+};
+
 
 export const updateRoom = room => {
   return async (dispatch, _, {axios}) => {
@@ -43,7 +52,16 @@ export const updateRoom = room => {
       .then(room => dispatch(updatedRoom(room)))
       .catch(console.error.bind(console))
   }
-}
+};
+
+export const deleteRoom = (room) => {
+  console.log(room);
+  return async (dispatch, _, {axios}) => {
+    await axios.delete(`/api/rooms/${room.id}`)
+      .then(() => dispatch(deletedRoom(room)))
+      .catch(console.error.bind(console));
+  }
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -53,7 +71,9 @@ export default (state = initialState, action) => {
       return [...state, action.room];
     case UPDATE_ROOM:
       return state.map(room => ((room.id !== action.room.id) ? room : action.room));
+    case DELETED_ROOM:
+      return state.filter(room => room.name !== action.room.name);
     default:
       return state;
   }
-}
+};
