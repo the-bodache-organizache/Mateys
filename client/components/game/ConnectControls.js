@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getWidgets } from '../../store/widgets';
+import { getWidgets, toggleReady } from '../../store/widgets';
 import { getCommand } from '../../store/commands';
 import { setPlayerOne, setSocket } from '../../store/connection';
 import { socketEvents } from '../../utils';
@@ -45,9 +45,23 @@ class ConnectControls extends Component {
         if (!newWidgets[newIndex]) {
           newWidgets[newIndex] = widgets[index];
           index++;
+          newWidgets[newIndex].ready = false;
         }
       }
       this.props.getWidgets(newWidgets);
+    });
+
+    socket.on('ACTIVATE_WIDGETS', () => {
+      for (let i = 0; i < this.props.widgets.length; i++) {
+        let widget = this.props.widgets[i];
+        if (widget && !widget.ready) {
+            //socket.emit(WIDGET_PRESSED, widget);
+          setTimeout(() => {
+            this.props.toggleReady(widget);
+            console.log('AFTER RESET:', widget)
+          }, 2000);
+        }
+      }
     });
 
     socket.on(ISSUE_COMMAND, command => {
@@ -122,7 +136,8 @@ const mapDispatchToProps = dispatch => ({
   setPlayerOne: isPlayerOne => dispatch(setPlayerOne(isPlayerOne)),
   setSocket: socket => dispatch(setSocket(socket)),
   getGameStatus: status => dispatch(getGameStatus(status)),
-  leaveRoom: () => dispatch(leaveRoom())
+  leaveRoom: () => dispatch(leaveRoom()),
+  toggleReady: widget => dispatch(toggleReady(widget)),
 });
 
 const mapStateToProps = (state, ownProps) => ({
@@ -132,7 +147,8 @@ const mapStateToProps = (state, ownProps) => ({
   status: state.status,
   myRoom: state.myRoom,
   history: ownProps.history,
-  sounds: state.sounds
+  sounds: state.sounds,
+  widgets: state.widgets
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ConnectControls));

@@ -32,6 +32,7 @@
     "history": "^4.7.2",
     "lodash": "^4.17.10",
     "morgan": "^1.9.0",
+    "npm": "^6.0.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "pg": "^7.4.1",

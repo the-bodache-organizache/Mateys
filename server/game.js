@@ -9,7 +9,7 @@ class Game {
     this.seconds = 8;
     this.health = 10;
     this.score = 0;
-    this.targetScore = 4;
+    this.targetScore = 6;
     this.activeCommands = [];
     this.intervalId = null;
     this.numOfWidgets = 4;
@@ -70,15 +70,17 @@ class Game {
       nextLevel,
       end
     } = this;
+
     const {
       WIDGET_PRESSED,
       RIGHT_MOVE,
       WRONG_MOVE,
       ISSUE_COMMAND
     } = socketEvents;
-    players.forEach(player => player.removeAllListeners(WIDGET_PRESSED));
-
-    players.forEach(player => player.on(WIDGET_PRESSED, payload => {
+    
+    players.forEach(player => player.emit('ACTIVATE_WIDGETS'));
+    players.forEach(player => player.removeAllListeners('WIDGET_PRESSED'));
+    players.forEach(player => player.on('WIDGET_PRESSED', payload => {
       const index = this.activeCommands.indexOf(payload.command);
       if (this.score < this.targetScore) {
         if (index >= 0) {
@@ -110,14 +112,12 @@ class Game {
       player1.emit(ISSUE_COMMAND, widget1.command);
       player2.emit(ISSUE_COMMAND, widget2.command);
       this.activeCommands.push(widget1.command, widget2.command);
-      console.log('HEALTH:', this.health);
-      console.log('SCORE:', this.score);
-      console.log('LEVEL:', this.level);
       this.sendStatus();
     }, this.seconds * 1000);
   }
 
   nextLevel() {
+    const [ player1, player2 ] = this.players;
     const { NEXT_LEVEL } = socketEvents;
     this.level++;
     if (this.seconds >= 4.4) {

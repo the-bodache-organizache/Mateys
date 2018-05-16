@@ -11,7 +11,7 @@ const seed = async () => {
     Widget.create({name: 'cannon', command: 'Load the cannon!', ready: true, imageUrl: '/widget-images/cannon.png'}),
     Widget.create({name: 'poopDeck', command: 'Swab the poop deck!', ready: true, imageUrl: '/widget-images/poopdeck.png'}),
     Widget.create({name: 'sails', command: 'Raise the sails!', ready: true, imageUrl: '/widget-images/sails.png'}),
-    Widget.create({name: 'parrot', command: "Shut the parrot up!", ready: true, imageUrl: '/widget-images/parrot.png'}),
+    Widget.create({name: 'parrot', command: "Polly wants a craker!", ready: true, imageUrl: '/widget-images/parrot.png'}),
     Widget.create({name: 'anchor', command: 'Raise the anchor!', ready: true, imageUrl: '/widget-images/anchor.png'}),
     Widget.create({name: 'oars', command: 'Man the oars!', ready: true, imageUrl: '/widget-images/oar.png'}),
     Widget.create({name: 'fish', command: 'Go fishing!', ready: true, imageUrl: '/widget-images/fish.png' }),
@@ -19,7 +19,7 @@ const seed = async () => {
     Widget.create({name: 'cody', command: 'Pet Cody!', ready: true, imageUrl: '/widget-images/pirate-cody.png'}),
     Widget.create({name: 'duel', command: 'Duel!', ready: true, imageUrl: '/widget-images/duel.png'}),
     Widget.create({name: 'treasure', command: 'Grab the treasure!', ready: true, imageUrl: '/widget-images/treasure.png'}),
-    Widget.create({name: 'flag', command: 'Raise the Jolly Roger!', ready: true, imageUrl: '/widget-images/flag.png'})
+    Widget.create({name: 'flag', command: 'Fly the Jolly Roger!', ready: true, imageUrl: '/widget-images/flag.png'})
   ]);
 
   console.log(`seeded successfully`);
