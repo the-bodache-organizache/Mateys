@@ -86,10 +86,12 @@ class GameRoom extends React.Component {
 
   cleanUp () {
     const { myRoom, updateRoom } = this.props;
-    if (myRoom.occupany > 0) {
+    console.log('cleanup myroom', myRoom)
+    if (myRoom.occupancy > 0) {
       myRoom.occupancy--;
       updateRoom(myRoom);
     }
+    console.log('after dec', myRoom)
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
       const { DISCONNECT, EDIT_ROOM } = socketEvents;
