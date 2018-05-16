@@ -44,12 +44,12 @@ socketServer.on('connection', socket => {
     socket.broadcast.emit(RERENDER_PAGE);
   });
 
-  socket.on(REQUEST_GAME_START, async (payload) => {
+  socket.on(REQUEST_GAME_START, async (myRoom) => {
     console.log('Another client has connected!: ', socket.id);
-    const { myRoom } = payload;
     const roomName = myRoom.name;
     if (!rooms[roomName]) {
       rooms[roomName] = {
+        room: roomName,
         players: [],
         startRequests: 0
       };
@@ -57,22 +57,36 @@ socketServer.on('connection', socket => {
     rooms[roomName].players.push(socket);
     rooms[roomName].startRequests++;
     if (rooms[roomName].startRequests === 2) {
-      const game = new Game(rooms[roomName].players, roomName);
+      const game = new Game(rooms[roomName]);
       await game.startGame();
       socket.on(DISCONNECT, () => {
         game.end();
         rooms[roomName].players = [];
       });
-      socket.on(GAME_OVER, () => {
+    }
+    socket.on(DISCONNECT, () => {
+      console.log('A client has disconnected!: ', socket.id);
+      rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
+    });
+  });
+
+  socket.on(REQUEST_GAME_RESTART, async (myRoom) => {
+    const roomName = myRoom.name;
+    rooms[roomName].startRequests++;
+
+    if (rooms[roomName].startRequests === 2) {
+      const game = new Game(rooms[roomName]);
+      await game.startGame();
+      socket.on(DISCONNECT, () => {
         game.end();
-        rooms[roomName].startRequests = 0;
+        rooms[roomName].players = [];
       });
     }
-  socket.on(DISCONNECT, () => {
-    console.log('A client has disconnected!: ', socket.id);
-    rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
-  });
-  });
+    socket.on(DISCONNECT, () => {
+      console.log('A client has disconnected!: ', socket.id);
+      rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
+    });
+  })
 });
 // await Rooms.destroy({ where: {name: this.room.name }});
 

@@ -92,7 +92,7 @@ class ConnectControls extends Component {
   }
 
   render() {
-    const { REQUEST_GAME_START } = socketEvents;
+    const { REQUEST_GAME_START, REQUEST_GAME_RESTART } = socketEvents;
     const { isConnected, isPlayerOne, setSocket, myRoom } = this.props;
     const { setListeners } = this;
     const { ready, gamesPlayed } = this.state;
@@ -112,7 +112,7 @@ class ConnectControls extends Component {
                 ready: true,
                 gamesPlayed: this.state.gamesPlayed + 1
               });
-              webSocket.emit(REQUEST_GAME_START, { socketEvents, myRoom });
+              webSocket.emit(REQUEST_GAME_START, myRoom);
             }}
           >
             Set Sail!
@@ -129,7 +129,8 @@ class ConnectControls extends Component {
                 ready: true,
                 gamesPlayed: this.state.gamesPlayed + 1
               });
-              webSocket.emit(REQUEST_GAME_RESTART, { myRoom });
+              this.props.socket.emit(REQUEST_GAME_RESTART, myRoom);
+              this.props.getCommand('');
             }}
           >
             Sail Again!

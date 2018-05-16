@@ -2,7 +2,7 @@ const { Widget, Rooms } = require('./db');
 const socketEvents = require('../client/utils/socketEvents');
 
 class Game {
-  constructor(players, room) {
+  constructor(roomObj) {
     this.level = 1;
     this.widgets = [];
     this.seconds = 8;
@@ -13,8 +13,9 @@ class Game {
     this.intervalId = null;
     this.numOfWidgets = 4;
 
-    this.players = players;
-    this.room = room;
+    this.players = roomObj.players;
+    this.room = roomObj.roomName;
+    this.roomObj = roomObj;
 
 
     this.nextLevel = this.nextLevel.bind(this);
@@ -165,6 +166,7 @@ class Game {
   async end() {
     const { GAME_OVER, RERENDER_PAGE } = socketEvents;
     this.players.forEach(player => player.emit(GAME_OVER));
+    this.roomObj.startRequests = 0;
     clearInterval(this.intervalId);
     this.initialize();
     // this.players.forEach(player => player.leave(this.room.name));
