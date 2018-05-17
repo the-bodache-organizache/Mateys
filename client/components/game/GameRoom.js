@@ -74,24 +74,19 @@ class GameRoom extends React.Component {
     await connectToEasyRTC(+width, +height, roomNoSpaces);
     isConnected(true);
     this.detectMotion();
-    console.log(this.props.socket);
   }
 
   componentWillUnmount() {
-    console.log('unmount socketlog', this.props.socket);
-    console.log('unmount wbrtclog', easyrtc.webSocket);
     this.cleanUp();
     window.removeEventListener('beforeunload', this.cleanUp);
   }
 
   cleanUp () {
     const { myRoom, updateRoom } = this.props;
-    console.log('cleanup myroom', myRoom)
     if (myRoom.occupancy > 0) {
       myRoom.occupancy--;
       updateRoom(myRoom);
     }
-    console.log('after dec', myRoom)
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
       const { DISCONNECT, EDIT_ROOM } = socketEvents;
