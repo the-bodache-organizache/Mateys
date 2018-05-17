@@ -31,6 +31,8 @@ class Rooms extends React.Component {
         {rooms.map(room => (
           <button
             key={room.id}
+            className="sub-panel"
+            id="room-link"
             onClick={() => this.handleClick(room)}
             onMouseEnter={() => {
               if (room.occupancy < 2) playSound(click);

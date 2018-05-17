@@ -43,6 +43,18 @@ a {
   border-radius: 5px;
 }
 
+.button {
+  background-color: rgb(223, 99, 50);
+  border: none;
+  padding: 1em;
+  color: white;
+  border-radius: 5px;
+}
+
+#connect-button {
+  margin: 1em 0;
+}
+
 #logo {
   padding-top: 1em;
 }
@@ -59,10 +71,6 @@ a {
   justify-content: center;
 }
 
-/* .port-sounds {
-  margin-bottom: 0px;
-} */
-
 /* PORT */
 #port {
   padding: 2em;
@@ -72,6 +80,8 @@ a {
 #crew-list {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 #room-link {
@@ -84,6 +94,7 @@ a {
   align-items: center;
   font-size: 0.75em;
   transition: 0.3s;
+  border: none;
 }
 
 #room-link:hover {

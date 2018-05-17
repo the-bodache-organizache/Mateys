@@ -32,8 +32,11 @@ export default (videoWidth, videoHeight, roomId) => {
         };
       })(easyrtcid);
 
-      var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+      //var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+      var label = document.createTextNode('Connect to your Matey!');
       button.appendChild(label);
+      button.setAttribute('class', 'button');
+      button.setAttribute('id', 'connect-button');
       otherClientDiv.appendChild(button);
     }
   }
