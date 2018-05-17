@@ -137,15 +137,15 @@ class Game {
     const [ player1, player2 ] = this.players;
     const { NEXT_LEVEL } = socketEvents;
     this.level++;
-    if (this.seconds >= 4) {
-      this.seconds -= 0.5;
+    if (this.seconds >= 2.6) {
+      this.seconds -= 0.6;
     }
-    if (this.targetScore < 18) this.targetScore += 1;
-    if (this.level % 2 === 0) {
+    if (this.targetScore < 20) this.targetScore += 1;
+    if (this.level % 3 === 0) {
       if (this.numOfWidgets <= 10) this.numOfWidgets += 2;
     }
     this.score = 0;
-    this.health = 10;
+    this.health += 1;
     clearInterval(this.intervalId);
     this.players.forEach(player => player.emit(NEXT_LEVEL, { level: this.level }));
     this.sendStatus();

@@ -42,7 +42,7 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
           socket.emit(WIDGET_PRESSED, widget);
           setTimeout(() => {
             store.dispatch(toggleReady(widget));
-          }, 2000);
+          }, 1500);
         }
       }
     }
