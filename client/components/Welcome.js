@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { playSound } from '../utils';
 
-const Welcome = ({ click, history }) => {
+const Welcome = (props) => {
+  const { click } = props.sounds;
+  const { history } = props;
   return (
     <div id="welcome">
       <button
