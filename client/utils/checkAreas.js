@@ -7,13 +7,13 @@ const checkAreas = (width, height, contextBlended, widgets, socket) => {
   for (let r = 0; r < 6; ++r) {
     let sx = 0,
       sy = 1 / 3 * r * height,
-      sw = 50,
+      sw = 100,
       sh = height * 0.3;
     if (r >= 1) {
       sy = 1 / 3 * r * height + height * 0.05;
     }
     if (r >= 3) {
-      sx = width - 50;
+      sx = width - 100;
       sy = 1 / 3 * (r - 3) * height;
     }
     if (r >= 4) {

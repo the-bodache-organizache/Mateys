@@ -137,8 +137,8 @@ class Game {
     const [ player1, player2 ] = this.players;
     const { NEXT_LEVEL } = socketEvents;
     this.level++;
-    if (this.seconds >= 4.4) {
-      this.seconds -= 0.4;
+    if (this.seconds >= 4) {
+      this.seconds -= 0.5;
     }
     if (this.targetScore < 18) this.targetScore += 1;
     if (this.level % 2 === 0) {
