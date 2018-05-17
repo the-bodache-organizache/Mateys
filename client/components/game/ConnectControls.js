@@ -51,10 +51,8 @@ class ConnectControls extends Component {
       for (let i = 0; i < this.props.widgets.length; i++) {
         let widget = this.props.widgets[i];
         if (widget && !widget.ready) {
-          //socket.emit(WIDGET_PRESSED, widget);
           setTimeout(() => {
             this.props.toggleReady(widget);
-            console.log('AFTER RESET:', widget);
           }, 2000);
         }
       }
@@ -110,6 +108,8 @@ class ConnectControls extends Component {
         <div id="start-game">
           <button
             type="button"
+            className="button"
+            id="connect-button"
             onClick={() => {
               const { webSocket } = easyrtc;
               setSocket(webSocket);
@@ -130,6 +130,8 @@ class ConnectControls extends Component {
         <div id="start-game">
           <button
             type="button"
+            className="button"
+            id="connect-button"
             onClick={() => {
               this.setState({
                 ready: true,
@@ -141,25 +143,29 @@ class ConnectControls extends Component {
           >
             Sail Again!
           </button>
-          <button
+          {/* <button
             type="button"
+            className="button"
+            id="connect-button"
             onClick={() => {
               this.props.socket.emit('REQUEST_LEAVE_ROOM', this.props.myRoom);
             }}
           >
             Disembark!
-          </button>
+          </button> */}
         </div>
       )
     }
 
     return (
       <div id="connectControls">
-        <div id="iam">Not yet connected...</div>
+        <div id="iam" hidden>Not yet connected...</div>
         <br />
-        <strong>Connected users:</strong>
-        <div id="otherClients" />
-        {button}
+        <span id="pad-buttons">
+          <strong>Connected users:</strong>
+          <div id="otherClients" />
+          {button}
+        </span>
       </div>
     );
   }

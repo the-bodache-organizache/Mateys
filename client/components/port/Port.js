@@ -28,6 +28,7 @@ class Port extends React.Component {
       <div id="port" className="main-panel">
         <button
           type="button"
+          className="button"
           onClick={async () => {
             const shipName = shipNameGenerator(pirateDictionary);
             await createRoom(shipName);
