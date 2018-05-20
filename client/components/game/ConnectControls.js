@@ -53,7 +53,7 @@ class ConnectControls extends Component {
         if (widget && !widget.ready) {
           setTimeout(() => {
             this.props.toggleReady(widget);
-          }, 2000);
+          }, 1500);
         }
       }
     });

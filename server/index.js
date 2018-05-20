@@ -21,8 +21,6 @@ const socketServer = socketIo.listen(webServer, { 'log level': 1 });
 let rooms = {};
 
 socketServer.on('connection', socket => {
-
-  console.log('A client has connected');
   const {
     ENTER_ROOM,
     RERENDER_PAGE,
@@ -35,7 +33,7 @@ socketServer.on('connection', socket => {
 
   socket.on(ENTER_ROOM, roomName => {
     if (socketServer.sockets.clients(roomName).length > 2) {
-      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
+
       // socket.disconnect();
     }
   });
@@ -45,7 +43,6 @@ socketServer.on('connection', socket => {
   });
 
   socket.on(REQUEST_GAME_START, async (myRoom) => {
-    console.log('Another client has connected!: ', socket.id);
     const roomName = myRoom.name;
     if (!rooms[roomName]) {
       rooms[roomName] = {
@@ -66,7 +63,6 @@ socketServer.on('connection', socket => {
       });
     }
     socket.on(DISCONNECT, () => {
-      console.log('A client has disconnected!: ', socket.id);
       rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
     });
   });
@@ -84,7 +80,7 @@ socketServer.on('connection', socket => {
       });
     }
     socket.on(DISCONNECT, () => {
-      console.log('A client has disconnected!: ', socket.id);
+
       rooms[roomName].players = rooms[roomName].players.filter(player => player.id !== socket.id);
     });
   });
@@ -125,11 +121,6 @@ easyrtc.events.on('easyrtcAuth', function(
         isShared: false
       });
 
-      console.log(
-        '[' + easyrtcid + '] Credential saved!',
-        connectionObj.getFieldValueSync('credential')
-      );
-
       callback(err, connectionObj);
     }
   );
@@ -137,7 +128,6 @@ easyrtc.events.on('easyrtcAuth', function(
 
 // Start EasyRTC server
 const rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
-  console.log('Initiated');
 
   rtcRef.events.on('roomCreate', function(
     appObj,
@@ -146,7 +136,6 @@ const rtc = easyrtc.listen(app, socketServer, null, function(err, rtcRef) {
     roomOptions,
     callback
   ) {
-    console.log('roomCreate fired! Trying to create: ' + roomName);
 
     appObj.events.defaultListeners.roomCreate(
       appObj,
@@ -165,10 +154,7 @@ easyrtc.events.on('roomJoin', function(
   roomParameter,
   callback
 ) {
-  console.log(
-    '[' + connectionObj.getEasyrtcid() + '] Credential retrieved!',
-    connectionObj.getFieldValueSync('credential')
-  );
+
   easyrtc.events.defaultListeners.roomJoin(
     connectionObj,
     roomName,
@@ -197,6 +183,5 @@ if (env === 'production') {
 }
 
 db.sync().then(() => {
-  console.log('The database is synced');
   webServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 });
