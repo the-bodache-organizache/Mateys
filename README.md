@@ -22,7 +22,7 @@ React
 
 Redux
 
-[Magic Xylophone](https://github.com/soundstep/magic-xylophone/blob/master/app/js/app.js) (for motion detection)
+[Magic Xylophone](https://github.com/soundstep/magic-xylophone/blob/master/app/js/app.js) (motion detection functionality extracted)
 
 # How to run
 ```
