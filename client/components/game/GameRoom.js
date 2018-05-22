@@ -12,7 +12,7 @@ import {
   getContextBlended,
   getVideo
 } from '../../store/motionDetection';
-import { isConnected } from '../../store/connection';
+import { isConnected, setPlayerOne } from '../../store/connection';
 import { updateRoom } from '../../store/rooms';
 import {
   connectToEasyRTC,
@@ -61,8 +61,12 @@ class GameRoom extends React.Component {
       getVideo,
       isConnected,
       myRoom,
-      updateRoom
+      updateRoom,
+      setPlayerOne
     } = this.props;
+    if (myRoom.occupancy < 1) {
+      setPlayerOne(true);
+    }
     myRoom.occupancy++;
     updateRoom(myRoom);
     const roomNoSpaces = myRoom.name.split(' ').join('');
@@ -136,7 +140,8 @@ const mapDispatchToProps = dispatch => ({
   getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
   getVideo: video => dispatch(getVideo(video)),
   isConnected: connected => dispatch(isConnected(connected)),
-  updateRoom: room => dispatch(updateRoom(room))
+  updateRoom: room => dispatch(updateRoom(room)),
+  setPlayerOne: boolean => dispatch(setPlayerOne(boolean))
 });
 
 const mapStateToProps = (state, ownProps) => {

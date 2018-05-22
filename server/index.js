@@ -33,11 +33,8 @@ socketServer.on('connection', socket => {
     GAME_OVER
   } = socketEvents;
 
-  socket.on(ENTER_ROOM, roomName => {
-    if (socketServer.sockets.clients(roomName).length > 2) {
-      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
-      // socket.disconnect();
-    }
+  socket.on('ENTER_ROOM', roomName => {
+      console.log('ENTERED ROOM!!!!!!!!!!!!');
   });
 
   socket.on(EDIT_ROOM, () => {

@@ -18,7 +18,8 @@ class Rooms extends React.Component {
 
   handleClick(room) {
     this.props.getMyRoom(room);
-    this.props.socket.emit('ENTER_ROOM', this.props.myRoom.name);
+    console.log('SOCKET!!', this.props.socket);
+    this.props.socket.emit('ENTER_ROOM', room.name);
     this.props.socket.emit('EDIT_ROOM');
     this.props.history.push('/game');
   }
