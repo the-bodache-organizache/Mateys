@@ -24,7 +24,6 @@ class Game {
   }
 
   initialize() {
-    this.startRequests = 0;
     this.level = 1;
     this.widgets = [];
     this.seconds = 8;
