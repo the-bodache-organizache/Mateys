@@ -20,7 +20,8 @@ const Widget = db.define('widget', {
   },
   ready: {
     type: Sequelize.BOOLEAN,
-    allowNull: false
+    allowNull: false,
+    defaultValue: true
   },
   imageUrl: {
     type: Sequelize.STRING,

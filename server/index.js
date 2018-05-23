@@ -34,10 +34,13 @@ socketServer.on('connection', socket => {
   } = socketEvents;
 
   socket.on(ENTER_ROOM, roomName => {
-    if (socketServer.sockets.clients(roomName).length > 2) {
-      console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
-      // socket.disconnect();
-    }
+    //const roomNoSpaces = roomName.split(' ').join('');
+    console.log('room no spaces', roomName);
+    console.log('Num Occupants:', socketServer.sockets.clients(roomName));
+    // if (socketServer.sockets.clients(roomName).length > 2) {
+    //   console.log('Num Occupants:', socketServer.sockets.clients(roomName).length);
+    //   // socket.disconnect();
+    // }
   });
 
   socket.on(EDIT_ROOM, () => {
