@@ -15,7 +15,8 @@ class ConnectControls extends Component {
     super(props);
     this.state = {
       ready: false,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      placedCall: false
     };
     this.resetState = this.resetState.bind(this);
   }
@@ -53,7 +54,7 @@ class ConnectControls extends Component {
         if (widget && !widget.ready) {
           setTimeout(() => {
             this.props.toggleReady(widget);
-          }, 2000);
+          }, 1500);
         }
       }
     });
@@ -97,7 +98,7 @@ class ConnectControls extends Component {
 
   render() {
     const { REQUEST_GAME_START, REQUEST_GAME_RESTART } = socketEvents;
-    const { isConnected, setSocket, myRoom } = this.props;
+    const { isConnected, setSocket, myRoom, isPlayerOne } = this.props;
     const { setListeners } = this;
     const { ready, gamesPlayed } = this.state;
     const firstGame = isConnected && !ready && !gamesPlayed;
@@ -158,12 +159,12 @@ class ConnectControls extends Component {
     }
 
     return (
-      <div id="connectControls">
+      <div id="connectControls" >
         <div id="iam" hidden>Not yet connected...</div>
         <br />
         <span id="pad-buttons">
           <strong>Connected users:</strong>
-          <div id="otherClients" />
+          {isPlayerOne && !this.state.placedCall && <div id="otherClients" onClick={() => this.setState({placedCall: true})}/>}
           {button}
         </span>
       </div>
@@ -189,7 +190,8 @@ const mapStateToProps = (state, ownProps) => ({
   myRoom: state.myRoom,
   history: ownProps.history,
   sounds: state.sounds,
-  widgets: state.widgets
+  widgets: state.widgets,
+  isPlayerOne: state.connection.isPlayerOne
 });
 
 export default withRouter(

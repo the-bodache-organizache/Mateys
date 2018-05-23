@@ -55,7 +55,6 @@ export const updateRoom = room => {
 };
 
 export const deleteRoom = (room) => {
-  console.log(room);
   return async (dispatch, _, {axios}) => {
     await axios.delete(`/api/rooms/${room.id}`)
       .then(() => dispatch(deletedRoom(room)))

@@ -12,7 +12,7 @@ import {
   getContextBlended,
   getVideo
 } from '../../store/motionDetection';
-import { isConnected } from '../../store/connection';
+import { isConnected, setPlayerOne } from '../../store/connection';
 import { updateRoom } from '../../store/rooms';
 import {
   connectToEasyRTC,
@@ -61,8 +61,12 @@ class GameRoom extends React.Component {
       getVideo,
       isConnected,
       myRoom,
-      updateRoom
+      updateRoom,
+      setPlayerOne
     } = this.props;
+    if (myRoom.occupancy < 1) {
+      setPlayerOne(true);
+    }
     myRoom.occupancy++;
     updateRoom(myRoom);
     const roomNoSpaces = myRoom.name.split(' ').join('');
@@ -74,24 +78,19 @@ class GameRoom extends React.Component {
     await connectToEasyRTC(+width, +height, roomNoSpaces);
     isConnected(true);
     this.detectMotion();
-    console.log(this.props.socket);
   }
 
   componentWillUnmount() {
-    console.log('unmount socketlog', this.props.socket);
-    console.log('unmount wbrtclog', easyrtc.webSocket);
     this.cleanUp();
     window.removeEventListener('beforeunload', this.cleanUp);
   }
 
   cleanUp () {
     const { myRoom, updateRoom } = this.props;
-    console.log('cleanup myroom', myRoom)
     if (myRoom.occupancy > 0) {
       myRoom.occupancy--;
       updateRoom(myRoom);
     }
-    console.log('after dec', myRoom)
     const socket = this.props.socket || easyrtc.webSocket;
     if (socket) {
       const { DISCONNECT, EDIT_ROOM } = socketEvents;
@@ -136,7 +135,8 @@ const mapDispatchToProps = dispatch => ({
   getContextBlended: contextBlended => dispatch(getContextBlended(contextBlended)),
   getVideo: video => dispatch(getVideo(video)),
   isConnected: connected => dispatch(isConnected(connected)),
-  updateRoom: room => dispatch(updateRoom(room))
+  updateRoom: room => dispatch(updateRoom(room)),
+  setPlayerOne: boolean => dispatch(setPlayerOne(boolean))
 });
 
 const mapStateToProps = (state, ownProps) => {
